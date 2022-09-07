@@ -1,0 +1,18 @@
+export default {
+    title: 'Chilee',
+    phoneError: 'Vui lòng nhập số điện thoại người nhận hợp lệ',
+    receiverNameError: 'Vui lòng nhập tên người nhận',
+    buyerNameError: 'Vui lòng nhập tên người mua',
+    buyerPhoneError: 'Vui lòng nhập SĐT người mua hợp lệ',
+    addressError: 'Vui lòng chọn tên đường, số nhà',
+    districtError: 'Vui lòng chọn Quận/Huyện',
+    provinceError: 'Vui lòng chọn tỉnh',
+    addedToCart: 'Đã thêm vào giỏ',
+    pleaseLogin: 'Vui lòng đăng nhập để bắt đầu mua hàng',
+    confirmRemoveCartItem: 'Xóa sản phẩm này?',
+    defaultAddrAlert: 'Vui lòng chọn địa chỉ mặc định',
+    loginRequired: 'Bạn cần đăng nhập để sử dụng tính năng này',
+    outOfQuantity: 'Không đủ số lượng hàng để thêm vào giỏ hàng',
+    outOfQuantity2: 'Không đủ số lượng hàng',
+    wrongProvince: 'Sản phẩm này không nằm trong khu vực được hỗ trợ.',
+}
