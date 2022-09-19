@@ -96,15 +96,14 @@ export default class HomeTabItem extends PureComponent<Props, State>{
     }
 
     render() {
-        if (this.props.loading || !this.props.show) {
-            return <View style={styles.textWrapper}>
-                <Text style={{fontSize: 18}}>Đang tải sản phẩm...</Text>
-            </View>
-        }
+        // if (this.props.loading || !this.props.show) {
+        //     return <View style={styles.textWrapper}>
+        //         <Text style={{fontSize: 18}}>Đang tải sản phẩm...</Text>
+        //     </View>
+        // }
 
         return (
             <View style={styles.container}>
-
                 {this.renderContent()}
             </View>
         )

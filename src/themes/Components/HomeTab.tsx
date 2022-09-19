@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
-import {View, StyleSheet, TouchableOpacity, ScrollView, Animated, FlatList, Text, Image} from "react-native";
+import React, { Component } from 'react';
+import { View, StyleSheet, TouchableOpacity, ScrollView, Animated, FlatList, Text, Image } from "react-native";
 import config from "../../config";
-import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 import platform from "../../themes/Variables/platform";
 import Spinner from '../../ui/Spinner';
 import HomeTabItem from "../../themes/Components/HomeTabItem";
-import {Campaign, Product} from "../../api/interfaces";
+import { Campaign, Product } from "../../api/interfaces";
 import SearchBox from "../../ui/SearchBox";
 import BannerHome from "../../screens/BannerHome";
 import HomeRequest from "../../api/requests/HomeRequest";
 import BannerCategory from "../../ui/BannerCategory";
-import CategoryRequest, {GetProductResponse} from "../../api/requests/CategoryRequest";
+import CategoryRequest, { GetProductResponse } from "../../api/requests/CategoryRequest";
 
 const img = require("../../assets/logo.jpg");
 
@@ -18,6 +18,7 @@ interface Props {
     campaigns: Array<Campaign>,
     navigation: any,
     listBanner: Array<any>,
+    icons: any
 }
 
 interface State {
@@ -41,7 +42,7 @@ export default class HomeTab extends Component<Props, State>{
         super(props);
 
         this.state = {
-            index : 0,
+            index: 0,
             isLoading: true,
             tabLoading: true,
             routes: [],
@@ -54,8 +55,7 @@ export default class HomeTab extends Component<Props, State>{
     }
 
     asyncInit = async () => {
-
-        const {campaigns} = this.props
+        const { campaigns } = this.props
         if (campaigns && campaigns.length > 0) {
             let routes = campaigns.map((value, index, res) => {
                 let item: any = {};
@@ -65,46 +65,49 @@ export default class HomeTab extends Component<Props, State>{
                 return item
             });
             await this.loadCampaign(campaigns[0].id);
-
             setTimeout(() => {
-
                 this.setState({
                     isLoading: false,
                     routes: routes
+                }, () => {
+                    console.log('aaaa111', this.state.routes);
                 });
             }, 500)
         }
-
     }
 
     componentDidMount(): void {
         this.asyncInit();
-
     }
 
     onLoadMore = async (campaignId: number) => {
         this.page += 1;
-        this.setState({isLoadingMore: true});
-        const res = await CategoryRequest.getProducts(campaignId, {page: this.page, limit: 26});
+        this.setState({ isLoadingMore: true });
+        const res = await CategoryRequest.getProducts(campaignId, { page: this.page, limit: 26 });
 
-        this.setState({products: this.state.products.concat(res.products),
-            isLoadingMore: false, hasReadMore: res.hasNextPage})
+        this.setState({
+            products: this.state.products.concat(res.products),
+            isLoadingMore: false, hasReadMore: res.hasNextPage
+        })
     }
 
     loadCampaign = (campaignId: number) => {
         if (productCache[campaignId]) {
-            const res:GetProductResponse = productCache[campaignId];
-
-            this.setState({products: res.products, tabLoading: false,
-                hasReadMore: res.hasNextPage, categories: res.categories})
+            const res: GetProductResponse = productCache[campaignId];
+            this.setState({
+                products: res.products, tabLoading: false,
+                hasReadMore: res.hasNextPage, categories: res.categories
+            })
         } else {
-            this.setState({products: [], tabLoading: true});
+            this.setState({ products: [], tabLoading: true });
             CategoryRequest.getProducts(campaignId, {}).then((res: GetProductResponse) => {
 
                 productCache[campaignId] = res;
-                this.setState({products: res.products, tabLoading: false,
+                this.setState({
+                    products: res.products, tabLoading: false,
                     hasReadMore: res.hasNextPage,
-                    categories: res.categories})
+                    categories: res.categories
+                })
             });
         }
     }
@@ -114,34 +117,37 @@ export default class HomeTab extends Component<Props, State>{
             this.page = 1;
             const campaignId = this.props.campaigns[index].id;
             this.loadCampaign(campaignId);
-            this.setState({index: index});
+            this.setState({ index: index });
             if (this.state.scrollY._value > deviceWidth * 0.7 + 80) {
                 setTimeout(() => {
-                    this.scrollViewRef.getNode().scrollTo({x: 0, y: deviceWidth * 0.7 + 80, animated: true})
+                    this.scrollViewRef.getNode().scrollTo({ x: 0, y: deviceWidth * 0.7 + 80, animated: true })
                 }, 1)
             }
-            this.flatListRef.scrollToIndex({animated: true, index: index, viewPosition: 0.5});
+            this.flatListRef.scrollToIndex({ animated: true, index: index, viewPosition: 0.5 });
         }
     }
 
-    renderScene = ({ route }) => {
-        const {listBanner, navigation, campaigns} = this.props;
-
+    renderScene = (
+        // { route }
+    ) => {
+        const { listBanner, navigation, campaigns } = this.props;
+        console.log('cam', campaigns, listBanner, this.state.products );
+        
         return <HomeTabItem
             loading={this.state.tabLoading}
             products={this.state.products}
-            campaign={campaigns[route.index]}
+            campaign={campaigns[0]}
             navigation={navigation}
             banner={listBanner}
-            show={route.index === this.state.index}
-            onLoadMore={() => this.onLoadMore(campaigns[route.index].id)}
+            // show={route.index === this.state.index}
+            // onLoadMore={() => this.onLoadMore(campaigns[route.index].id)}
             hasReadMore={this.state.hasReadMore}
             isLoadingMore={this.state.isLoadingMore}
         />
     };
 
     _getTabBarOpacity = () => {
-        const {scrollY} = this.state;
+        const { scrollY } = this.state;
 
         return scrollY.interpolate({
             inputRange: [deviceWidth * 0.7 + 79, deviceWidth * 0.7 + 80],
@@ -152,7 +158,7 @@ export default class HomeTab extends Component<Props, State>{
     };
 
     _getTabBarPosition = () => {
-        const {scrollY} = this.state;
+        const { scrollY } = this.state;
 
         return scrollY.interpolate({
             inputRange: [0, deviceWidth * 0.7 + 80],
@@ -162,9 +168,8 @@ export default class HomeTab extends Component<Props, State>{
         });
     };
 
-    renderTabBar = props =>  {
-
-        return  <TabBar
+    renderTabBar = props => {
+        return <TabBar
             {...props}
             indicatorStyle={styles.indicatorStyle}
             style={styles.tabBarStyle}
@@ -179,29 +184,29 @@ export default class HomeTab extends Component<Props, State>{
         />
     }
 
-    renderCategoryItem = ({item, index}) => {
+    renderCategoryItem = ({ item, index }) => {
         return (
             <TouchableOpacity
                 style={styles.btnCategory}
                 activeOpacity={1}
-                onPress={() => this.props.navigation.navigate("ListProductScreen", {id: item.id, title: item.name})}
+                onPress={() => this.props.navigation.navigate("ListProductScreen", { id: item.id, title: item.name })}
             >
-                <Image source={item.thumb} style={styles.iconCategory} resizeMode={"contain"}/>
+                <Image source={item.thumb} style={styles.iconCategory} resizeMode={"contain"} />
                 <Text style={styles.categoryName} numberOfLines={1} ellipsizeMode={"tail"}>{item.name}</Text>
             </TouchableOpacity>
         )
     }
 
     renderHeader = () => {
-        const {listBanner, navigation, campaigns} = this.props;
+        const { listBanner, navigation, campaigns } = this.props;
         if (listBanner) {
             return (
-                <View style={{backgroundColor: "#f6f6fa"}}>
+                <View style={{ backgroundColor: "#f6f6fa" }}>
                     <BannerHome navigation={navigation} listBanner={listBanner} />
                     <FlatList
                         numColumns={5}
                         keyExtractor={(item, index) => item.id.toString()}
-                        style={{marginTop: 15, marginBottom: 5}}
+                        style={{ marginTop: 15, marginBottom: 5 }}
                         showsVerticalScrollIndicator={false}
                         data={this.state.categories}
                         renderItem={this.renderCategoryItem}
@@ -213,19 +218,19 @@ export default class HomeTab extends Component<Props, State>{
     }
 
     renderContent = () => {
-        const {isLoading, index, routes} = this.state
+        const { isLoading, index, routes } = this.state
         if (isLoading) {
-            return <View style={{flex:1, backgroundColor:'#fff'}}>
-                <Spinner/>
+            return <View style={{ flex: 1, backgroundColor: '#fff' }}>
+                <Spinner />
             </View>
         }
         return (
             <View>
-                {this.renderHeader()}
+                {/* {this.renderHeader()} */}
                 <TabView
                     swipeEnabled={true}
                     lazy={true}
-                    navigationState={ {index: index, routes: routes}}
+                    navigationState={{ index: index, routes: routes }}
                     renderScene={this.renderScene}
                     onIndexChange={this.onIndexChange}
                     initialLayout={styles.initialLayout}
@@ -235,26 +240,26 @@ export default class HomeTab extends Component<Props, State>{
         )
     }
 
-    renderItem = ({ item, index}) => {
+    renderItem = ({ item, index }) => {
         return (
             <TouchableOpacity
-                style={[styles.tabItem, {borderColor: config.secondaryColor, borderBottomWidth: this.state.index === index ? 2 : 0}]}
+                style={[styles.tabItem, { borderColor: config.secondaryColor, borderBottomWidth: this.state.index === index ? 2 : 0 }]}
                 activeOpacity={1}
                 onPress={this.onIndexChange.bind(this, index)}
             >
-                <Text style={[styles.tabLabel, {color: this.state.index === index ? config.secondaryColor : "#4b4b4b"}]}>{item.title}</Text>
+                <Text style={[styles.tabLabel, { color: this.state.index === index ? config.secondaryColor : "#4b4b4b" }]}>{item.title}</Text>
             </TouchableOpacity>
         )
     }
 
     render() {
-        const {isLoading, index, routes} = this.state
+        const { isLoading, index, routes } = this.state
         return (
-            <View style={{flex: 1}}>
-                <Animated.View  style={[styles.tabWrap,{
+            <View style={{ flex: 1 }}>
+                <Animated.View style={[styles.tabWrap, {
                     opacity: this._getTabBarOpacity(),
                     transform: [
-                        {translateY: this._getTabBarPosition()},
+                        { translateY: this._getTabBarPosition() },
                     ]
                 }]}>
                     <FlatList
@@ -267,40 +272,61 @@ export default class HomeTab extends Component<Props, State>{
                         showsHorizontalScrollIndicator={false}
                     />
                 </Animated.View>
-                <Animated.ScrollView
+                {/* <Animated.ScrollView
                     ref={(ref) => { this.scrollViewRef = ref; }}
                     style={styles.container}
                     showsVerticalScrollIndicator={false}
-                    onScroll={Animated.event(
-                        [
-                            {
-                                nativeEvent: {contentOffset: {y: this.state.scrollY}}
-                            }
-                        ]
-                    )}
+                    onScroll={Animated.event([{
+                        nativeEvent: { contentOffset: { y: this.state.scrollY } }
+                    }])}
                 >
                     <View style={styles.searchBoxWrapper}>
                         <TouchableOpacity onPress={() => this.props.navigation.navigate("SearchScreen")}>
                             <SearchBox
-                                config={{placeholder :"Bạn tìm gì hôm nay...", placeholderTextColor: "#a0a0a0", editable: false, pointerEvents: "none"}}
-                                style={{backgroundColor: "#ededed"}}
+                                config={{ placeholder: "Bạn tìm gì hôm nay...", placeholderTextColor: "#a0a0a0", editable: false, pointerEvents: "none" }}
+                                style={{ backgroundColor: "#ededed" }}
                             />
                         </TouchableOpacity>
                     </View>
                     {this.renderContent()}
-                </Animated.ScrollView>
+                </Animated.ScrollView> */}
+                <View style={styles.searchBoxWrapper}>
+                    <TouchableOpacity onPress={() => this.props.navigation.navigate("SearchScreen")}>
+                        <SearchBox
+                            config={{ placeholder: "Bạn tìm gì hôm nay...", placeholderTextColor: "#a0a0a0", editable: false, pointerEvents: "none" }}
+                            style={{ backgroundColor: "#ededed" }}
+                        />
+                    </TouchableOpacity>
+                </View>
+                {this.renderHeader()}
+                <View style={{ height: 60, width: '100%' }}>
+                    {
+                        this.state.routes && (
+                            <FlatList
+                                showsHorizontalScrollIndicator={false}
+                                bounces={false}
+                                style={{ height: 30 }}
+                                horizontal
+                                data={this.state.routes}
+                                renderItem={this.renderItem}
+                                keyExtractor={item => item.key}
+                            />
+                        )
+                    }
+                </View>
+                {this.renderScene()}
             </View>
         )
     }
 }
-const {deviceWidth, deviceHeight} = platform
+const { deviceWidth, deviceHeight } = platform
 const styles = StyleSheet.create({
-    container:{ flex: 1},
+    container: { flex: 1 },
     indicatorStyle: { backgroundColor: config.secondaryColor },
-    tabBarStyle: { backgroundColor: "#fff"},
-    tabStyle: {width: "auto", paddingHorizontal: 5, minHeight: 45},
-    labelStyle: {fontSize: 17, textTransform: "capitalize"},
-    initialLayout: { width: deviceWidth},
+    tabBarStyle: { backgroundColor: "#fff" },
+    tabStyle: { width: "auto", paddingHorizontal: 5, minHeight: 45 },
+    labelStyle: { fontSize: 17, textTransform: "capitalize" },
+    initialLayout: { width: deviceWidth },
     searchBoxWrapper: {
         paddingHorizontal: 15,
         width: deviceWidth,
@@ -320,10 +346,10 @@ const styles = StyleSheet.create({
         },
         zIndex: 1
     },
-    tabWrap: {position: "absolute", top: 0, backgroundColor: "#fff", minHeight: 45, left: 0, right: 0, zIndex:99},
-    tabItem: {alignItems: 'center', justifyContent: 'center', paddingVertical: 10, minHeight: 45, width: "auto", paddingHorizontal: 5},
-    tabLabel: {fontSize: 17, textTransform: "capitalize", margin: 4, backgroundColor: 'transparent'},
-    btnCategory: {width: deviceWidth*0.2, height: deviceWidth*0.2, alignItems: "center"},
-    iconCategory: {width: deviceWidth/5 -30, height: deviceWidth/5 - 30},
-    categoryName: {fontSize: 14, color: config.textColor, paddingVertical: 0, marginTop: 5},
+    tabWrap: { position: "absolute", top: 0, backgroundColor: "#fff", minHeight: 45, left: 0, right: 0, zIndex: 99 },
+    tabItem: { alignItems: 'center', justifyContent: 'center', paddingVertical: 10, minHeight: 45, width: "auto", paddingHorizontal: 5 },
+    tabLabel: { fontSize: 17, textTransform: "capitalize", margin: 4, backgroundColor: 'transparent' },
+    btnCategory: { width: deviceWidth * 0.2, height: deviceWidth * 0.2, alignItems: "center" },
+    iconCategory: { width: deviceWidth / 5 - 30, height: deviceWidth / 5 - 30 },
+    categoryName: { fontSize: 14, color: config.textColor, paddingVertical: 0, marginTop: 5 },
 });
