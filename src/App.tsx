@@ -63,7 +63,7 @@ function MyTabs(props) {
           activeTintColor: config.secondaryColor,
           allowFontScaling: false,
       }}>
-          <Tab.Screen
+          {/* <Tab.Screen
               name="HomeScreen"
               component={HomeStack}
               options={{
@@ -72,12 +72,12 @@ function MyTabs(props) {
                       <MaterialCommunityIcons name="home" color={color} size={size} />
                   ),
               }}
-          />
+          /> */}
           <Tab.Screen
               name="ProductsScreen"
               component={ProductStack}
               options={{
-                  tabBarLabel: 'Sản phẩm',
+                  tabBarLabel: 'Danh mục',
                   tabBarIcon: ({ color, size }) => (
                       <MaterialCommunityIcons name="border-all" color={color} size={size} />
                   ),

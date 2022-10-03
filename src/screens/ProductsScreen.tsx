@@ -19,6 +19,8 @@ export default class ProductsScreen extends Component<any, any>{
 
         const res = await HomeRequest.getCategories();
 
+        console.log('ress', res)
+
         setTimeout(() => {
 
             this.setState({
