@@ -193,7 +193,7 @@ export default class ProfileScreen extends Component<any, State>{
 
         return (
             <ScrollView style={{ flex: 1 }}>
-                <View style={{margin: 10,  height:50}}>
+                {/* <View style={{margin: 10,  height:50}}>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <View style={{width: 60}}>
                             <FastImage source={user.avatar} style={styles.avatar}/>
@@ -203,8 +203,7 @@ export default class ProfileScreen extends Component<any, State>{
                             {this.state.hasCredit && <Text style={styles.balance}>Số dư: {numberFormat(this.state.credit)}</Text>}
                         </View>
                     </View>
-
-                </View>
+                </View> */}
                 <View style={styles.myOrders}>
                     <View style={{flexDirection: 'row', height:40}}>
                         <View style={{flex:1}}>

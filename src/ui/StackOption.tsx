@@ -7,6 +7,7 @@ import React from "react";
 import Location from "./Location";
 import ConfigStore from "../store/ConfigStore";
 import NotificationBadge from "./NotificationBadge";
+
 export function StackOption(title: string, headerLeft = true, headerRight = true, props? : object) {
     return {
         title: title,

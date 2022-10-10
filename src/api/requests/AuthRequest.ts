@@ -23,8 +23,12 @@ export class AuthRequest extends BaseRequest {
         return super.dispatch('forgot', email)
     }
 
-    async login(email: string, password: string): Promise<LoginResponse> {
-        return super.dispatch('login', email, password)
+    // async login(email: string, password: string): Promise<LoginResponse> {
+    //     return super.dispatch('login', email, password)
+    // }
+
+    async login(deviceId: string): Promise<LoginResponse> {
+        return super.dispatch('login', deviceId)
     }
 
     async register(params: RegisterPayload): Promise<LoginResponse> {

@@ -27,6 +27,7 @@ interface State {
 
 export default class ProductItem extends Component<Props, State>{
     private activePrice: number;
+    
     constructor(props: any) {
         super(props);
         props.ProductItem.packs.forEach((item: Pack, index: number) => {

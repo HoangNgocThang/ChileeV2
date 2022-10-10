@@ -1,22 +1,13 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
 import 'react-native-gesture-handler';
-import {StyleSheet, Text, View, YellowBox ,Linking, Platform} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import React, {Component} from 'react';
+import { StyleSheet, Text, View, YellowBox, Linking, Platform } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import React, { Component } from 'react';
 
-import {Colors,} from 'react-native/Libraries/NewAppScreen';
-
+import { Colors, } from 'react-native/Libraries/NewAppScreen';
+// @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {createStackNavigator} from '@react-navigation/stack';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeStack from './navigation/HomeStack'
 import CartStack from './navigation/CartStack'
 import ProductStack from './navigation/ProductStack'
@@ -25,14 +16,21 @@ import GroupBuyStack from './navigation/GroupBuyStack'
 import config from "./config";
 import CartBadge from "./ui/CartBadge";
 import Spinner from "./ui/Spinner";
-import {getRemoteConfig} from "./utils";
+import { getRemoteConfig } from "./utils";
 import CartStore from "./store/CartStore";
-import {navigationRef} from './navigation/RootNavigation';
-import {navigate} from "./navigation/RootNavigation";
-import {fcm} from "./native/MrBen";
+import { navigationRef } from './navigation/RootNavigation';
+import { navigate } from "./navigation/RootNavigation";
+import { fcm } from "./native/MrBen";
+import { getDeviceId, getUniqueId } from 'react-native-device-info'
+import AuthRequest from './api/requests/AuthRequest';
+import { $alert } from './ui/Alert';
+import storage from './utils/storage';
+import { CommonActions } from "@react-navigation/native";
+import NotiScreen from './screens/NotiScreen';
+import NotiStack from './navigation/NotiStack';
 
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
-declare var global: {HermesInternal: null | {}};
+declare var global: { HermesInternal: null | {} };
 
 if (!config.secondaryColor) {
     config.secondaryColor = '#c0576a';
@@ -55,15 +53,16 @@ const Tab = createBottomTabNavigator();
 
 
 
-const Stack = createStackNavigator();
-function MyTabs(props) {
+const Stack = createStackNavigator()
+    ;
+function MyTabs(props: any) {
 
-  return (
-      <Tab.Navigator tabBarOptions={{
-          activeTintColor: config.secondaryColor,
-          allowFontScaling: false,
-      }}>
-          {/* <Tab.Screen
+    return (
+        <Tab.Navigator tabBarOptions={{
+            activeTintColor: config.secondaryColor,
+            allowFontScaling: false,
+        }}>
+            {/* <Tab.Screen
               name="HomeScreen"
               component={HomeStack}
               options={{
@@ -73,70 +72,104 @@ function MyTabs(props) {
                   ),
               }}
           /> */}
-          <Tab.Screen
-              name="ProductsScreen"
-              component={ProductStack}
-              options={{
-                  tabBarLabel: 'Danh mục',
-                  tabBarIcon: ({ color, size }) => (
-                      <MaterialCommunityIcons name="border-all" color={color} size={size} />
-                  ),
-              }}
-          />
-          {/*{!!props.showBuyShare && <Tab.Screen*/}
-              {/*name="GroupScreen"*/}
-              {/*component={GroupBuyStack}*/}
-              {/*options={{*/}
-                  {/*tabBarLabel: 'Mua chung',*/}
-                  {/*tabBarIcon: ({ color, size }) => (*/}
-                      {/*<MaterialCommunityIcons name="account-group" color={color} size={size} />*/}
-                  {/*),*/}
-              {/*}}*/}
-          {/*/>}*/}
-          <Tab.Screen
-              name="CartScreen"
-              component={CartStack}
-              options={{
-                  tabBarLabel: 'Giỏ hàng',
-                  tabBarIcon: ({ color, size }) => {
-                      return <View>
-                          <CartBadge name={'tab1'} count={CartStore.count()}/>
-                          <MaterialCommunityIcons name="cart" color={color} size={size} />
-                      </View>
-                  },
-              }}
-          />
-          <Tab.Screen
-              name="ProfileScreen"
-              component={ProfileStack}
-              options={{
-                  tabBarLabel: 'Thông tin',
-                  tabBarIcon: ({ color, size }) => (
-                      <MaterialCommunityIcons name="account" color={color} size={size} />
-                  ),
-              }}
-          />
-      </Tab.Navigator>
-  );
+            <Tab.Screen
+                name="ProductsScreen"
+                component={ProductStack}
+                options={{
+                    tabBarLabel: 'Danh mục',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="border-all" color={color} size={size} />
+                    ),
+                }}
+            />
+            {/*{!!props.showBuyShare && <Tab.Screen*/}
+            {/*name="GroupScreen"*/}
+            {/*component={GroupBuyStack}*/}
+            {/*options={{*/}
+            {/*tabBarLabel: 'Mua chung',*/}
+            {/*tabBarIcon: ({ color, size }) => (*/}
+            {/*<MaterialCommunityIcons name="account-group" color={color} size={size} />*/}
+            {/*),*/}
+            {/*}}*/}
+            {/*/>}*/}
+            <Tab.Screen
+                name="CartScreen"
+                component={CartStack}
+                options={{
+                    tabBarLabel: 'Giỏ hàng',
+                    tabBarIcon: ({ color, size }) => {
+                        return <View>
+                            <CartBadge name={'tab1'} count={CartStore.count()} />
+                            <MaterialCommunityIcons name="cart" color={color} size={size} />
+                        </View>
+                    },
+                }}
+            />
+            <Tab.Screen
+                name="NotiScreen"
+                component={NotiStack}
+                options={{
+                    tabBarLabel: 'Thông báo',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="bell-outline" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="ProfileScreen"
+                component={ProfileStack}
+                options={{
+                    tabBarLabel: 'Thông tin',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size} />
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+    );
 }
 interface State {
     isLoading: boolean
 }
-class App extends Component<any,State>{
+class App extends Component<any, State>{
     private appConfig: any;
-    constructor(props:any) {
+    constructor(props: any) {
         super(props);
         this.state = {
             isLoading: true
         }
     }
 
+    onLoginSucceed = () => {
+        CartStore.clear();
+        // this.props.navigation.dispatch(
+        //     CommonActions.reset({
+        //         index: 0,
+        //         routes: [
+        //             { name: 'ProfileScreen' },
+        //         ],
+        //     })
+        // );
+    };
+
     _init = async () => {
         this.appConfig = await getRemoteConfig();
-        this.setState({isLoading: false})
+        // const res1 = await getDeviceId()
+        const res2 = await getUniqueId()
+        console.log("pppp111", res2)
+        const loginRes = await AuthRequest.login(res2);
+        console.log("pppp3333", loginRes)
+        if (loginRes.err_code !== 0) {
+            $alert(loginRes.message);
+        } else {
+            await storage.setAuth(loginRes);
+            this.onLoginSucceed();
+        }
+        this.setState({ isLoading: false })
     }
-    handleDeepLink = (link:any) => {
-        if (! link.url) {
+
+    handleDeepLink = (link: any) => {
+        if (!link.url) {
             return;
         }
         let scheme = 'cluxapp://';
@@ -158,7 +191,7 @@ class App extends Component<any,State>{
 
             if (routeName) {
                 setTimeout(() => {
-                    navigate(routeName, {id})
+                    navigate(routeName, { id })
                 }, 500)
             }
         }
@@ -168,68 +201,67 @@ class App extends Component<any,State>{
         this._init();
         Linking.addEventListener('url', this.handleDeepLink);
 
-       /* fcm.getToken().then((token: string) => {
-            console.log('FCM_Toen=' + token);
-        });
-
-        fcm.onMessageReceived((data: any) => {
-            console.log('onMessageReceived', data);
-        });
-
-        fcm.getInitialMessage().then((data:any) => {
-            console.log({initialMessage: data});
-        })*/
+        /* fcm.getToken().then((token: string) => {
+             console.log('FCM_Toen=' + token);
+         });
+ 
+         fcm.onMessageReceived((data: any) => {
+             console.log('onMessageReceived', data);
+         });
+ 
+         fcm.getInitialMessage().then((data:any) => {
+             console.log({initialMessage: data});
+         })*/
 
     }
 
-    render(){
+    render() {
         if (this.state.isLoading) {
-            return <Spinner/>
+            return <Spinner />
         }
         return <NavigationContainer ref={navigationRef} >
-
-            <  MyTabs showBuyShare={this.appConfig.showBuyShare}/>
+            <MyTabs showBuyShare={this.appConfig.showBuyShare} />
         </NavigationContainer>
     }
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+    scrollView: {
+        backgroundColor: Colors.lighter,
+    },
+    engine: {
+        position: 'absolute',
+        right: 0,
+    },
+    body: {
+        backgroundColor: Colors.white,
+    },
+    sectionContainer: {
+        marginTop: 32,
+        paddingHorizontal: 24,
+    },
+    sectionTitle: {
+        fontSize: 24,
+        fontWeight: '600',
+        color: Colors.black,
+    },
+    sectionDescription: {
+        marginTop: 8,
+        fontSize: 18,
+        fontWeight: '400',
+        color: Colors.dark,
+    },
+    highlight: {
+        fontWeight: '700',
+    },
+    footer: {
+        color: Colors.dark,
+        fontSize: 12,
+        fontWeight: '600',
+        padding: 4,
+        paddingRight: 12,
+        textAlign: 'right',
+    },
 });
 
 export default App;
