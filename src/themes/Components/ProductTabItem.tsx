@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {FlatList, Text, View, ScrollView, StyleSheet, ActivityIndicator} from "react-native";
+import React, { Component } from 'react';
+import { FlatList, Text, View, StyleSheet, ActivityIndicator } from "react-native";
 import XSpinner from "react-native-spinkit";
 import CategoryRequest from "../../api/requests/CategoryRequest";
 import config from "../../config";
 import ProductItem from "../../themes/Components/ProductItem";
-import {debounce} from "../../utils";
+import { debounce } from "../../utils";
 
 interface Props {
     id: number
@@ -19,7 +19,9 @@ interface State {
 }
 
 export default class ProductTabItem extends Component<Props, State>{
+
     page: number = 0;
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -31,9 +33,9 @@ export default class ProductTabItem extends Component<Props, State>{
     }
 
     onLoad = debounce(async () => {
-        const {id} = this.props;
-        const {listItem} = this.state;
-        const products = await CategoryRequest.getProducts(id, {page: this.page + 1, limit: 10});
+        const { id } = this.props;
+        const { listItem } = this.state;
+        const products = await CategoryRequest.getProducts(id, { page: this.page + 1, limit: 10 });
         if (products) {
             this.page += 1;
             this.setState({
@@ -49,7 +51,8 @@ export default class ProductTabItem extends Component<Props, State>{
         this.onLoad();
     }
 
-    renderItem = ({item, index}) => {
+    renderItem = (ele: any) => {
+        const { item, index } = ele;
         return (
             <ProductItem
                 ProductItem={item}
@@ -60,21 +63,21 @@ export default class ProductTabItem extends Component<Props, State>{
     }
 
     renderFooter = () => {
-        const {isLoadingMore} = this.state
-        if (isLoadingMore) return <ActivityIndicator color={config.secondaryColor} size={"small"}/>
+        const { isLoadingMore } = this.state
+        if (isLoadingMore) return <ActivityIndicator color={config.secondaryColor} size={"small"} />
         return null
     }
 
     renderContent = () => {
-        const {isLoading, listItem, hasNextPage} = this.state
+        const { isLoading, listItem, hasNextPage } = this.state
         if (isLoading) {
-            return <XSpinner style={{marginBottom: 50}} isVisible={true} size={60} type={'Circle'} color={config.secondaryColor}/>
+            return <XSpinner style={{ marginBottom: 50 }} isVisible={true} size={60} type={'Circle'} color={config.secondaryColor} />
         }
         if (listItem.length > 0) {
             return (
                 <FlatList
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{paddingBottom: 15}}
+                    contentContainerStyle={{ paddingBottom: 15 }}
                     style={styles.listWrapper}
                     data={listItem}
                     keyExtractor={(item, index) => item.id.toString()}
@@ -83,7 +86,7 @@ export default class ProductTabItem extends Component<Props, State>{
                     maxToRenderPerBatch={10}
                     onEndReached={() => {
                         if (hasNextPage) {
-                            this.setState({isLoadingMore: true})
+                            this.setState({ isLoadingMore: true })
                             this.onLoad()
                         }
                     }}
@@ -109,7 +112,7 @@ export default class ProductTabItem extends Component<Props, State>{
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f6f6fa", marginTop: 15},
-    listWrapper: {flex: 1, paddingHorizontal: 7.5, paddingTop: 7.5},
+    container: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#f6f6fa", marginTop: 15 },
+    listWrapper: { flex: 1, paddingHorizontal: 7.5, paddingTop: 7.5 },
     textWrapper: { flex: 1, alignItems: 'center', justifyContent: 'center' },
 })

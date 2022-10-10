@@ -1,22 +1,23 @@
-import React, {Component} from 'react';
-import {FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, { Component } from 'react';
+import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import config from "../config";
 import OrderItem from "../themes/Components/OrderItem"
 import platform from "../themes/Variables/platform";
+// @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from '../ui/Spinner';
 import InputText from "../ui/InputText";
-import {$alert, confirm} from "../ui/Alert";
+import { $alert, confirm } from "../ui/Alert";
 import messages from "../locale/messages";
 import CartStore from "../store/CartStore";
-import {debounce, getAuthSync, getRemoteConfigSync, isPhoneValid, isStrEmptyOrSpaces, numberFormat} from "../utils";
+import { debounce, getAuthSync, getRemoteConfigSync, isPhoneValid, isStrEmptyOrSpaces, numberFormat } from "../utils";
 import OrderRequest from "../api/requests/OrderRequest";
-import {Address} from "../api/interfaces";
-import {CommonActions} from '@react-navigation/native';
-import {navigate} from "../navigation/RootNavigation";
+import { Address } from "../api/interfaces";
+import { CommonActions } from '@react-navigation/native';
+import { navigate } from "../navigation/RootNavigation";
 import DatePickerCheckout from "../ui/DatePickerCheckout";
-import {RadioButton} from "../ui/RadioButton";
-import {CheckBox} from "../ui/CheckBox";
+import { RadioButton } from "../ui/RadioButton";
+import { CheckBox } from "../ui/CheckBox";
 import TimePickerCheckout from "../ui/TimePickerCheckout";
 import storage from "../utils/storage";
 const BOOK_TIME_NONE = 0;
@@ -25,6 +26,7 @@ const BOOK_TIME_ANY = 2;
 const BOOK_TIME_ANY_DATE = 3;
 
 export default class CheckoutScreen extends Component<any, any>{
+
     private shipFee: number = 0;
     private fastShipFee: number = 0;
     private address: Address;
@@ -36,7 +38,7 @@ export default class CheckoutScreen extends Component<any, any>{
     private buyerPhone = '';
     private buyerPhone2 = '';
     private paymentMethod = 0;
-    private listener:any;
+    private listener: any;
 
 
     private receiptType = 1;
@@ -47,7 +49,7 @@ export default class CheckoutScreen extends Component<any, any>{
             $alert(messages.defaultAddrAlert);
             return;
         }
-        this.address= props.route.params.address;
+        this.address = props.route.params.address;
         if (!this.address) {
             $alert(messages.defaultAddrAlert);
             return;
@@ -65,7 +67,7 @@ export default class CheckoutScreen extends Component<any, any>{
             items: [],
             chooseTime: true,
             allowBookingTime: BOOK_TIME_NONE,
-            orderType:0,//0=mua cho chính mình,1=tặng người khác,
+            orderType: 0,//0=mua cho chính mình,1=tặng người khác,
             fastShipping: true,
             allowFastShipping: false,
             fastShipping: false,
@@ -91,7 +93,7 @@ export default class CheckoutScreen extends Component<any, any>{
         //this.state.items = res.items;
 
         const feeData = res.fee;
-        this.setState({allowBookingTime: feeData.allowBookingTime});
+        this.setState({ allowBookingTime: feeData.allowBookingTime });
         this.shipFee = feeData.shipFee;
         this.fastShipFee = feeData.fastShipFee;
         this.fastShippingNote = feeData.fastShippingNote;
@@ -133,7 +135,7 @@ export default class CheckoutScreen extends Component<any, any>{
         const shortItems = this.state.items.map(item => {
             //console.log(item);
             return {
-                product: {id: item.product.id},
+                product: { id: item.product.id },
                 pack: item.pack,
                 quantity: item.quantity,
                 price: item.price
@@ -144,12 +146,12 @@ export default class CheckoutScreen extends Component<any, any>{
             note: this.note || '',
             addressId: this.address.id,
             items: shortItems,
-            amount:  this.state.amount,
+            amount: this.state.amount,
             amountTotal: this.state.amount + this.shipFee,
             receipt_type: this.receiptType,
             receipt_date: '',
             order_type: this.address.type,
-            fast_shipping: this.state.fastShipping ? 1: 0,
+            fast_shipping: this.state.fastShipping ? 1 : 0,
             buyer_name: this.address.buyer_name,
             buyer_phone: this.address.buyer_phone,
             buyer_phone2: this.address.buyer_phone2,
@@ -158,10 +160,10 @@ export default class CheckoutScreen extends Component<any, any>{
         };
 
         if (this.date.length > 4) {
-            params.receipt_date =  this.date ;
+            params.receipt_date = this.date;
         }
         if (this.time.length > 3) {
-            params.receipt_date +=  ' ' + this.time;
+            params.receipt_date += ' ' + this.time;
         }
 
         return params;
@@ -189,14 +191,13 @@ export default class CheckoutScreen extends Component<any, any>{
                 return;
             }
         }
-        this.setState({isLoading: true});
+        this.setState({ isLoading: true });
 
         const res = await OrderRequest.createV4(this.getOrderParams());
         setTimeout(() => {
-            this.setState({isLoading: false});
+            this.setState({ isLoading: false });
             CartStore.clear();
             if (res.err_code === 0) {
-
                 this.props.navigation.dispatch(
                     CommonActions.reset({
                         index: 0,
@@ -205,7 +206,7 @@ export default class CheckoutScreen extends Component<any, any>{
                         ],
                     })
                 );
-                navigate('CheckoutSucceedScreen', {orderCode: res.orderCode})
+                navigate('CheckoutSucceedScreen', { orderCode: res.orderCode })
             } else {
                 $alert(res.message);
             }
@@ -220,49 +221,49 @@ export default class CheckoutScreen extends Component<any, any>{
         return <View>
             <InputText
                 placeholder={"Tên người mua"}
-                onChangeText={(text) => {this.buyerName = text;}}
+                onChangeText={(text) => { this.buyerName = text; }}
                 placeholdercolor={"#a0a0a0"}
-                style={{fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000"}}
+                style={{ fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000" }}
                 showplaceholder={true}
             />
-            <View style={{flex:1, borderBottomWidth: 1,borderColor: '#ccc'}}/>
+            <View style={{ flex: 1, borderBottomWidth: 1, borderColor: '#ccc' }} />
             <InputText
                 placeholder={"SĐT người mua"}
 
-                onChangeText={(text) => {this.buyerPhone = text;}}
+                onChangeText={(text) => { this.buyerPhone = text; }}
                 placeholdercolor={"#a0a0a0"}
-                style={{fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000"}}
+                style={{ fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000" }}
                 showplaceholder={true}
             />
-            <View style={{flex:1, borderBottomWidth: 1,borderColor: '#ccc'}}/>
+            <View style={{ flex: 1, borderBottomWidth: 1, borderColor: '#ccc' }} />
             <InputText
                 placeholder={"SĐT khác"}
 
-                onChangeText={(text) => {this.buyerPhone2 = text;}}
+                onChangeText={(text) => { this.buyerPhone2 = text; }}
                 placeholdercolor={"#a0a0a0"}
-                style={{fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000"}}
+                style={{ fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000" }}
                 showplaceholder={true}
             />
-            <View style={{flex:1, borderBottomWidth: 1,borderColor: '#ccc'}}/>
+            <View style={{ flex: 1, borderBottomWidth: 1, borderColor: '#ccc' }} />
         </View>
     }
 
     onPayNow = (value: any) => {
         this.paymentMethod = value.id;
-        if (value.id == 1)  {
+        if (value.id == 1) {
             if (this.state.amountTotal <= 0) {
                 return;
             }
 
             if (this.state.currentCredit < this.state.amountTotal) {
-                let missed = this.state.amountTotal - this.state.currentCredit  ;
+                let missed = this.state.amountTotal - this.state.currentCredit;
                 confirm(`Tài khoản của bạn không đủ. Bạn cần nạp thêm: ${numberFormat(missed)}. Ấn OK để tiếp tục`,
-                    async (ok:boolean) => {
-                    if (ok) {
-                        const auth = await storage.getAuth();
-                        this.props.navigation.navigate('PaymentScreen', {auth, amount: missed})
-                    }
-                })
+                    async (ok: boolean) => {
+                        if (ok) {
+                            const auth = await storage.getAuth();
+                            this.props.navigation.navigate('PaymentScreen', { auth, amount: missed })
+                        }
+                    })
             }
 
         }
@@ -281,7 +282,7 @@ export default class CheckoutScreen extends Component<any, any>{
         const paymentEnabled = getRemoteConfigSync().payment.show;
         return (
             <View style={styles.container}>
-                {this.state.isLoading && <Spinner/>}
+                {this.state.isLoading && <Spinner />}
                 <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
 
                     <View style={styles.firstCard}>
@@ -292,12 +293,12 @@ export default class CheckoutScreen extends Component<any, any>{
                             <Text style={styles.cardTitle}>Địa chỉ người nhận</Text>
                         </View>
                         <View style={styles.cardRight}>
-                            <View style={{width: 30}}/>
-                            <View style={{flex: 1, paddingLeft: 15}}>
+                            <View style={{ width: 30 }} />
+                            <View style={{ flex: 1, paddingLeft: 15 }}>
                                 <Text style={styles.addrInfo}>{this.address.name}</Text>
                                 <Text style={styles.addrInfo}>{this.address.decoded}</Text>
                                 <Text style={styles.addrInfo}>{phone}</Text>
-                                {this.address.type==1 && <View>
+                                {this.address.type == 1 && <View>
                                     <Text>Người mua</Text>
                                     <Text style={styles.addrInfo}>{this.address.buyer_name + ' - ' + buyerPhone}</Text>
                                 </View>}
@@ -308,12 +309,12 @@ export default class CheckoutScreen extends Component<any, any>{
                         <InputText
                             placeholder={"Ghi chú cho người bán"}
 
-                            onChangeText={(text) => {this.note = text;}}
+                            onChangeText={(text) => { this.note = text; }}
                             placeholdercolor={"#a0a0a0"}
-                            style={{fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000"}}
+                            style={{ fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000" }}
                             showplaceholder={true}
                         />
-                        <View style={{width: "100%", height: 1, backgroundColor: "#a0a0a0"}}/>
+                        <View style={{ width: "100%", height: 1, backgroundColor: "#a0a0a0" }} />
                     </View>
 
                     <View style={styles.secondCard}>
@@ -326,28 +327,28 @@ export default class CheckoutScreen extends Component<any, any>{
                         {paymentEnabled && <View style={styles.cardLeft}>
 
                             <Text style={styles.cardTitle9}>Số dư: {numberFormat(this.state.currentCredit)}</Text>
-                            <View style={{backgroundColor: config.secondaryColor, borderRadius: 5}}>
+                            <View style={{ backgroundColor: config.secondaryColor, borderRadius: 5 }}>
                                 <TouchableOpacity
                                     onPress={async () => {
                                         const auth = await storage.getAuth();
-                                        this.props.navigation.navigate('PaymentScreen', {auth})
+                                        this.props.navigation.navigate('PaymentScreen', { auth })
                                     }}
                                     style={styles.chargeBtn}>
-                                    <Text style={{color: '#fff'}}>
-                                        <MaterialCommunityIcons name="currency-usd" color={"#fff"} size={14}/>
+                                    <Text style={{ color: '#fff' }}>
+                                        <MaterialCommunityIcons name="currency-usd" color={"#fff"} size={14} />
                                         Nạp tiền</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>}
                         <View style={styles.cardRight}>
                             {paymentEnabled ? <RadioButton value={this.paymentMethod} onChange={this.onPayNow} items={[
-                                {id: '0', label: 'Thanh toán khi nhận hàng'},
-                                {id: '1', label: 'Thanh toán ngay'}
-                            ]}/> : <Text>Thanh toán khi nhận hàng</Text>}
+                                { id: '0', label: 'Thanh toán khi nhận hàng' },
+                                { id: '1', label: 'Thanh toán ngay' }
+                            ]} /> : <Text>Thanh toán khi nhận hàng</Text>}
 
                         </View>
                     </View>
-                    {!! this.state.shipmentNote && <View style={styles.secondCard}>
+                    {!!this.state.shipmentNote && <View style={styles.secondCard}>
 
                         <View style={styles.cardLeft}>
                             <View style={styles.cardIcon}>
@@ -356,12 +357,12 @@ export default class CheckoutScreen extends Component<any, any>{
                             <Text style={styles.cardTitle}>Ghi chú vận chuyển</Text>
                         </View>
                         <View style={styles.cardRight}>
-                            <View style={{width: 30}}/>
+                            <View style={{ width: 30 }} />
                             <Text style={styles.cardText}>{this.state.shipmentNote}</Text>
                         </View>
                     </View>}
                     <View style={styles.thirdCard}>
-                        <View style={[styles.cardLeft,{paddingVertical: 10}]}>
+                        <View style={[styles.cardLeft, { paddingVertical: 10 }]}>
                             <View style={styles.cardIcon}>
                                 <MaterialCommunityIcons name="package-variant-closed" color={"#000000"} size={24} />
                             </View>
@@ -377,19 +378,19 @@ export default class CheckoutScreen extends Component<any, any>{
                         })}
 
                     </View>
-                    {this.state.allowBookingTime>0 &&
+                    {this.state.allowBookingTime > 0 &&
                         <View style={styles.secondCard}>
-                            <DatePickerCheckout onConfrim={this.confirmDate}/>
+                            <DatePickerCheckout onConfrim={this.confirmDate} />
 
                         </View>}
-                    {this.state.allowBookingTime===BOOK_TIME_ANY &&
+                    {this.state.allowBookingTime === BOOK_TIME_ANY &&
                         <View style={styles.secondCard}>
-                            <TimePickerCheckout onConfirm={this.confirmTime}/>
+                            <TimePickerCheckout onConfirm={this.confirmTime} />
 
                         </View>
                     }
                     {
-                        this.state.allowBookingTime ===BOOK_TIME_OPTION &&
+                        this.state.allowBookingTime === BOOK_TIME_OPTION &&
                         <View style={styles.secondCard}>
                             <View style={styles.cardLeft}>
                                 <View style={styles.cardIcon}>
@@ -397,20 +398,20 @@ export default class CheckoutScreen extends Component<any, any>{
                                 </View>
                                 <Text style={styles.cardTitle}>Tùy chọn nhận hàng</Text>
                             </View>
-                            <View style={{paddingTop: 5}}>
+                            <View style={{ paddingTop: 5 }}>
                                 <RadioButton
                                     paddingVertical={5}
                                     value={1}
-                                    onChange={(value) => {this.onChangeReceiptOption(value)}}
-                                    items={[{id: 1, label: 'Trong giờ hành chính'}, {id: 2, label: 'Ngoài giờ hành chính'}]}
-                                    label={'giờ hành chính'} selected={true}/>
+                                    onChange={(value) => { this.onChangeReceiptOption(value) }}
+                                    items={[{ id: 1, label: 'Trong giờ hành chính' }, { id: 2, label: 'Ngoài giờ hành chính' }]}
+                                    label={'giờ hành chính'} selected={true} />
 
                             </View>
                         </View>
                     }
                     {this.state.allowFastShipping && <View style={styles.secondCard}>
 
-                        <View style={{paddingTop: 5}}>
+                        <View style={{ paddingTop: 5 }}>
                             <CheckBox
                                 paddingVertical={5}
                                 checked={false}
@@ -419,14 +420,14 @@ export default class CheckoutScreen extends Component<any, any>{
                                     let amountTotal = 0;
                                     const amount = this.calculateAmount(this.state.items);
                                     if (this.fastShipping) {
-                                       amountTotal = amount + this.shipFee + this.fastShipFee;
+                                        amountTotal = amount + this.shipFee + this.fastShipFee;
                                     } else {
                                         amountTotal = amount + this.shipFee;
                                     }
-                                    this.setState({amountTotal: amountTotal, fastShipping: value})
+                                    this.setState({ amountTotal: amountTotal, fastShipping: value })
                                 }}
-                                items={[{id: 1, label: this.fastShippingNote}]}
-                                label={'giờ hành chính'} selected={true}/>
+                                items={[{ id: 1, label: this.fastShippingNote }]}
+                                label={'giờ hành chính'} selected={true} />
 
                         </View>
                     </View>
@@ -439,8 +440,8 @@ export default class CheckoutScreen extends Component<any, any>{
                             <Text style={styles.cardTitle}>Thông tin thanh toán</Text>
                         </View>
                         <View style={styles.cardRight}>
-                            <View style={{width: 30}}/>
-                            <View style={{flex: 1, paddingLeft: 15}}>
+                            <View style={{ width: 30 }} />
+                            <View style={{ flex: 1, paddingLeft: 15 }}>
                                 <View style={styles.rowInfo}>
                                     <Text style={styles.titleInfo}>Tổng tiền sản phẩm</Text>
                                     <Text style={styles.textInfo}>{numberFormat(this.state.amount)}</Text>
@@ -456,7 +457,7 @@ export default class CheckoutScreen extends Component<any, any>{
                                 <View style={styles.rowInfo}>
                                     <Text style={styles.titleInfo}>Phí giao hàng nhanh</Text>
                                     <Text style={styles.textInfo}>
-                                        {numberFormat(this.state.fastShipping?this.fastShipFee:0)}
+                                        {numberFormat(this.state.fastShipping ? this.fastShipFee : 0)}
                                     </Text>
                                 </View>
                                 <View style={styles.rowInfo}>
@@ -471,21 +472,19 @@ export default class CheckoutScreen extends Component<any, any>{
                 <View style={styles.footer}>
 
 
-                        <View style={styles.footerLeft}>
-                            <Text style={styles.footerTitle}>Cần Thanh Toán</Text>
-                            <Text style={styles.footerText}>
-                                {this.state.amountOrigin > this.state.amountTotal &&
-                                    <Text style={styles.textAmountOrigin}>
+                    <View style={styles.footerLeft}>
+                        <Text style={styles.footerTitle}>Cần Thanh Toán</Text>
+                        <Text style={styles.footerText}>
+                            {this.state.amountOrigin > this.state.amountTotal &&
+                                <Text style={styles.textAmountOrigin}>
                                     {numberFormat(this.state.amountOrigin)}
-                                    </Text>
+                                </Text>
 
-                                }
+                            }
 
-                                {' ' +numberFormat(this.state.amountTotal)}
-                            </Text>
-                        </View>
-
-
+                            {' ' + numberFormat(this.state.amountTotal)}
+                        </Text>
+                    </View>
                     <TouchableOpacity style={styles.footerRight} onPress={this.checkOut}>
                         <Text style={styles.footerBtnText}>Đặt hàng</Text>
                     </TouchableOpacity>
@@ -496,29 +495,29 @@ export default class CheckoutScreen extends Component<any, any>{
 }
 
 const styles = StyleSheet.create({
-    addrInfo: {fontSize: 15, color: "#a0a0a0", marginTop: 2},
-    container: { flex: 1, alignItems: 'center'},
-    scroll: {flex: 1, backgroundColor: "#f6f6fa"},
-    firstCard: {backgroundColor: "#fff", width: platform.deviceWidth, paddingVertical: 10, paddingHorizontal: 15},
-    secondCard: {backgroundColor: "#fff", width: platform.deviceWidth, paddingVertical: 10, marginTop: 5, paddingHorizontal: 15},
-    thirdCard: {backgroundColor: "#fff", width: platform.deviceWidth, marginTop: 5, paddingHorizontal: 15},
-    cardTitle: {fontSize: 16, color: "#000000", flex: 1, paddingVertical: 0, fontWeight: "500", paddingLeft: 15},
-    cardTitle9: {fontSize: 17, color: config.secondaryColor, flex: 1, paddingVertical: 0, fontWeight: "500", paddingLeft: 15},
-    cardText: {fontSize: 15, color: "#a0a0a0", paddingVertical: 0, paddingLeft: 15, flex: 1},
-    footer: {backgroundColor: "#fff", flexDirection: "row", alignItems: "center", paddingHorizontal: 15, paddingVertical: 10, borderTopWidth: 0.5, borderColor: "#a0a0a0"},
-    rowInfo: {flexDirection: "row", alignItems: "center", marginTop: 2},
-    titleInfo: {fontSize: 15, color: "#a0a0a0"},
-    textInfo: {fontSize: 15, color: "#a0a0a0", paddingLeft: 5, flex: 1, textAlign: "right"},
-    titleInfo2: {fontSize: 15, color: "#000000", fontWeight: "500"},
-    textInfo2: {fontSize: 15, color: config.secondaryColor, fontWeight: "500", paddingLeft: 5, flex: 1, textAlign: "right"},
-    cardLeft: {flexDirection: "row", alignItems: "center"},
-    cardRight: {flexDirection: "row"},
-    cardIcon: {width: 30, alignItems: "center"},
-    footerLeft: {flex: 1},
-    footerRight: {backgroundColor: config.secondaryColor, borderRadius: 5},
-    footerTitle: {fontSize: 15, color: "#a0a0a0", fontWeight: "500"},
-    footerText: {fontSize: 18, color: config.secondaryColor, marginTop: 2},
-    footerBtnText: {paddingVertical: 7.5, paddingHorizontal: 10, fontSize: 18, color: "#fff"},
-    chargeBtn: {paddingVertical:2, paddingHorizontal: 10, fontSize: 18, color: "#fff"},
-    textAmountOrigin: {fontSize: 16, color: 'gray', textDecorationLine: "line-through", marginRight: 5},
+    addrInfo: { fontSize: 15, color: "#a0a0a0", marginTop: 2 },
+    container: { flex: 1, alignItems: 'center' },
+    scroll: { flex: 1, backgroundColor: "#f6f6fa" },
+    firstCard: { backgroundColor: "#fff", width: platform.deviceWidth, paddingVertical: 10, paddingHorizontal: 15 },
+    secondCard: { backgroundColor: "#fff", width: platform.deviceWidth, paddingVertical: 10, marginTop: 5, paddingHorizontal: 15 },
+    thirdCard: { backgroundColor: "#fff", width: platform.deviceWidth, marginTop: 5, paddingHorizontal: 15 },
+    cardTitle: { fontSize: 16, color: "#000000", flex: 1, paddingVertical: 0, fontWeight: "500", paddingLeft: 15 },
+    cardTitle9: { fontSize: 17, color: config.secondaryColor, flex: 1, paddingVertical: 0, fontWeight: "500", paddingLeft: 15 },
+    cardText: { fontSize: 15, color: "#a0a0a0", paddingVertical: 0, paddingLeft: 15, flex: 1 },
+    footer: { backgroundColor: "#fff", flexDirection: "row", alignItems: "center", paddingHorizontal: 15, paddingVertical: 10, borderTopWidth: 0.5, borderColor: "#a0a0a0" },
+    rowInfo: { flexDirection: "row", alignItems: "center", marginTop: 2 },
+    titleInfo: { fontSize: 15, color: "#a0a0a0" },
+    textInfo: { fontSize: 15, color: "#a0a0a0", paddingLeft: 5, flex: 1, textAlign: "right" },
+    titleInfo2: { fontSize: 15, color: "#000000", fontWeight: "500" },
+    textInfo2: { fontSize: 15, color: config.secondaryColor, fontWeight: "500", paddingLeft: 5, flex: 1, textAlign: "right" },
+    cardLeft: { flexDirection: "row", alignItems: "center" },
+    cardRight: { flexDirection: "row" },
+    cardIcon: { width: 30, alignItems: "center" },
+    footerLeft: { flex: 1 },
+    footerRight: { backgroundColor: config.secondaryColor, borderRadius: 5 },
+    footerTitle: { fontSize: 15, color: "#a0a0a0", fontWeight: "500" },
+    footerText: { fontSize: 18, color: config.secondaryColor, marginTop: 2 },
+    footerBtnText: { paddingVertical: 7.5, paddingHorizontal: 10, fontSize: 18, color: "#fff" },
+    chargeBtn: { paddingVertical: 2, paddingHorizontal: 10, fontSize: 18, color: "#fff" },
+    textAmountOrigin: { fontSize: 16, color: 'gray', textDecorationLine: "line-through", marginRight: 5 },
 })

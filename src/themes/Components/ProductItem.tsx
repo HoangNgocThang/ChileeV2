@@ -4,6 +4,7 @@ import platform from "../Variables/platform";
 import { cloneObject, debounce, intVal, numberFormat } from "../../utils";
 import Image from 'react-native-fast-image'
 import config from "../../config";
+// @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CartRequest from "../../api/requests/CartRequest";
 import { $alert } from "../../ui/Alert";
@@ -13,11 +14,14 @@ import { navigate } from "../../navigation/RootNavigation";
 import { CartItem, Pack } from "../../api/interfaces";
 import CartStore from "../../store/CartStore";
 import ListProps from './ListProps';
+import ProductRequest from '../../api/requests/ProductRequest';
 
 const defaultWidth = platform.deviceWidth;
 
 interface Props {
-    ProductItem: any
+    index: number
+    ProductItem: any,
+    navigation: any
 }
 
 interface State {
@@ -26,8 +30,9 @@ interface State {
 }
 
 export default class ProductItem extends Component<Props, State>{
+
     private activePrice: number;
-    
+
     constructor(props: any) {
         super(props);
         props.ProductItem.packs.forEach((item: Pack, index: number) => {
@@ -42,15 +47,24 @@ export default class ProductItem extends Component<Props, State>{
         }
     }
 
+    componentDidMount() {
+        console.log('aaa111', this.props.ProductItem)
+    }
+
+    getProductPacks = async (id: number) => {
+        const res = await ProductRequest.getProductPacks(id)
+        console.log('ress' ,res)
+    }
+
     addToCart = async () => {
 
         const auth = await storage.getAuth();
-        if (!auth) {
-            $alert(messages.pleaseLogin, () => {
-                navigate('ProfileScreen');
-            });
-            return;
-        }
+        // if (!auth) {
+        //     $alert(messages.pleaseLogin, () => {
+        //         navigate('ProfileScreen');
+        //     });
+        //     return;
+        // }
 
         const product = this.props.ProductItem;
 
@@ -58,6 +72,8 @@ export default class ProductItem extends Component<Props, State>{
             $alert(messages.outOfQuantity);
             return;
         }
+
+        this.getProductPacks(product.id)
 
 
         const activePack = cloneObject(this.state.activePack);
@@ -128,7 +144,7 @@ export default class ProductItem extends Component<Props, State>{
         let { ProductItem } = this.props;
         const { quantity } = this.state
         return (
-            <View style={[styles.item, {flexDirection:'column'}]}>
+            <View style={[styles.item, { flexDirection: 'column' }]}>
                 <View style={styles.item}>
                     <TouchableOpacity
                         style={styles.imageWrapper}
