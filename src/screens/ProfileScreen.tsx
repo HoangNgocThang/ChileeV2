@@ -91,15 +91,16 @@ export default class ProfileScreen extends Component<any, State>{
 
                         this.props.navigation.navigate('AddressScreen')
                     }, show: true
-                },
-                {
-                    id: 'logout', icon: 'logout', text: 'Đăng xuất', action: async () => {
-                        setAuthSync(null);
-                        CartStore.clear();
-                        await storage.clearAuth();
-                        this.props.navigation.navigate('LoginScreen')
-                    }
                 }
+                // ,
+                // {
+                //     id: 'logout', icon: 'logout', text: 'Đăng xuất', action: async () => {
+                //         setAuthSync(null);
+                //         CartStore.clear();
+                //         await storage.clearAuth();
+                //         this.props.navigation.navigate('LoginScreen')
+                //     }
+                // }
             ];
             if (remoteConfig.payment.show) {
                 authenticatedMenu.push(...[
@@ -125,12 +126,12 @@ export default class ProfileScreen extends Component<any, State>{
         } else {
 
             menu = [
-                {id: 'login', icon: 'lock', text: 'Đăng nhập', action: () => {
-                        this.props.navigation.navigate('LoginScreen')
-                    }},
-                {id: 'register', icon: 'account', text: 'Đăng kí', action: () => {
-                        this.props.navigation.navigate('RegisterScreen')
-                    }}
+                // {id: 'login', icon: 'lock', text: 'Đăng nhập', action: () => {
+                //         this.props.navigation.navigate('LoginScreen')
+                //     }},
+                // {id: 'register', icon: 'account', text: 'Đăng kí', action: () => {
+                //         this.props.navigation.navigate('RegisterScreen')
+                //     }}
 
                 ,...menu];
         }

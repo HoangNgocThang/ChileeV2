@@ -192,9 +192,9 @@ export default class TabOrderHistory extends PureComponent<Props>{
                     :
                     <View style={styles.emptyWrapper}>
                         <Text style={styles.emptyText}>Chưa có đơn hàng</Text>
-                        <TouchableOpacity style={styles.emptyButton} onPress={this.onNavigate}>
+                        {/* <TouchableOpacity style={styles.emptyButton} onPress={this.onNavigate}>
                             <Text style={styles.emptyButtonText}>Đặt hàng ngay</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
                 }
             </View>

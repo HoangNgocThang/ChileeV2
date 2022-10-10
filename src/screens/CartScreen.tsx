@@ -1,26 +1,18 @@
-import React, {Component} from 'react';
-import {
-    FlatList,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    KeyboardAvoidingView,
-    Platform
-} from "react-native";
+import React, { Component } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, KeyboardAvoidingView, Platform } from "react-native";
 import config from "../config";
 import CartItem from "../themes/Components/CartItem"
 import CartStore from "../store/CartStore";
-import {$alert, confirm} from "../ui/Alert";
+import { $alert, confirm } from "../ui/Alert";
 import messages from "../locale/messages";
-import {numberFormat} from "../utils";
+import { numberFormat } from "../utils";
 import Spinner from "../ui/Spinner";
-import ModalLocationOption from "../themes/Components/ModalLocationOption";
 
 export default class CartScreen extends Component<any, any>{
+
     private focusListener: any;
     private isCheckoutReady = false;
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -65,7 +57,7 @@ export default class CartScreen extends Component<any, any>{
     }
 
     quantityChanged = (amount, amountOrigin) => {
-        this.setState({amount, amountOrigin}, () => {
+        this.setState({ amount, amountOrigin }, () => {
             this.isCheckoutReady = true;
         })
     };
@@ -78,7 +70,7 @@ export default class CartScreen extends Component<any, any>{
                     const res = await CartStore.remove(item);
                     if (res.err_code === 0) {
                         this.state.items.splice(index, 1);
-                        this.setState({items: this.state.items, amount: res.amount});
+                        this.setState({ items: this.state.items, amount: res.amount });
                     } else {
                         $alert(res.message);
                     }
@@ -94,8 +86,7 @@ export default class CartScreen extends Component<any, any>{
             $alert('Bạn vui lòng đợi trong giây lát');
             return;
         }
-
-        this.props.navigation.navigate("AddressScreen", {payment: true})
+        this.props.navigation.navigate("AddressScreen", { payment: true })
     }
 
     onNavigate = () => {
@@ -105,17 +96,17 @@ export default class CartScreen extends Component<any, any>{
     render() {
         if (this.state.isLoading) {
             return (
-                <View style={{flex:1, backgroundColor:'#fff'}}>
-                    <Spinner/>
+                <View style={{ flex: 1, backgroundColor: '#fff' }}>
+                    <Spinner />
                 </View>
             )
         }
         if (this.state.items.length === 0) {
-            return  <View style={styles.emptyWrapper}>
+            return <View style={styles.emptyWrapper}>
                 <Text>Bạn chưa có sản phẩm nào trong giỏ hàng</Text>
-                <TouchableOpacity style={styles.emptyButton} onPress={this.onNavigate}>
+                {/* <TouchableOpacity style={styles.emptyButton} onPress={this.onNavigate}>
                     <Text style={styles.emptyButtonText}>Đặt hàng ngay</Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
             </View>
         }
         const ios = Platform.OS === 'ios';
@@ -141,12 +132,12 @@ export default class CartScreen extends Component<any, any>{
                                     index={index}
                                     navigation={this.props.navigation}
                                 />
-                                )
+                            )
                         }}
                     />
                 </View>
                 <View style={styles.footer}>
-                    <View style={{flex: 1}}>
+                    <View style={{ flex: 1 }}>
                         <Text style={styles.titleMoney}>Tổng tiền</Text>
                         {
                             this.state.amount < this.state.amountOrigin
@@ -155,8 +146,8 @@ export default class CartScreen extends Component<any, any>{
                         }
                         <Text style={styles.textMoney}>{numberFormat(this.state.amount)}</Text>
                     </View>
-                    {this.state.items.length > 0 &&<TouchableOpacity style={styles.buttonPay}
-                                                                     onPress={() => this.pay()}>
+                    {this.state.items.length > 0 && <TouchableOpacity style={styles.buttonPay}
+                        onPress={() => this.pay()}>
                         <Text style={styles.btnText}>Tiến hành thanh toán</Text>
                     </TouchableOpacity>}
                 </View>
@@ -166,23 +157,23 @@ export default class CartScreen extends Component<any, any>{
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, alignItems: 'center'},
-    content: {flex: 1, paddingHorizontal: 15},
-    flatList: {flex: 1, paddingVertical: 5},
-    emptyWrapper: { flex: 1, alignItems: 'center', justifyContent: 'center'},
-    emptyText: {fontSize: 18, paddingVertical: 10},
+    container: { flex: 1, alignItems: 'center' },
+    content: { flex: 1, paddingHorizontal: 15 },
+    flatList: { flex: 1, paddingVertical: 5 },
+    emptyWrapper: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+    emptyText: { fontSize: 18, paddingVertical: 10 },
     emptyButton: {
         paddingVertical: 5, paddingHorizontal: 10, backgroundColor: config.secondaryColor,
         borderRadius: 5, marginTop: 20
     },
-    emptyButtonText: {fontSize: 18, color: "#fff"},
+    emptyButtonText: { fontSize: 18, color: "#fff" },
     footer: {
         backgroundColor: "#fff", flexDirection: "row", alignItems: "center",
         paddingHorizontal: 15, paddingVertical: 10
     },
-    buttonPay: {backgroundColor: config.secondaryColor, borderRadius: 5},
-    btnText: {paddingVertical: 7.5, paddingHorizontal: 10, fontSize: 18, color: "#fff"},
-    titleMoney: {fontSize: 15, color: "#a0a0a0", fontWeight: "500"},
-    textMoney: {fontSize: 18, color: config.secondaryColor, marginTop: 2},
-    textMoneyOrigin: {fontSize: 14, color: 'gray', marginTop: 2, textDecorationLine: "line-through"},
+    buttonPay: { backgroundColor: config.secondaryColor, borderRadius: 5 },
+    btnText: { paddingVertical: 7.5, paddingHorizontal: 10, fontSize: 18, color: "#fff" },
+    titleMoney: { fontSize: 15, color: "#a0a0a0", fontWeight: "500" },
+    textMoney: { fontSize: 18, color: config.secondaryColor, marginTop: 2 },
+    textMoneyOrigin: { fontSize: 14, color: 'gray', marginTop: 2, textDecorationLine: "line-through" },
 });
