@@ -2,13 +2,15 @@ import * as React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import config from '../../config';
 
+interface Props {
+    listData: Array<any>
+    onSelectPack: (item: any, index: number) => void
+}
+
+
 interface State {
     list: Array<any>
     listSelected: Array<any>
-}
-
-interface Props {
-    listData: Array<any>
 }
 
 class ListProps extends React.Component<Props, State>{
@@ -52,13 +54,13 @@ class ListProps extends React.Component<Props, State>{
         return (
             <View style={styles.container}>
                 {
-                    this.state.list.map(((e, i) => {
+                    this.props.listData.map(((e, i) => {
                         return (
                             <TouchableOpacity
-                                onPress={() => this.onClickItem(e, i)}
-                                key={`${e.value}`}
+                                onPress={() => this.props.onSelectPack(e, i)}
+                                key={`${e.id}`}
                                 style={e.selected ? styles.itemSelected : styles.item}>
-                                <Text style={e.selected ? styles.textItemSelected : styles.textItem}>{e.title}</Text>
+                                <Text style={e.selected ? styles.textItemSelected : styles.textItem}>{e.name}</Text>
                             </TouchableOpacity>
                         )
                     }))

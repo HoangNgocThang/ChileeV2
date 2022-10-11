@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { Text, View, TouchableOpacity, Button, StyleSheet, TextInput } from "react-native";
+import { Text, View, TouchableOpacity, Button, StyleSheet, TextInput, Alert } from "react-native";
 import platform from "../Variables/platform";
 import { cloneObject, debounce, intVal, numberFormat } from "../../utils";
 import Image from 'react-native-fast-image'
@@ -27,11 +27,13 @@ interface Props {
 interface State {
     quantity: number
     activePack: Pack,
+    listDataPack: any[],
 }
 
 export default class ProductItem extends Component<Props, State>{
 
     private activePrice: number;
+    isShow = false;
 
     constructor(props: any) {
         super(props);
@@ -43,22 +45,44 @@ export default class ProductItem extends Component<Props, State>{
         this.activePrice = props.ProductItem.price;
         this.state = {
             quantity: 1,
-            activePack: defaultPack
+            activePack: defaultPack,
+            listDataPack: [],
         }
     }
 
-    componentDidMount() {
-        console.log('aaa111', this.props.ProductItem)
+    // componentDidMount() {
+    //     console.log('thang1tang1than1', this.props.ProductItem)
+    // }
+
+    onSelectPack = (item: any, index: number) => {
+        const newArr = this.state.listDataPack.map((e) => {
+            if (e.id == item.id) {
+                return { ...e, selected: true }
+            } else {
+                return { ...e, selected: false }
+            }
+        })
+        this.setState({
+            listDataPack: newArr
+        })
     }
 
-    getProductPacks = async (id: number) => {
-        const res = await ProductRequest.getProductPacks(id)
-        console.log('ress' ,res)
+    addCartBuyThangHN = async (item: any) => {
+        const res = await CartStore.add(item);
+        this.setState({
+          
+        }, () => {
+            setTimeout(() => {
+                $alert(res.message);
+            }, 200)
+        })
+
     }
 
     addToCart = async () => {
-
-        const auth = await storage.getAuth();
+        const { listDataPack } = this.state;
+        // auto login rồi nên k cần check nữa
+        // const auth = await storage.getAuth();
         // if (!auth) {
         //     $alert(messages.pleaseLogin, () => {
         //         navigate('ProfileScreen');
@@ -67,26 +91,64 @@ export default class ProductItem extends Component<Props, State>{
         // }
 
         const product = this.props.ProductItem;
-
         if (product.quantity < this.state.quantity) {
-            $alert(messages.outOfQuantity);
+            setTimeout(() => {
+                $alert(messages.outOfQuantity);
+            }, 200);
             return;
         }
 
-        this.getProductPacks(product.id)
+        if (this.isShow && listDataPack.every(e => e.selected == false)) {
+            setTimeout(() => {
+                Alert.alert('Thông báo', "Vui lòng thuộc tính")
+            }, 200)
+            return;
+        }
 
+        const resPacks: any = await ProductRequest.getProductPacks(product.id)
+        console.log('resPacks', resPacks)
+        if (resPacks?.err_code == 0) {
+            if (resPacks?.data?.length > 0) {
 
-        const activePack = cloneObject(this.state.activePack);
-        activePack.price = this.activePrice;
-        const item: CartItem = {
-            product: product,
-            pack: activePack,
-            price: this.activePrice,
-            quantity: this.state.quantity
-        };
+                if (this.isShow) {
+                    const item = {
+                        product: product,
+                        pack: listDataPack.find(e => e.selected == true),
+                        price: this.activePrice,
+                        quantity: this.state.quantity
+                    };
+                    this.addCartBuyThangHN(item)
+                    return;
+                }
 
-        const res = await CartStore.add(item);
-        $alert(res.message);
+                this.setState({
+                    listDataPack: resPacks?.data.map((e: any) => {
+                        return { ...e, selected: false }
+                    })
+                }, () => {
+                    this.isShow = true;
+                })
+                return;
+            }
+
+            this.isShow = false;
+            const activePack = cloneObject(this.state.activePack);
+            activePack.price = this.activePrice;
+            console.log('activePack', activePack)
+
+            const item = {
+                product: product,
+                pack: activePack,
+                price: this.activePrice,
+                quantity: this.state.quantity
+            };
+            this.addCartBuyThangHN(item)
+
+        } else {
+            setTimeout(() => {
+                $alert(resPacks.message);
+            }, 200)
+        }
     };
 
     add = (value: number) => {
@@ -197,7 +259,9 @@ export default class ProductItem extends Component<Props, State>{
                         }
                     </View>
                 </View>
-                <ListProps />
+                <ListProps
+                    onSelectPack={this.onSelectPack}
+                    listData={this.state.listDataPack || []} />
             </View>
         );
     }

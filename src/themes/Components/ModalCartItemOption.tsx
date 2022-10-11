@@ -373,6 +373,7 @@ export default class ModalCartItemOption extends Component<Props, State> {
                                 </View>
                                 {this.renderPrice()}
                                 <View style={styles.underLine}/>
+                                {/* thanghn todo */}
                                 <TouchableOpacity style={styles.addBtn} onPress={this.addToCart}>
                                     <Text style={styles.textAdd}>Thêm vào giỏ hàng</Text>
                                 </TouchableOpacity>

@@ -70,7 +70,6 @@ export default class HomeTab extends Component<Props, State>{
                     isLoading: false,
                     routes: routes
                 }, () => {
-                    console.log('aaaa111', this.state.routes);
                 });
             }, 500)
         }
