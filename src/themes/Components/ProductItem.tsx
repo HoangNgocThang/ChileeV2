@@ -68,15 +68,14 @@ export default class ProductItem extends Component<Props, State>{
     }
 
     addCartBuyThangHN = async (item: any) => {
+        console.log('addCartBuyThangHN', item)
         const res = await CartStore.add(item);
         this.setState({
-          
         }, () => {
             setTimeout(() => {
                 $alert(res.message);
             }, 200)
         })
-
     }
 
     addToCart = async () => {
@@ -138,7 +137,8 @@ export default class ProductItem extends Component<Props, State>{
 
             const item = {
                 product: product,
-                pack: activePack,
+                // pack: activePack,
+                pack: {},
                 price: this.activePrice,
                 quantity: this.state.quantity
             };

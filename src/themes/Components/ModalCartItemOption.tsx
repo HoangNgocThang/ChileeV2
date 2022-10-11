@@ -133,14 +133,15 @@ export default class ModalCartItemOption extends Component<Props, State> {
             $alert('Vui lòng đợi giây lát')
             return;
         }
-        const auth = await storage.getAuth();
-        if (!auth) {
-            $alert(messages.pleaseLogin, () => {
-                this.setState({isVisible: false});
-                navigate('ProfileScreen');
-            });
-            return;
-        }
+        
+        // const auth = await storage.getAuth();
+        // if (!auth) {
+        //     $alert(messages.pleaseLogin, () => {
+        //         this.setState({isVisible: false});
+        //         navigate('ProfileScreen');
+        //     });
+        //     return;
+        // }
 
         const product = this.state.item;
 
@@ -152,6 +153,9 @@ export default class ModalCartItemOption extends Component<Props, State> {
 
         const activePack = cloneObject(this.state.activePack);
         activePack.price = this.activePrice;
+
+        console.log('a111',activePack)
+        
         const item: CartItem = {
             product: product,
             pack: activePack,

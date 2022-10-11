@@ -130,7 +130,6 @@ export default class CartItem extends Component<any, any>{
                         </View>
 
                         <View style={[styles.contentFooter]}>
-
                             <Text style={styles.textInfo}>Đơn giá:</Text>
                             <Text style={styles.textAmount} numberOfLines={1} ellipsizeMode="tail">
                                 {numberFormat(this.state.price)}
@@ -139,13 +138,9 @@ export default class CartItem extends Component<any, any>{
                             <Text style={styles.textAmountOrigin} numberOfLines={1} ellipsizeMode="tail">
                                 {numberFormat(this.state.priceOrigin)}
                             </Text>}
-
                         </View>
-
                         <View style={[styles.contentFooter]}>
-
                             <Text style={styles.textInfo}>Tổng tiền:</Text>
-
                             <Text style={styles.textAmount} numberOfLines={1} ellipsizeMode="tail">
                                 {numberFormat(this.state.amount)}
                             </Text>
@@ -153,10 +148,9 @@ export default class CartItem extends Component<any, any>{
                             <Text style={styles.textAmountOrigin} numberOfLines={1} ellipsizeMode="tail">
                                 {numberFormat(this.state.amountOrigin)}
                             </Text>}
-
                         </View>
-                        <View style={[styles.contentFooter, {marginTop:5}]}>
 
+                        <View style={[styles.contentFooter, {marginTop:5}]}>
                             <View style={styles.buttonWrapper}>
                                 <TouchableOpacity style={{borderRadius: 15}}    onPress={(() => this.add(-1))}>
                                     <View style={styles.button}>

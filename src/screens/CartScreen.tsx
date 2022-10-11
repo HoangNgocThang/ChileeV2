@@ -26,15 +26,22 @@ export default class CartScreen extends Component<any, any>{
 
     asyncInit = async () => {
         this.isCheckoutReady = false;
-        const res = await CartStore.get();
-        this.isCheckoutReady = true;
         this.setState({
-            isLoading: false,
-            items: res.items,
-            isEmpty: res.items.length === 0,
-            amount: res.cart.amount,
-            amountOrigin: res.cart.amount_origin
-        });
+            isLoading: true,
+            items: []
+        })
+        const res = await CartStore.get();
+        console.log('CartStore>111', res)
+        this.isCheckoutReady = true;
+        setTimeout(() => {
+            this.setState({
+                isLoading: false,
+                items: res.items,
+                isEmpty: res.items.length === 0,
+                amount: res.cart.amount,
+                amountOrigin: res.cart.amount_origin
+            });
+        }, 200)
     };
 
 

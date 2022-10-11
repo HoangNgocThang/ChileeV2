@@ -147,7 +147,7 @@ export default class ProductDetailScreen extends Component<any, State>{
         }
     }
 
-    renderImage = ({ item, index }) => {
+    renderImage = ({ item, index }:any) => {
 
         return (
             <TouchableOpacity style={styles.imageTouch} onPress={this.zoomImages}>
@@ -158,7 +158,7 @@ export default class ProductDetailScreen extends Component<any, State>{
         );
     }
 
-    renderPreviewImage = ({ item, index }) => {
+    renderPreviewImage = ({ item, index }:any) => {
         let {activeImage} = this.state;
         return (
             <TouchableOpacity style={styles.previewImageTouch} onPress={this.pressPreviewImage.bind(this, index)}>
