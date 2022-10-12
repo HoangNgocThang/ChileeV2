@@ -31,7 +31,6 @@ export default class CartScreen extends Component<any, any>{
             items: []
         })
         const res = await CartStore.get();
-        console.log('CartStore>111', res)
         this.isCheckoutReady = true;
         setTimeout(() => {
             this.setState({

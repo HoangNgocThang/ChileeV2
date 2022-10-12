@@ -154,15 +154,12 @@ export default class ModalCartItemOption extends Component<Props, State> {
         const activePack = cloneObject(this.state.activePack);
         activePack.price = this.activePrice;
 
-        console.log('a111',activePack)
-        
         const item: CartItem = {
             product: product,
-            pack: activePack,
+            pack:product?.packs?.length > 0 ?  activePack : {},
             price: this.activePrice,
             quantity: this.state.quantity
         };
-
         const res = await CartStore.add(item);
         if (res.err_code) {
             $alert(res.message);

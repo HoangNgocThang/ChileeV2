@@ -371,7 +371,7 @@ export default class CheckoutScreen extends Component<any, any>{
                         {this.state.items.map(item => {
                             return (
                                 <OrderItem
-                                    key={item.product.id.toString() + "/" + item.pack.id.toString()}
+                                    // key={item.product.id.toString() + "/" + item.pack.id.toString()}
                                     item={item}
                                 />
                             )
@@ -435,7 +435,7 @@ export default class CheckoutScreen extends Component<any, any>{
                     <View style={styles.secondCard}>
                         <View style={styles.cardLeft}>
                             <View style={styles.cardIcon}>
-                                <MaterialCommunityIcons name="cash-usd" color={"#000000"} size={24} />
+                                <MaterialCommunityIcons name="cash-refund" color={"#000000"} size={24} />
                             </View>
                             <Text style={styles.cardTitle}>Thông tin thanh toán</Text>
                         </View>
