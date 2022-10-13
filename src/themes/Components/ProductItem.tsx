@@ -81,13 +81,13 @@ export default class ProductItem extends Component<Props, State>{
     addToCart = async () => {
         const { listDataPack } = this.state;
         // auto login rồi nên k cần check nữa
-        // const auth = await storage.getAuth();
-        // if (!auth) {
-        //     $alert(messages.pleaseLogin, () => {
-        //         navigate('ProfileScreen');
-        //     });
-        //     return;
-        // }
+        const auth = await storage.getAuth();
+        if (!auth) {
+            $alert(messages.pleaseLogin, () => {
+                // navigate('ProfileScreen');
+            });
+            return;
+        }
 
         const product = this.props.ProductItem;
         if (product.quantity < this.state.quantity) {

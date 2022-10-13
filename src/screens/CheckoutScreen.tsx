@@ -198,9 +198,7 @@ export default class CheckoutScreen extends Component<Props, any>{
         }
         this.setState({ isLoading: true });
 
-        console.log('aaa',this.getOrderParams())
-
-        const res = await OrderRequest.createV4(this.getOrderParams());
+        const res:any = await OrderRequest.createV4(this.getOrderParams());
         console.log('ress OrderRequest',this.getOrderParams())
         setTimeout(() => {
             this.setState({ isLoading: false });
@@ -214,7 +212,13 @@ export default class CheckoutScreen extends Component<Props, any>{
                         ],
                     })
                 );
-                this.props.navigation.navigate('CheckoutSucceedScreen', { orderCode: res.orderCode })
+                // this.props.navigation.navigate('CheckoutSucceedScreen', { orderCode: res.orderCode })
+                navigate('OrderStack', {
+                    screen: 'CheckoutSucceedScreen',
+                    params: {
+                        orderCode: res.orderCode
+                    },
+                })
             } else {
                 $alert(res.message);
             }

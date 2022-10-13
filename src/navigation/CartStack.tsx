@@ -12,6 +12,7 @@ import PaymentScreen from "../screens/PaymentScreen";
 import ShopDetailScreen from "../screens/ShopDetailScreen";
 import ProductShopDetail from "../screens/ProductShopDetail";
 import CheckoutSucceedScreen from '../screens/CheckoutSucceedScreen';
+import OrderStack from './OrderStack';
 
 const Stack = createStackNavigator();
 
@@ -67,11 +68,13 @@ export default function CartStack() {
                 <Stack.Screen
                     options={getOption('Xác nhận thông tin đơn hàng', false)}
                     name="CheckoutScreen" component={CheckoutScreen} />
-                <Stack.Screen
+                {/* <Stack.Screen
                     options={({route}) => {
                         return StackOption( 'Thông tin đơn hàng', false, false)
                     }}
-                    name="CheckoutSucceedScreen" component={CheckoutSucceedScreen} />
+                    name="CheckoutSucceedScreen" component={CheckoutSucceedScreen} /> */}
+
+                  
                 <Stack.Screen  options={({route}) => {
                     return getOption( route.params.title || 'Thêm địa chỉ', false)
                 }} name="AddressFormScreen" component={AddressFormScreen} />

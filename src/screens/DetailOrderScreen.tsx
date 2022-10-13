@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {FlatList, ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator} from "react-native";
 import config from "../config";
 import platform from "../themes/Variables/platform";
+// @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from '../ui/Spinner';
 import Image from "react-native-fast-image";
@@ -43,7 +44,7 @@ export default class DetailOrderScreen extends Component<any, any>{
 
     onCancel = async () => {
         this.setState({btnLoading: true});
-        const res = await OrderRequest.cancel(this.state.order.code);
+        const res:any = await OrderRequest.cancel(this.state.order.code);
         setTimeout(async () => {
             if (res.code !== 0) {
                 $alert(res.message);
@@ -99,7 +100,7 @@ export default class DetailOrderScreen extends Component<any, any>{
         return null;
     };
 
-    renderBuyerInfo = (order) => {
+    renderBuyerInfo = (order:any) => {
         return <>
             <View style={styles.bodyRow}>
                 <Text style={styles.titleBody}>Tên người mua</Text>
@@ -112,7 +113,7 @@ export default class DetailOrderScreen extends Component<any, any>{
         </>
     }
 
-    renderBuyer = (item) => {
+    renderBuyer = (item:any) => {
         let phone = item.buyer_phone;
 
         return <>
@@ -243,7 +244,7 @@ export default class DetailOrderScreen extends Component<any, any>{
                             <View style={styles.bodyRight}>
                                 <View style={styles.bodyRow}>
                                     <Text style={styles.titleBody}>Tổng tiền sản phẩm</Text>
-                                    <Text style={styles.textBody}>{numberFormat(order.amount)}</Text>
+                                    <Text style={styles.textBody}>{numberFormat(order.amount_origin)}</Text>
                                 </View>
                                 <View style={styles.bodyRow}>
                                     <Text style={styles.titleBody}>Khuyến mãi</Text>

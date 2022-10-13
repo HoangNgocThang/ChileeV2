@@ -28,6 +28,7 @@ import storage from './utils/storage';
 import { CommonActions } from "@react-navigation/native";
 import NotiScreen from './screens/NotiScreen';
 import NotiStack from './navigation/NotiStack';
+import OrderStack from './navigation/OrderStack';
 
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
 declare var global: { HermesInternal: null | {} };
@@ -53,8 +54,10 @@ const Tab = createBottomTabNavigator();
 
 
 
-const Stack = createStackNavigator()
-    ;
+const Stack = createStackNavigator();
+
+const RootStack = createStackNavigator();
+
 function MyTabs(props: any) {
 
     return (
@@ -219,8 +222,27 @@ class App extends Component<any, State>{
         if (this.state.isLoading) {
             return <Spinner />
         }
-        return <NavigationContainer ref={navigationRef} >
-            <MyTabs showBuyShare={this.appConfig.showBuyShare} />
+        return <NavigationContainer ref={navigationRef}>
+            {/* <MyTabs showBuyShare={this.appConfig.showBuyShare} /> */}
+            <RootStack.Navigator
+                screenOptions={{ gestureEnabled: false }}>
+                <RootStack.Screen
+                    options={{
+                        // animationEnabled: false,
+                        gestureEnabled: false,
+                        headerShown: false
+                    }}
+                    name="Home"
+                    component={MyTabs} />
+                <RootStack.Screen
+                    options={{
+                        // animationEnabled: false,
+                        gestureEnabled: false,
+                        headerShown: false
+                    }}
+                    name="OrderStack"
+                    component={OrderStack} />
+            </RootStack.Navigator>
         </NavigationContainer>
     }
 }

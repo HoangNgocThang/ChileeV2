@@ -134,14 +134,14 @@ export default class ModalCartItemOption extends Component<Props, State> {
             return;
         }
         
-        // const auth = await storage.getAuth();
-        // if (!auth) {
-        //     $alert(messages.pleaseLogin, () => {
-        //         this.setState({isVisible: false});
-        //         navigate('ProfileScreen');
-        //     });
-        //     return;
-        // }
+        const auth = await storage.getAuth();
+        if (!auth) {
+            $alert(messages.pleaseLogin, () => {
+                this.setState({isVisible: false});
+                // navigate('ProfileScreen');
+            });
+            return;
+        }
 
         const product = this.state.item;
 
