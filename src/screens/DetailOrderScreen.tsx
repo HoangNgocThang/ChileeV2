@@ -57,10 +57,9 @@ export default class DetailOrderScreen extends Component<any, any>{
         }, 250)
     }
 
-    renderItem = ({ item, index }) => {
-
+    renderItem = ( item:any, index:number ) => {
         return  (
-            <View style={styles.itemWrapper}>
+            <View style={styles.itemWrapper} key={`${item?.id}`}>
                 <View style={styles.thumbWrapper}>
                     <Image source={thumbHolder(item.thumb)} style={styles.thumb}/>
                 </View>
@@ -235,7 +234,7 @@ export default class DetailOrderScreen extends Component<any, any>{
                     <View style={styles.rowContent2}>
                         <View style={styles.contentTop}>
                             <View style={styles.topLeft}>
-                                <MaterialCommunityIcons name="cash-usd" color={"#000000"} size={24} />
+                                <MaterialCommunityIcons name="cash-refund" color={"#000000"} size={24} />
                             </View>
                             <Text style={styles.titleTop}>Thông tin thanh toán</Text>
                         </View>
@@ -288,12 +287,15 @@ export default class DetailOrderScreen extends Component<any, any>{
                             </View>
                             <Text style={styles.titleTop}>Danh sách sản phẩm</Text>
                         </View>
-                        <FlatList
+                        {/* <FlatList
                             style={{flex: 1, paddingVertical: 5, marginTop: 5}}
                             data={this.state.order.OrderItem}
                             keyExtractor={(item, index) => item.id.toString()}
                             renderItem={this.renderItem}
-                        />
+                        /> */}
+                        {this.state.order.OrderItem.map((item:any,index:number)=> {
+                            return this.renderItem(item,index)
+                        })}
                     </View>
                     {this.renderCancelButton()}
                 </ScrollView>

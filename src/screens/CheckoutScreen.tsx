@@ -25,7 +25,11 @@ const BOOK_TIME_OPTION = 1;
 const BOOK_TIME_ANY = 2;
 const BOOK_TIME_ANY_DATE = 3;
 
-export default class CheckoutScreen extends Component<any, any>{
+interface Props {
+    navigation:any
+}
+
+export default class CheckoutScreen extends Component<Props, any>{
 
     private shipFee: number = 0;
     private fastShipFee: number = 0;
@@ -98,6 +102,7 @@ export default class CheckoutScreen extends Component<any, any>{
         this.fastShipFee = feeData.fastShipFee;
         this.fastShippingNote = feeData.fastShippingNote;
 
+        console.log("AAA",res, 'tt',amount + feeData.shipFee, 'ori' ,amountOrigin + feeData.shipFee)
         this.setState({
             allowFastShipping: feeData.allowFastShipping,
             isLoading: false,
@@ -147,7 +152,7 @@ export default class CheckoutScreen extends Component<any, any>{
             addressId: this.address.id,
             items: shortItems,
             amount: this.state.amount,
-            amountTotal: this.state.amount + this.shipFee,
+            amountTotal: this.state.amountOrigin + this.shipFee,
             receipt_type: this.receiptType,
             receipt_date: '',
             order_type: this.address.type,
@@ -193,7 +198,10 @@ export default class CheckoutScreen extends Component<any, any>{
         }
         this.setState({ isLoading: true });
 
+        console.log('aaa',this.getOrderParams())
+
         const res = await OrderRequest.createV4(this.getOrderParams());
+        console.log('ress OrderRequest',this.getOrderParams())
         setTimeout(() => {
             this.setState({ isLoading: false });
             CartStore.clear();
@@ -206,7 +214,7 @@ export default class CheckoutScreen extends Component<any, any>{
                         ],
                     })
                 );
-                navigate('CheckoutSucceedScreen', { orderCode: res.orderCode })
+                this.props.navigation.navigate('CheckoutSucceedScreen', { orderCode: res.orderCode })
             } else {
                 $alert(res.message);
             }
@@ -444,7 +452,7 @@ export default class CheckoutScreen extends Component<any, any>{
                             <View style={{ flex: 1, paddingLeft: 15 }}>
                                 <View style={styles.rowInfo}>
                                     <Text style={styles.titleInfo}>Tổng tiền sản phẩm</Text>
-                                    <Text style={styles.textInfo}>{numberFormat(this.state.amount)}</Text>
+                                    <Text style={styles.textInfo}>{numberFormat(this.state.amountOrigin)}</Text>
                                 </View>
                                 <View style={styles.rowInfo}>
                                     <Text style={styles.titleInfo}>Khuyến mãi</Text>
@@ -470,8 +478,6 @@ export default class CheckoutScreen extends Component<any, any>{
                 </ScrollView>
 
                 <View style={styles.footer}>
-
-
                     <View style={styles.footerLeft}>
                         <Text style={styles.footerTitle}>Cần Thanh Toán</Text>
                         <Text style={styles.footerText}>
@@ -479,9 +485,7 @@ export default class CheckoutScreen extends Component<any, any>{
                                 <Text style={styles.textAmountOrigin}>
                                     {numberFormat(this.state.amountOrigin)}
                                 </Text>
-
                             }
-
                             {' ' + numberFormat(this.state.amountTotal)}
                         </Text>
                     </View>

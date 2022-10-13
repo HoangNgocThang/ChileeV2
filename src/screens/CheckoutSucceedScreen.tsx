@@ -1,15 +1,20 @@
 import React, {Component} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import config from "../config";
+// @ts-ignored
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default class CheckoutSucceedScreen extends Component<any, any>{
+interface Props {
+   navigate:any
+}
+
+export default class CheckoutSucceedScreen extends Component<Props, any>{
     private focusListener: any;
+    
     constructor(props: any) {
         super(props);
         this.orderCode = props.route.params.orderCode;
     }
-
 
     componentWillUnmount(): void {
     }
