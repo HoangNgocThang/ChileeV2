@@ -10,6 +10,7 @@ import {$alert} from "../../ui/Alert";
 import messages from "../../locale/messages";
 import storage from "../../utils/storage";
 import {navigate} from "../../navigation/RootNavigation";
+// @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProductRequest from "../../api/requests/ProductRequest";
 import Prompt from "../../ui/Prompt";
