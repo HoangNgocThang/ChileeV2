@@ -157,7 +157,8 @@ export default class ModalCartItemOption extends Component<Props, State> {
 
         const item: CartItem = {
             product: product,
-            pack:product?.packs?.length > 0 ?  activePack : {},
+            // pack: product?.packs?.length > 0 ?  activePack : {},
+            pack: {},
             price: this.activePrice,
             quantity: this.state.quantity
         };
@@ -353,7 +354,7 @@ export default class ModalCartItemOption extends Component<Props, State> {
                                     </View>
                                 </View>
                                 {this.renderPriceByQuantity()}
-                                {this.renderPack()}
+                                {/* {this.renderPack()} */}
                                 <View style={styles.underLine}/>
                                 <View style={styles.amountWrapper}>
                                     <Text style={styles.amountTitle}>Số lượng</Text>
@@ -366,8 +367,6 @@ export default class ModalCartItemOption extends Component<Props, State> {
                                             style={{minWidth:70, justifyContent:'center'}}>
                                             <Text style={{textAlign:'center',width:'100%'}}>{this.state.quantity}</Text>
                                         </TouchableOpacity>
-
-
                                         <TouchableOpacity style={styles.plusBtn} onPress={() => {this.add(1)}}>
                                             <MaterialCommunityIcons name="plus" color={"#a0a0a0"} size={22} />
                                         </TouchableOpacity>

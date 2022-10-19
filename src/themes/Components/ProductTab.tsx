@@ -39,7 +39,6 @@ export default class ProductTab extends Component<Props, State>{
                 return item
             })
             setTimeout(() => {
-
                 this.setState({
                     isLoading: false,
                     routes: routes,

@@ -15,6 +15,7 @@ import { CartItem, Pack } from "../../api/interfaces";
 import CartStore from "../../store/CartStore";
 import ListProps from './ListProps';
 import ProductRequest from '../../api/requests/ProductRequest';
+import ListChildren from './ListChildren';
 
 const defaultWidth = platform.deviceWidth;
 
@@ -33,7 +34,7 @@ interface State {
 export default class ProductItem extends Component<Props, State>{
 
     private activePrice: number;
-    isShow = false;
+    // isShow = false;
 
     constructor(props: any) {
         super(props);
@@ -50,36 +51,34 @@ export default class ProductItem extends Component<Props, State>{
         }
     }
 
-    // componentDidMount() {
-    //     console.log('thang1tang1than1', this.props.ProductItem)
-    // }
-
-    onSelectPack = (item: any, index: number) => {
-        const newArr = this.state.listDataPack.map((e) => {
-            if (e.id == item.id) {
-                return { ...e, selected: true }
-            } else {
-                return { ...e, selected: false }
-            }
-        })
-        this.setState({
-            listDataPack: newArr
-        })
+    componentDidMount() {
+        console.log('thang1tang1than1', this.props.ProductItem)
     }
+
+    // onSelectPack = (item: any, index: number) => {
+    //     const newArr = this.state.listDataPack.map((e) => {
+    //         if (e.id == item.id) {
+    //             return { ...e, selected: true }
+    //         } else {
+    //             return { ...e, selected: false }
+    //         }
+    //     })
+    //     this.setState({
+    //         listDataPack: newArr
+    //     })
+    // }
 
     addCartBuyThangHN = async (item: any) => {
         console.log('addCartBuyThangHN', item)
         const res = await CartStore.add(item);
-        this.setState({
-        }, () => {
-            setTimeout(() => {
-                $alert(res.message);
-            }, 200)
-        })
+        setTimeout(() => {
+            $alert(res.message);
+        }, 200)
     }
 
     addToCart = async () => {
-        const { listDataPack } = this.state;
+        // const { listDataPack } = this.state;
+
         // auto login rồi nên k cần check nữa
         const auth = await storage.getAuth();
         if (!auth) {
@@ -97,58 +96,61 @@ export default class ProductItem extends Component<Props, State>{
             return;
         }
 
-        if (this.isShow && listDataPack.every(e => e.selected == false)) {
-            setTimeout(() => {
-                Alert.alert('Thông báo', "Vui lòng thuộc tính")
-            }, 200)
-            return;
-        }
+        // if (this.isShow && listDataPack.every(e => e.selected == false)) {
+        //     setTimeout(() => {
+        //         Alert.alert('Thông báo', "Vui lòng thuộc tính")
+        //     }, 200)
+        //     return;
+        // }
 
-        const resPacks: any = await ProductRequest.getProductPacks(product.id)
-        console.log('resPacks', resPacks)
-        if (resPacks?.err_code == 0) {
-            if (resPacks?.data?.length > 0) {
+        const item = {
+            product: product,
+            pack: {},
+            price: this.activePrice,
+            quantity: this.state.quantity
+        };
+        this.addCartBuyThangHN(item)
 
-                if (this.isShow) {
-                    const item = {
-                        product: product,
-                        pack: listDataPack.find(e => e.selected == true),
-                        price: this.activePrice,
-                        quantity: this.state.quantity
-                    };
-                    this.addCartBuyThangHN(item)
-                    return;
-                }
-
-                this.setState({
-                    listDataPack: resPacks?.data.map((e: any) => {
-                        return { ...e, selected: false }
-                    })
-                }, () => {
-                    this.isShow = true;
-                })
-                return;
-            }
-
-            this.isShow = false;
-            const activePack = cloneObject(this.state.activePack);
-            activePack.price = this.activePrice;
-            console.log('activePack', activePack)
-
-            const item = {
-                product: product,
-                // pack: activePack,
-                pack: {},
-                price: this.activePrice,
-                quantity: this.state.quantity
-            };
-            this.addCartBuyThangHN(item)
-
-        } else {
-            setTimeout(() => {
-                $alert(resPacks.message);
-            }, 200)
-        }
+        // const resPacks: any = await ProductRequest.getProductPacks(product.id)
+        // console.log('resPacks', resPacks)
+        // if (resPacks?.err_code == 0) {
+        //     if (resPacks?.data?.length > 0) {
+        //         if (this.isShow) {
+        //             const item = {
+        //                 product: product,
+        //                 pack: listDataPack.find(e => e.selected == true),
+        //                 price: this.activePrice,
+        //                 quantity: this.state.quantity
+        //             };
+        //             this.addCartBuyThangHN(item)
+        //             return;
+        //         }
+        //         this.setState({
+        //             listDataPack: resPacks?.data.map((e: any) => {
+        //                 return { ...e, selected: false }
+        //             })
+        //         }, () => {
+        //             this.isShow = true;
+        //         })
+        //         return;
+        //     }
+        //     this.isShow = false;
+        //     const activePack = cloneObject(this.state.activePack);
+        //     activePack.price = this.activePrice;
+        //     console.log('activePack', activePack)
+        //     const item = {
+        //         product: product,
+        //         // pack: activePack,
+        //         pack: {},
+        //         price: this.activePrice,
+        //         quantity: this.state.quantity
+        //     };
+        //     this.addCartBuyThangHN(item)
+        // } else {
+        //     setTimeout(() => {
+        //         $alert(resPacks.message);
+        //     }, 200)
+        // }
     };
 
     add = (value: number) => {
@@ -156,7 +158,6 @@ export default class ProductItem extends Component<Props, State>{
         if (newQuantity <= 0) {
             return;
         }
-
         this.setState({ quantity: newQuantity });
     }
 
@@ -165,7 +166,6 @@ export default class ProductItem extends Component<Props, State>{
         if (quantity <= 0) {
             return;
         }
-
         this.setState({ quantity });
     }
 
@@ -174,10 +174,8 @@ export default class ProductItem extends Component<Props, State>{
         if (quantity < 0) {
             quantity = 1;
         }
-
         this.setState({ quantity })
     }
-
 
     onNavigate = () => {
         const { ProductItem, navigation } = this.props;
@@ -202,16 +200,52 @@ export default class ProductItem extends Component<Props, State>{
         return null
     }
 
+    renderQuantity = () => {
+        let { ProductItem } = this.props;
+        console.log('ProductItem?.children?.length', ProductItem?.children?.length);
+        if (ProductItem?.children?.length > 0) {
+            return <></>
+        }
+        return (
+            <View style={{ marginTop: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={styles.buttonWrapper}>
+                    <TouchableOpacity style={{ borderRadius: 15 }} onPress={(() => this.add(-1))}>
+                        <View style={styles.button}>
+                            <View style={styles.buttonBackground} />
+                            <View style={{ zIndex: 1 }}><MaterialCommunityIcons name="minus" color={"#fff"} size={15} /></View>
+                        </View>
+                    </TouchableOpacity>
+                    <TextInput
+                        value={this.state.quantity.toString()}
+                        onChangeText={this.onChangeText}
+                        onEndEditing={this.onEndEditing}
+                        keyboardType={"number-pad"}
+                        enablesReturnKeyAutomatically={true}
+                        returnKeyType={"done"}
+                        style={styles.textQuantity}
+                    />
+                    <TouchableOpacity
+                        onPress={(() => this.add(1))}
+                        style={{ backgroundColor: config.secondaryColor, borderRadius: 15 }}>
+                        <View style={styles.button}>
+                            <MaterialCommunityIcons name="plus" color={"#fff"} size={15} />
+                        </View>
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity onPress={this.addToCart}>
+                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     render() {
         let { ProductItem } = this.props;
         const { quantity } = this.state
         return (
             <View style={[styles.item, { flexDirection: 'column' }]}>
                 <View style={styles.item}>
-                    <TouchableOpacity
-                        style={styles.imageWrapper}
-                        onPress={this.onNavigate}
-                    >
+                    <TouchableOpacity style={styles.imageWrapper} onPress={this.onNavigate}            >
                         <Image source={ProductItem.thumb} style={styles.image} />
                         {this.renderPopup()}
                     </TouchableOpacity>
@@ -219,49 +253,25 @@ export default class ProductItem extends Component<Props, State>{
                         <TouchableOpacity onPress={this.onNavigate}>
                             <Text style={styles.textName}>{ProductItem.name}</Text>
                         </TouchableOpacity>
-                        <Text style={{ fontSize: 12 }}>Đơn giá:
+                        <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
                             <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price)}</Text>
                         </Text>
-                        {quantity > 1 ? <Text style={{ fontSize: 12 }}>Tổng tiền:
+                        {quantity > 1 ? <Text style={{ fontSize: 12, marginTop: 4 }}>Tổng tiền:
                             <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price * quantity)}</Text>
-                        </Text> : null}
-                        {ProductItem.quantity > 0 && ProductItem.saleable ?
-                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                                <View style={styles.buttonWrapper}>
-                                    <TouchableOpacity style={{ borderRadius: 15 }} onPress={(() => this.add(-1))}>
-                                        <View style={styles.button}>
-                                            <View style={styles.buttonBackground} />
-                                            <View style={{ zIndex: 1 }}><MaterialCommunityIcons name="minus" color={"#fff"} size={15} /></View>
-                                        </View>
-                                    </TouchableOpacity>
-                                    <TextInput
-                                        value={this.state.quantity.toString()}
-                                        onChangeText={this.onChangeText}
-                                        onEndEditing={this.onEndEditing}
-                                        keyboardType={"number-pad"}
-                                        enablesReturnKeyAutomatically={true}
-                                        returnKeyType={"done"}
-                                        style={styles.textQuantity}
-                                    />
-                                    <TouchableOpacity
-                                        onPress={(() => this.add(1))}
-                                        style={{ backgroundColor: config.secondaryColor, borderRadius: 15 }}>
-                                        <View style={styles.button}>
-                                            <MaterialCommunityIcons name="plus" color={"#fff"} size={15} />
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                                <TouchableOpacity onPress={this.addToCart}>
-                                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
-                                </TouchableOpacity>
-                            </View>
-                            : null
+                        </Text> : <></>}
+                        {ProductItem?.quantity > 0 && ProductItem?.saleable ?
+                            this.renderQuantity()
+                            : <></>
                         }
                     </View>
                 </View>
-                <ListProps
+                <ListChildren
+                    navigation={this.props.navigation}
+                    data={ProductItem?.children || []}
+                />
+                {/* <ListProps
                     onSelectPack={this.onSelectPack}
-                    listData={this.state.listDataPack || []} />
+                    listData={this.state.listDataPack || []} /> */}
             </View>
         );
     }
@@ -281,7 +291,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 3.5
     },
     textFreeShip: { fontSize: 10, color: "#fff" },
-    content: { flex: 1, justifyContent: "space-between" },
+    content: {
+        flex: 1,
+        // justifyContent: 'space-around'
+    },
     textName: { fontSize: 14, fontWeight: "bold", color: config.textColor },
     textPrice1: { fontSize: 12, color: config.secondaryColor, flex: 1 },
     buttonWrapper: { flexDirection: "row", alignItems: "center" },

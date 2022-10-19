@@ -117,8 +117,8 @@ export default class CartItem extends Component<any, any>{
                                 </TouchableOpacity>
                             </View>
                             <Text style={styles.textInfo}>Số lượng còn lại: {product.quantity}</Text>
-                            <Text style={styles.textInfo}>Ngày giao hàng: {product.time_range}</Text>
-                            <Text style={styles.textInfo}>Thuộc tính: {pack.name}</Text>
+                            {/* <Text style={styles.textInfo}>Ngày giao hàng: {product.time_range}</Text>
+                            <Text style={styles.textInfo}>Thuộc tính: {pack.name}</Text> */}
                             {shop != null &&
                             <TouchableOpacity style={styles.shopInfo} onPress={() => {
                                 navigate('ShopDetailScreen', {

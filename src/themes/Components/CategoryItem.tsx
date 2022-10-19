@@ -6,6 +6,7 @@ import {Category} from "../../api/interfaces";
 
 interface Props {
     product: Category
+    navigation: any
 }
 
 export default class CategoryItem extends PureComponent<Props, any>{

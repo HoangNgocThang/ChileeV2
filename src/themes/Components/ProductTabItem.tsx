@@ -47,7 +47,7 @@ export default class ProductTabItem extends Component<Props, State>{
         }
     })
 
-    componentDidMount(): void {
+    componentDidMount() {
         this.onLoad();
     }
 

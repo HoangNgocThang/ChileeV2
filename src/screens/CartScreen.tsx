@@ -102,7 +102,7 @@ export default class CartScreen extends Component<any, any>{
     render() {
         if (this.state.isLoading) {
             return (
-                <View style={{ flex: 1, backgroundColor: '#fff' }}>
+                <View style={{ flex: 1,}}>
                     <Spinner />
                 </View>
             )
