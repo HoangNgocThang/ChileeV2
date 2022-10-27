@@ -202,7 +202,11 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'space-around'
     },
-    textName: { fontSize: 14, fontWeight: "bold", color: config.textColor },
+    textName: {
+        fontSize: 12,
+        // fontWeight: "bold",
+        color: config.textColor
+    },
     textPrice1: { fontSize: 12, color: config.secondaryColor, flex: 1 },
     buttonWrapper: { flexDirection: "row", alignItems: "center" },
     button: { alignItems: "center", width: 20, height: 20, justifyContent: "center", padding: 1 },

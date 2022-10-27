@@ -7,7 +7,6 @@ import {$alert, confirm} from "../ui/Alert";
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 // @ts-ignored
 import {User} from '../api/interfaces';
-
 import FastImage from "react-native-fast-image";
 import config from "../config";
 import {debounce, getAuthSync, getRemoteConfigSync, numberFormat, setAuthSync} from "../utils";
@@ -19,6 +18,7 @@ import AuthRequest from "../api/requests/AuthRequest";
 import {fcm} from "../native/MrBen";
 const imgBoCongThuong = require('../assets/bocongthuong.png');
 const defaultAvatar = require('../assets/default-avatar.png');
+
 interface State {
     menuItems: Array<any>,
     menuItems2: Array<any>,
@@ -56,10 +56,9 @@ export default class ProfileScreen extends Component<any, State>{
                     id: 'phone',
                     icon: 'phone',
                     show: true,
-                    text: <Text>Hotline: <Text style={{color: config.secondaryColor}}>{remoteConfig.phone}</Text></Text>,
+                    text: <Text>Hotline: <Text style={{color: config.secondaryColor}}>{1900.3524}</Text></Text>,
                     action: () => {
-                        this.handleCall(remoteConfig.phone)
-
+                        this.handleCall('19003524')
                     }
                 },
                 {id: '2', icon: 'account',

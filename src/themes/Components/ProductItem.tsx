@@ -18,6 +18,8 @@ import ProductRequest from '../../api/requests/ProductRequest';
 import ListChildren from './ListChildren';
 
 const defaultWidth = platform.deviceWidth;
+const ic_up = require('../../assets/ic_up.png')
+const ic_down = require('../../assets/ic_down.png')
 
 interface Props {
     index: number
@@ -29,6 +31,7 @@ interface State {
     quantity: number
     activePack: Pack,
     listDataPack: any[],
+    showChildren: boolean
 }
 
 export default class ProductItem extends Component<Props, State>{
@@ -48,6 +51,7 @@ export default class ProductItem extends Component<Props, State>{
             quantity: 1,
             activePack: defaultPack,
             listDataPack: [],
+            showChildren: false
         }
     }
 
@@ -202,7 +206,6 @@ export default class ProductItem extends Component<Props, State>{
 
     renderQuantity = () => {
         let { ProductItem } = this.props;
-        console.log('ProductItem?.children?.length', ProductItem?.children?.length);
         if (ProductItem?.children?.length > 0) {
             return <></>
         }
@@ -249,7 +252,7 @@ export default class ProductItem extends Component<Props, State>{
                         <Image source={ProductItem.thumb} style={styles.image} />
                         {this.renderPopup()}
                     </TouchableOpacity>
-                    <View style={styles.content}>
+                    <View style={[styles.content, {}]}>
                         <TouchableOpacity onPress={this.onNavigate}>
                             <Text style={styles.textName}>{ProductItem.name}</Text>
                         </TouchableOpacity>
@@ -263,12 +266,29 @@ export default class ProductItem extends Component<Props, State>{
                             this.renderQuantity()
                             : <></>
                         }
+                        {
+                            ProductItem?.quantity > 0 && ProductItem?.saleable && ProductItem?.children?.length > 0 &&
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.setState({
+                                        showChildren: !this.state.showChildren
+                                    })
+                                }}
+                                style={{ position: 'absolute', bottom: 0, right: 0 }}>
+                                <Image source={this.state.showChildren ? ic_down : ic_up} style={{ width: 20, height: 20 }} resizeMode='cover' />
+                            </TouchableOpacity>
+                        }
+
                     </View>
                 </View>
-                <ListChildren
-                    navigation={this.props.navigation}
-                    data={ProductItem?.children || []}
-                />
+                {
+                    this.state.showChildren ?
+                        <ListChildren
+                            navigation={this.props.navigation}
+                            data={ProductItem?.children || []}
+                        /> : <></>
+                }
+
                 {/* <ListProps
                     onSelectPack={this.onSelectPack}
                     listData={this.state.listDataPack || []} /> */}
@@ -295,7 +315,11 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'space-around'
     },
-    textName: { fontSize: 14, fontWeight: "bold", color: config.textColor },
+    textName: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: config.textColor
+    },
     textPrice1: { fontSize: 12, color: config.secondaryColor, flex: 1 },
     buttonWrapper: { flexDirection: "row", alignItems: "center" },
     button: { alignItems: "center", width: 20, height: 20, justifyContent: "center", padding: 1 },
