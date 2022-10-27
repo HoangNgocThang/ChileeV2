@@ -11,6 +11,7 @@ export interface State {
 }
 export  default class CartBadge extends Component<Prop, State>{
     private _isMounted = false;
+    
     constructor(props: any) {
         super(props);
         this.state = {

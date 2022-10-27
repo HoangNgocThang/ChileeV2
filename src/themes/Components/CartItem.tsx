@@ -11,6 +11,7 @@ import messages from "../../locale/messages";
 import CartRequest from "../../api/requests/CartRequest";
 import {navigate} from "../../navigation/RootNavigation";
 import InputText from "../../ui/InputText";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const defaultWidth = platform.deviceWidth;
 export default class CartItem extends Component<any, any>{
@@ -56,7 +57,7 @@ export default class CartItem extends Component<any, any>{
 
         const res = await CartRequest.updateQuantity(this.item.id, quantity);
         if (res.err_code === 0) {
-
+            await AsyncStorage.setItem('isErrorQuanity', 'false')
             this.setState({
                 //quantity: quantity,
                 price: res.price,
@@ -64,9 +65,9 @@ export default class CartItem extends Component<any, any>{
                 amountOrigin: res.price_origin*quantity,
                 amount: res.price*quantity,
             });
-
             this.props.quantityChanged(res.amount, res.amount_origin);
         } else {
+            await AsyncStorage.setItem('isErrorQuanity', 'true')
             $alert(res.message);
         }
     },200);
@@ -104,9 +105,8 @@ export default class CartItem extends Component<any, any>{
                 <View style={styles.container}>
                     <View style={styles.imageWrapper}>
                         <TouchableOpacity onPress={() => navigation.navigate("DetailProduct",{Item: product})}>
-                            <Image source={product.thumb} style={styles.thumb}/>
+                            <Image source={product.thumb} style={styles.thumb} resizeMode='contain'/>
                         </TouchableOpacity>
-
                     </View>
                     <View style={styles.contentWrapper}>
                         <View>
@@ -184,10 +184,16 @@ export default class CartItem extends Component<any, any>{
 }
 
 const styles = StyleSheet.create({
-    thumb: {width: defaultWidth * 0.3, height: defaultWidth * 0.3, borderRadius: 7.5},
-    cardWrapper: {paddingVertical: 10, borderBottomWidth: 0.5, borderColor: "#a0a0a0"},
+    thumb: {width: defaultWidth * 0.2, height: defaultWidth * 0.2, borderRadius: 7.5},
+    cardWrapper: {
+        marginTop:10,
+        paddingVertical: 10,
+        backgroundColor:'white',
+        borderRadius: 8,
+        // borderBottomWidth: 0.5, borderColor: "#a0a0a0"
+    },
     container: {width: defaultWidth - 30, flexDirection: "row"},
-    imageWrapper: {justifyContent: "center", flex: 0, paddingRight: 15},
+    imageWrapper: {justifyContent: "center", flex: 0, paddingRight: 10, paddingLeft:4 },
     contentWrapper: {flex: 1, justifyContent: "space-between"},
     contentHeader: {flexDirection: "row", justifyContent: "flex-end"},
     textName: {fontSize: 17, fontWeight: "bold", flex: 1, color: config.secondaryColor},

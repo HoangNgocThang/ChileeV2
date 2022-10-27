@@ -7,6 +7,7 @@ import { $alert, confirm } from "../ui/Alert";
 import messages from "../locale/messages";
 import { numberFormat } from "../utils";
 import Spinner from "../ui/Spinner";
+import AsyncStorage from "@react-native-community/async-storage";
 
 export default class CartScreen extends Component<any, any>{
 
@@ -20,7 +21,8 @@ export default class CartScreen extends Component<any, any>{
             amount: 0,
             amountOrigin: 0,
             isEmpty: false,
-            items: []
+            items: [],
+            count: 0,
         }
     }
 
@@ -30,7 +32,8 @@ export default class CartScreen extends Component<any, any>{
             isLoading: true,
             items: []
         })
-        const res = await CartStore.get();
+        const res: any = await CartStore.get();
+        console.log('res', res)
         this.isCheckoutReady = true;
         setTimeout(() => {
             this.setState({
@@ -38,7 +41,8 @@ export default class CartScreen extends Component<any, any>{
                 items: res.items,
                 isEmpty: res.items.length === 0,
                 amount: res.cart.amount,
-                amountOrigin: res.cart.amount_origin
+                amountOrigin: res.cart.amount_origin,
+                count: res?.count
             });
         }, 200)
     };
@@ -87,7 +91,12 @@ export default class CartScreen extends Component<any, any>{
         });
     }
 
-    pay = () => {
+    pay = async () => {
+        const check = await AsyncStorage.getItem('isErrorQuanity')
+        if(check == 'true') {
+            $alert('Bạn vui lòng kiểm tra số lượng sản phẩm');
+            return; 
+        }
         if (!this.isCheckoutReady) {
             $alert('Bạn vui lòng đợi trong giây lát');
             return;
@@ -102,7 +111,7 @@ export default class CartScreen extends Component<any, any>{
     render() {
         if (this.state.isLoading) {
             return (
-                <View style={{ flex: 1,}}>
+                <View style={{ flex: 1, }}>
                     <Spinner />
                 </View>
             )
@@ -122,7 +131,6 @@ export default class CartScreen extends Component<any, any>{
                 behavior={ios ? "padding" : null}
                 keyboardVerticalOffset={ios ? 100 : 0}
                 style={styles.container}>
-                <View style={styles.content} >
                     <FlatList
                         showsVerticalScrollIndicator={false}
                         style={styles.flatList}
@@ -141,7 +149,6 @@ export default class CartScreen extends Component<any, any>{
                             )
                         }}
                     />
-                </View>
                 <View style={styles.footer}>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.titleMoney}>Tổng tiền</Text>
@@ -152,9 +159,14 @@ export default class CartScreen extends Component<any, any>{
                         }
                         <Text style={styles.textMoney}>{numberFormat(this.state.amount)}</Text>
                     </View>
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.titleMoney}>Tổng số lượng</Text>
+                        <Text style={styles.textMoney}>{`${this.state.count} sản phẩm`}</Text>
+                    </View>
+
                     {this.state.items.length > 0 && <TouchableOpacity style={styles.buttonPay}
                         onPress={() => this.pay()}>
-                        <Text style={styles.btnText}>Tiến hành thanh toán</Text>
+                        <Text style={styles.btnText}>Tiếp tục</Text>
                     </TouchableOpacity>}
                 </View>
             </KeyboardAvoidingView>
@@ -163,8 +175,12 @@ export default class CartScreen extends Component<any, any>{
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, alignItems: 'center' },
-    content: { flex: 1, paddingHorizontal: 15 },
+    container: { flex: 1, paddingHorizontal: 10 },
+    content: { 
+       flex: 1,
+       backgroundColor:'green'
+    //    paddingHorizontal: 15 
+    },
     flatList: { flex: 1, paddingVertical: 5 },
     emptyWrapper: { flex: 1, alignItems: 'center', justifyContent: 'center' },
     emptyText: { fontSize: 18, paddingVertical: 10 },
