@@ -116,7 +116,6 @@ export default class CartItem extends Component<any, any>{
                                     <MaterialCommunityIcons name="close" color={"#a0a0a0"} size={20} />
                                 </TouchableOpacity>
                             </View>
-                            <Text style={styles.textInfo}>Số lượng còn lại: {product.quantity}</Text>
                             {/* <Text style={styles.textInfo}>Ngày giao hàng: {product.time_range}</Text>
                             <Text style={styles.textInfo}>Thuộc tính: {pack.name}</Text> */}
                             {shop != null &&
@@ -175,6 +174,7 @@ export default class CartItem extends Component<any, any>{
                                     </View>
                                 </TouchableOpacity>
                             </View>
+                            <Text style={styles.textInfo}>Max: {product.quantity}</Text>
                         </View>
                     </View>
                 </View>
@@ -196,7 +196,12 @@ const styles = StyleSheet.create({
     imageWrapper: {justifyContent: "center", flex: 0, paddingRight: 10, paddingLeft:4 },
     contentWrapper: {flex: 1, justifyContent: "space-between"},
     contentHeader: {flexDirection: "row", justifyContent: "flex-end"},
-    textName: {fontSize: 17, fontWeight: "bold", flex: 1, color: config.secondaryColor},
+    textName: {
+        fontSize: 14,
+        fontWeight: "bold",
+        flex: 1,
+        color: config.secondaryColor
+    },
     contentFooter:{flexDirection: "row", alignItems: "center"},
     textAmount: {fontSize: 14, color: config.secondaryColor, flex: 1, fontWeight: "bold"},
     textAmountOrigin: {fontSize: 12, color: 'gray', textDecorationLine: "line-through", marginRight: 3},

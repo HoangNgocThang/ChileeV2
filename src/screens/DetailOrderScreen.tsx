@@ -267,7 +267,7 @@ export default class DetailOrderScreen extends Component<any, any>{
                             </View>
                         </View>
                     </View>
-                    <View style={styles.rowContent2}>
+                    {/* <View style={styles.rowContent2}>
                         <View style={styles.contentTop}>
                             <View style={styles.topLeft}>
                                 <MaterialCommunityIcons name="credit-card" color={"#000000"} size={24} />
@@ -280,7 +280,7 @@ export default class DetailOrderScreen extends Component<any, any>{
                                 {order.payment_status==1 ? 'Đã thanh toán': 'Thanh toán khi nhận hàng'}
                             </Text>
                         </View>
-                    </View>
+                    </View> */}
                     <View style={styles.rowContent2}>
                         <View style={styles.contentTop}>
                             <View style={styles.topLeft}>

@@ -329,7 +329,7 @@ export default class CheckoutScreen extends Component<Props, any>{
                         <View style={{ width: "100%", height: 1, backgroundColor: "#a0a0a0" }} />
                     </View>
 
-                    <View style={styles.secondCard}>
+                    {/* <View style={styles.secondCard}>
                         <View style={styles.cardLeft}>
                             <View style={styles.cardIcon}>
                                 <MaterialCommunityIcons name="credit-card" color={"#000000"} size={24} />
@@ -359,7 +359,7 @@ export default class CheckoutScreen extends Component<Props, any>{
                             ]} /> : <Text>Thanh toán khi nhận hàng</Text>}
 
                         </View>
-                    </View>
+                    </View> */}
                     {!!this.state.shipmentNote && <View style={styles.secondCard}>
 
                         <View style={styles.cardLeft}>
