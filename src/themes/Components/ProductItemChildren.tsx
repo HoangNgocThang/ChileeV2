@@ -15,8 +15,8 @@ import { CartItem, Pack } from "../../api/interfaces";
 import CartStore from "../../store/CartStore";
 import ListProps from './ListProps';
 import ProductRequest from '../../api/requests/ProductRequest';
-const prodef = require('../../../src/assets/prodef.jpeg')
 
+const prodef = require('../../../src/assets/prodef.jpeg')
 const defaultWidth = platform.deviceWidth;
 
 

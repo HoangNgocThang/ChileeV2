@@ -25,11 +25,11 @@ const Stack = createStackNavigator();
 export default function OrderStack() {
     return (
         <Stack.Navigator>
-           <Stack.Screen
-                    options={({route}) => {
-                        return StackOption( 'Thông tin đơn hàng', false, false)
-                    }}
-                    name="CheckoutSucceedScreen" component={CheckoutSucceedScreen} />
+            <Stack.Screen
+                options={({ route }) => {
+                    return StackOption('Thông tin đơn hàng', false, false)
+                }}
+                name="CheckoutSucceedScreen" component={CheckoutSucceedScreen} />
         </Stack.Navigator>
     );
 }

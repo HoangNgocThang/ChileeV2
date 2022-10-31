@@ -4,6 +4,7 @@ import platform from "../Variables/platform";
 import {debounce, intVal, numberFormat} from "../../utils";
 import Image from 'react-native-fast-image'
 import config from "../../config";
+// @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import CartStore from "../../store/CartStore";
 import {$alert} from "../../ui/Alert";
@@ -13,8 +14,28 @@ import {navigate} from "../../navigation/RootNavigation";
 import InputText from "../../ui/InputText";
 import AsyncStorage from "@react-native-community/async-storage";
 
+const prodef = require('../../../src/assets/prodef.jpeg')
 const defaultWidth = platform.deviceWidth;
-export default class CartItem extends Component<any, any>{
+
+interface Props {
+    item: any
+    navigation: any
+}
+
+interface State {
+    product: any,
+    quantity: any,
+    pack: any,
+    price: any,
+    priceOrigin: any,
+    amount: any,
+    amountOrigin: any,
+    quantityText: any,
+    valid: boolean,
+}
+
+export default class CartItem extends Component<Props, State>{
+    
     private item:any;
 
     constructor(props: any) {
@@ -36,6 +57,7 @@ export default class CartItem extends Component<any, any>{
             amount: this.item.price * quantity,
             amountOrigin: this.item.price_origin*quantity,
             quantityText: quantity.toString(),
+            valid: true,
         }
     }
 
@@ -99,13 +121,13 @@ export default class CartItem extends Component<any, any>{
         let {product, quantity, pack, shop} = item;
         const {navigation} = this.props;
         const showOrigin = this.item.price < this.item.priceOrigin;
-
+        const { valid } = this.state;
         return (
             <View  style={styles.cardWrapper}>
                 <View style={styles.container}>
                     <View style={styles.imageWrapper}>
                         <TouchableOpacity onPress={() => navigation.navigate("DetailProduct",{Item: product})}>
-                            <Image source={product.thumb} style={styles.thumb} resizeMode='contain'/>
+                            <Image source={valid ? item?.product?.thumb : prodef} style={styles.thumb} onError={() => { this.setState({ valid: false }) }} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.contentWrapper}>

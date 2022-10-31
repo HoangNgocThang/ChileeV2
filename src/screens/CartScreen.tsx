@@ -47,32 +47,35 @@ export default class CartScreen extends Component<any, any>{
         }, 200)
     };
 
-
     onFocus = () => {
         this.asyncInit();
     };
 
-    componentWillUnmount(): void {
+    componentWillUnmount() {
         this.focusListener();
     }
 
-    componentDidMount(): void {
+    componentDidMount() {
+        this.setData()
         this.focusListener = this.props.navigation.addListener('focus', this.onFocus)
         CartStore.onChange(() => this.onFocus())
     }
 
+    setData = async ()=> {
+        await AsyncStorage.setItem('isErrorQuanity', 'false')
+    }
+
     beforeQuantityChanged = () => {
-        console.log('beforeQuantityChanged');
         this.isCheckoutReady = false;
     }
 
-    quantityChanged = (amount, amountOrigin) => {
+    quantityChanged = (amount:any, amountOrigin:any) => {
         this.setState({ amount, amountOrigin }, () => {
             this.isCheckoutReady = true;
         })
     };
 
-    removeItem = (item) => {
+    removeItem = (item:any) => {
         confirm(messages.confirmRemoveCartItem, async (ok) => {
             if (ok) {
                 const index = this.state.items.indexOf(item);
@@ -84,8 +87,6 @@ export default class CartScreen extends Component<any, any>{
                     } else {
                         $alert(res.message);
                     }
-
-
                 }
             }
         });
