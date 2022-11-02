@@ -1,5 +1,5 @@
 import BaseRequest from "../BaseRequest";
-import {Address, GeneralResponse} from '../interfaces';
+import { Address, GeneralResponse } from '../interfaces';
 
 class AddressRequest extends BaseRequest {
     constructor() {
@@ -22,6 +22,13 @@ class AddressRequest extends BaseRequest {
         return super.dispatch('setDefaultAddress', addressId)
     }
 
+    async getProvinces(): Promise<any> {
+        return super.dispatch('getProvinces')
+    }
+
+    async getDistricts(provinceId: any): Promise<any> {
+        return super.dispatch('getDistricts', provinceId)
+    }
 }
 
 export default new AddressRequest()

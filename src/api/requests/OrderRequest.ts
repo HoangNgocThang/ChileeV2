@@ -64,6 +64,10 @@ class OrderRequest extends BaseRequest {
     async leaveSharedGroup(groupId: number): Promise<any> {
         return super.dispatch('leaveSharedGroup', groupId)
     }
+
+    async updateNote( data: {code:string, note:string}): Promise<any> {
+        return super.dispatch('updateNote', data)
+    }
 }
 
 export default new OrderRequest()
