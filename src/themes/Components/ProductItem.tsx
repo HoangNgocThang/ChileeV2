@@ -56,7 +56,6 @@ export default class ProductItem extends Component<Props, State>{
     }
 
     componentDidMount() {
-        console.log('thang1tang1than1', this.props.ProductItem)
     }
 
     // onSelectPack = (item: any, index: number) => {
@@ -235,6 +234,7 @@ export default class ProductItem extends Component<Props, State>{
                         </View>
                     </TouchableOpacity>
                 </View>
+                <Text>{`Max: ${ProductItem?.quantity}`}</Text>
                 <TouchableOpacity onPress={this.addToCart}>
                     <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
                 </TouchableOpacity>

@@ -169,6 +169,7 @@ class ProductItemChildren extends PureComponent<Props, State> {
                                     </View>
                                 </TouchableOpacity>
                             </View>
+                            <Text>{`Max: ${item?.quantity}`}</Text>
                             <TouchableOpacity onPress={this.addToCart}>
                                 <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
                             </TouchableOpacity>
