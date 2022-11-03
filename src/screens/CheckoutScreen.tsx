@@ -199,7 +199,7 @@ export default class CheckoutScreen extends Component<Props, any>{
         this.setState({ isLoading: true });
 
         const res:any = await OrderRequest.createV4(this.getOrderParams());
-        console.log('ress OrderRequest',this.getOrderParams())
+        console.log('ress OrderRequest', res)
         setTimeout(() => {
             this.setState({ isLoading: false });
             CartStore.clear();

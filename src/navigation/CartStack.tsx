@@ -8,6 +8,9 @@ import CheckoutScreen from "../screens/CheckoutScreen";
 import AddressFormScreen from "../screens/AddressFormScreen";
 import {StackOption} from "../ui/StackOption";
 import SelectPickerScreen from "../screens/SelectPickerScreen";
+import SelectProvinceScreen from '../screens/SelectProvinceScreen';
+import SelectDistrictScreen from '../screens/SelectDistrictScreen';
+
 import PaymentScreen from "../screens/PaymentScreen";
 import ShopDetailScreen from "../screens/ShopDetailScreen";
 import ProductShopDetail from "../screens/ProductShopDetail";
@@ -84,6 +87,18 @@ export default function CartStack() {
                         return StackOption( route.params.title || 'SelectPicker', false)
                     }}
                     name="SelectPickerScreen" component={SelectPickerScreen} />
+
+            <Stack.Screen
+                options={({ route }) => {
+                    return StackOption(route.params.title || 'SelectPicker', false)
+                }}
+                name="SelectProvinceScreen" component={SelectProvinceScreen} />
+
+            <Stack.Screen
+                options={({ route }) => {
+                    return StackOption(route.params.title || 'SelectPicker', false)
+                }}
+                name="SelectDistrictScreen" component={SelectDistrictScreen} />
                  <Stack.Screen
                         options={({route}) => {
                             return StackOption( 'Thanh toán', false)

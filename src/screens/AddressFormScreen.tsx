@@ -27,6 +27,7 @@ const defaultAvatar = require('../assets/default-avatar.png');
 const formWidth = Dimensions.get('window').width;
 
 export default class AddressFormScreen extends Component<any, any>{
+    
     private remoteConfig: RemoteConfig;
     private provinces: any = [];
     private districts: any = [];
@@ -284,11 +285,22 @@ export default class AddressFormScreen extends Component<any, any>{
                         <Text style={styles.label}>Tỉnh/thành phố</Text>
                         <TouchableOpacity style={{ borderBottomWidth: 1, borderBottomColor: '#d9d9d9', flex: 1, flexDirection: 'row' }}
                             onPress={() => {
-                                navigation.navigate('SelectPickerScreen', {
-                                    options: this.provinces,
-                                    value: address.province_id,
+                                // navigation.navigate('SelectPickerScreen', {
+                                //     options: this.provinces,
+                                //     value: address.province_id,
+                                //     title: 'Chọn tỉnh/thành phố',
+                                //     onChange: (item) => {
+                                //         this.districts = item.districts;
+                                //         address.province_id = item.id;
+                                //         this.setState({ address, provinceName: item.name, districtName: 'Quận/Huyện' })
+                                //     }
+                                // });
+                                navigation.navigate('SelectProvinceScreen', {
+                                    // options: this.provinces,
+                                    // value: address.province_id,
                                     title: 'Chọn tỉnh/thành phố',
-                                    onChange: (item) => {
+                                    onChange: (item:any) => {
+                                        console.log('item11',item)
                                         this.districts = item.districts;
                                         address.province_id = item.id;
                                         this.setState({ address, provinceName: item.name, districtName: 'Quận/Huyện' })
@@ -307,10 +319,21 @@ export default class AddressFormScreen extends Component<any, any>{
                         <Text style={styles.label}>Quận/huyện</Text>
                         <TouchableOpacity style={{ borderBottomWidth: 1, borderBottomColor: '#d9d9d9', flex: 1, flexDirection: 'row' }}
                             onPress={() => {
-                                navigation.navigate('SelectPickerScreen', {
+                                // navigation.navigate('SelectPickerScreen', {
+                                //     title: 'Chọn quận/huyện',
+                                //     options: this.districts,
+                                //     value: address.district_id,
+                                //     onChange: (item) => {
+                                //         address.district_id = item.id;
+                                //         this.setState({ address, districtName: item.name })
+                                //     }
+                                // });
+                                console.log('333',address)
+                                navigation.navigate('SelectDistrictScreen', {
                                     title: 'Chọn quận/huyện',
-                                    options: this.districts,
-                                    value: address.district_id,
+                                    // options: this.districts,
+                                    // value: address.district_id,
+                                    provinceId: address.province_id,
                                     onChange: (item) => {
                                         address.district_id = item.id;
                                         this.setState({ address, districtName: item.name })

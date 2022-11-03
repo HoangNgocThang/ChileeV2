@@ -13,6 +13,9 @@ import AddressFormScreen from "../screens/AddressFormScreen";
 import PrivacyScreen from "../screens/PrivacyScreen";
 import {StackOption} from "../ui/StackOption";
 import SelectPickerScreen from "../screens/SelectPickerScreen";
+import SelectProvinceScreen from '../screens/SelectProvinceScreen';
+import SelectDistrictScreen from '../screens/SelectDistrictScreen';
+
 import InfoScreen from "../screens/InfoScreen";
 import PaymentScreen from "../screens/PaymentScreen";
 import PaymentHistoryScreen from "../screens/PaymentHistoryScreen";
@@ -38,6 +41,17 @@ export default function ProfileStack() {
                         return StackOption( route.params.title || 'SelectPicker', false)
                     }}
                     name="SelectPickerScreen" component={SelectPickerScreen} />
+            <Stack.Screen
+                options={({ route }) => {
+                    return StackOption(route.params.title || 'SelectPicker', false)
+                }}
+                name="SelectProvinceScreen" component={SelectProvinceScreen} />
+
+            <Stack.Screen
+                options={({ route }) => {
+                    return StackOption(route.params.title || 'SelectPicker', false)
+                }}
+                name="SelectDistrictScreen" component={SelectDistrictScreen} />
                 <Stack.Screen options={StackOption('Đơn hàng của tôi', false)} name="OrderHistory" component={OrderHistory} />
                 <Stack.Screen options={StackOption('Thông tin đơn hàng', false)} name="DetailOrderScreen" component={DetailOrderScreen} />
                 <Stack.Screen options={({route}) => {
