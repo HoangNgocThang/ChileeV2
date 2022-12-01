@@ -471,6 +471,9 @@
 			baseConfigurationReference = 8ACF3905C981FFE53A6406C3 /* Pods-ChileeApp-ChileeAppTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = AF65C2TX29;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -489,6 +492,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ChileeApp.app/ChileeApp";
 			};
 			name = Debug;
@@ -499,6 +503,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = AF65C2TX29;
 				INFOPLIST_FILE = ChileeAppTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -523,7 +528,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 32;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = AF65C2TX29;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ChileeApp/Info.plist;
@@ -540,6 +547,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.amy.chilee;
 				PRODUCT_NAME = ChileeApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -552,7 +560,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 32;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 33;
 				DEVELOPMENT_TEAM = AF65C2TX29;
 				INFOPLIST_FILE = ChileeApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chilee;
@@ -568,6 +578,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.amy.chilee;
 				PRODUCT_NAME = ChileeApp;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
