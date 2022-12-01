@@ -267,7 +267,8 @@ export default class ProductItem extends Component<Props, State>{
                             : <></>
                         }
                         {
-                            ProductItem?.quantity > 0 && ProductItem?.saleable && ProductItem?.children?.length > 0 &&
+                            // ProductItem?.quantity > 0 &&
+                             ProductItem?.saleable && ProductItem?.children?.length > 0 &&
                             <TouchableOpacity
                                 onPress={() => {
                                     this.setState({

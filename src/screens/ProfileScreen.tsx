@@ -220,7 +220,6 @@ export default class ProfileScreen extends Component<any, State>{
                                 <Text style={{ fontSize:14,color: config.secondaryColor}}>Xem thêm</Text>
                             </TouchableOpacity>
                         </View>
-
                     </View>
                     <View style={{flex: 1, flexDirection: 'row'}}>
                         <View style={{flex:1}}>
@@ -271,7 +270,6 @@ export default class ProfileScreen extends Component<any, State>{
 
                 <View style={[styles.profileMenu, {height: 50*this.state.menuItems.length}]}>
                     {this.state.menuItems.map((item,index) => {
-
                         const addedStyle = {};
                         if (index === this.state.menuItems.length -1) {
                             addedStyle.borderBottomWidth = 0;
