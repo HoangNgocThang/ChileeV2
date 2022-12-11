@@ -30,7 +30,6 @@ export default class SelectPickerScreen extends Component<any, any>{
                     <FlatList
                         style={{marginTop: 5}}
                         data={options}
-
                         renderItem={({ item, index }) => {
                             return <TouchableOpacity
                                 onPress={() => {

@@ -1,19 +1,11 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-    Dimensions,
-    KeyboardAvoidingView,
-    Picker,
-    Platform, ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+    Alert,
+    Dimensions, KeyboardAvoidingView, Picker, Platform, ScrollView, StyleSheet,
+    Text, TouchableOpacity, View
 } from "react-native";
-// @ts-ignored
 import { $alert } from "../ui/Alert";
 import InputText from "../ui/InputText";
-// @ts-ignored
-// @ts-ignored
 import AddressRequest from "../api/requests/AddressRequest";
 import config from "../config";
 import Spinner from "../ui/Spinner";
@@ -26,26 +18,39 @@ const IS_IOS = (Platform.OS === "ios");
 const defaultAvatar = require('../assets/default-avatar.png');
 const formWidth = Dimensions.get('window').width;
 
-export default class AddressFormScreen extends Component<any, any>{
-    
-    private remoteConfig: RemoteConfig;
-    private provinces: any = [];
-    private districts: any = [];
-    private provinceMap: any = {};
-    private provinceMapName: any = {};
-    private districtMapName: any = {};
+interface Props {
+    navigation: any
+}
+
+interface State {
+    isLoading: boolean,
+    provinceName: string,
+    districtName: string,
+    address: any,
+    type: number,
+    errors: any
+}
+
+export default class AddressFormScreen extends Component<Props, State>{
+
+    // private remoteConfig: RemoteConfig;
+    // private provinces: any = [];
+    // private districts: any = [];
+    // private provinceMap: any = {};
+    // private provinceMapName: any = {};
+    // private districtMapName: any = {};
 
     constructor(props: any) {
         super(props);
-        this.remoteConfig = getRemoteConfigSync();
-        this.provinces = getRemoteProvincesSync();
-        this.provinceMap = {};
-        this.provinceMapName = {};
-        this.districtMapName = {};
-        this.provinces.forEach(p => {
-            this.provinceMap[p.id] = p.districts;
-            this.provinceMapName[p.id] = p.name;
-        });
+        // this.remoteConfig = getRemoteConfigSync();
+        // this.provinces = getRemoteProvincesSync();
+        // this.provinceMap = {};
+        // this.provinceMapName = {};
+        // this.districtMapName = {};
+        // this.provinces.forEach(p => {
+        //     this.provinceMap[p.id] = p.districts;
+        //     this.provinceMapName[p.id] = p.name;
+        // });
         const defaultAddress = {
             name: '',
             phone: '',
@@ -59,18 +64,17 @@ export default class AddressFormScreen extends Component<any, any>{
             type: 0
         };
         const address = props.route.params.address || defaultAddress;
-        if (address.province_id) {
-            this.districts = this.provinceMap[address.province_id];
-            this.districts.forEach(d => {
-                this.districtMapName[d.id] = d.name;
-            })
-        }
-
-
+        // if (address.province_id) {
+        //     this.districts = this.provinceMap[address.province_id];
+        //     this.districts.forEach(d => {
+        //         this.districtMapName[d.id] = d.name;
+        //     })
+        // }
+        console.log('aaa', address)
         this.state = {
             isLoading: false,
-            provinceName: this.provinceMapName[address.province_id] || 'Tỉnh/Thành phố',
-            districtName: this.districtMapName[address.district_id] || 'Quận/Huyện',
+            provinceName: address?.province || '',
+            districtName: address?.district || '',
             address: address,
             type: 0,
             errors: {
@@ -88,7 +92,7 @@ export default class AddressFormScreen extends Component<any, any>{
         return this.setState({ errors, address })
     }
 
-    componentDidMount(): void {
+    componentDidMount() {
 
     }
 
@@ -97,6 +101,8 @@ export default class AddressFormScreen extends Component<any, any>{
             return;
         }
         const { address } = this.state;
+        console.log('1111', this.state.provinceName, this.state.districtName);
+
         if (isStrEmptyOrSpaces(address.name)) {
             $alert(messages.receiverNameError);
             return this.setValueAndError('name', messages.receiverNameError, address.name);
@@ -107,18 +113,18 @@ export default class AddressFormScreen extends Component<any, any>{
             return this.setValueAndError('phone', messages.phoneError, address.phone);
         }
 
-        if (isStrEmptyOrSpaces(address.address)) {
-            $alert(messages.addressError);
-            return this.setValueAndError('address', messages.addressError, address.address);
-        }
+        // if (isStrEmptyOrSpaces(address.address)) {
+        //     $alert(messages.addressError);
+        //     return this.setValueAndError('address', messages.addressError, address.address);
+        // }
 
-        if (parseInt(address.district_id) === 0) {
-            return $alert(messages.districtError)
-        }
+        // if (parseInt(address.district_id) === 0) {
+        //     return $alert(messages.districtError)
+        // }
 
-        if (parseInt(address.province_id) === 0) {
-            return $alert(messages.provinceError)
-        }
+        // if (parseInt(address.province_id) === 0) {
+        //     return $alert(messages.provinceError)
+        // }
 
         if (this.state.type) {
             if (isStrEmptyOrSpaces(address.buyer_name)) {
@@ -137,6 +143,16 @@ export default class AddressFormScreen extends Component<any, any>{
             }
         }
 
+        if (this.state.provinceName == "") {
+            Alert.alert('Thông báo', `Vui lòng chọn Tỉnh/thành phố`);
+            return;
+        }
+
+        if (this.state.districtName == "") {
+            Alert.alert('Thông báo', `Vui lòng chọn Quận/huyện`);
+            return;
+        }
+
 
         this.setState({ isLoading: true });
         const res = await AddressRequest.save(address);
@@ -151,20 +167,17 @@ export default class AddressFormScreen extends Component<any, any>{
 
         }, 500)
 
-
-
     }
 
-    renderDistrict() {
-        if (!this.provinceMap[this.state.address.province_id]) {
-            return null;
-        }
-
-        const districts = this.provinceMap[this.state.address.province_id];
-        return districts.map(d => {
-            return <Picker.Item key={d.id.toString()} label={d.name} value={d.id.toString()} />
-        })
-    }
+    // renderDistrict() {
+    //     if (!this.provinceMap[this.state.address.province_id]) {
+    //         return null;
+    //     }
+    //     const districts = this.provinceMap[this.state.address.province_id];
+    //     return districts.map(d => {
+    //         return <Picker.Item key={d.id.toString()} label={d.name} value={d.id.toString()} />
+    //     })
+    // }
 
     renderBuyer = () => {
         const { errors, address } = this.state;
@@ -299,11 +312,15 @@ export default class AddressFormScreen extends Component<any, any>{
                                     // options: this.provinces,
                                     // value: address.province_id,
                                     title: 'Chọn tỉnh/thành phố',
-                                    onChange: (item:any) => {
-                                        console.log('item11',item)
+                                    onChange: (item: any) => {
+                                        console.log('item11', item)
                                         this.districts = item.districts;
                                         address.province_id = item.id;
-                                        this.setState({ address, provinceName: item.name, districtName: 'Quận/Huyện' })
+                                        this.setState({
+                                            address,
+                                            provinceName: item.name,
+                                            districtName: ''
+                                        })
                                     }
                                 });
                             }}>
@@ -328,7 +345,7 @@ export default class AddressFormScreen extends Component<any, any>{
                                 //         this.setState({ address, districtName: item.name })
                                 //     }
                                 // });
-                                console.log('333',address)
+                                console.log('333', address)
                                 navigation.navigate('SelectDistrictScreen', {
                                     title: 'Chọn quận/huyện',
                                     // options: this.districts,
@@ -336,7 +353,10 @@ export default class AddressFormScreen extends Component<any, any>{
                                     provinceId: address.province_id,
                                     onChange: (item) => {
                                         address.district_id = item.id;
-                                        this.setState({ address, districtName: item.name })
+                                        this.setState({
+                                            address,
+                                            districtName: item.name
+                                        })
                                     }
                                 });
                             }}>
@@ -377,13 +397,7 @@ const styles = StyleSheet.create({
     label: { fontSize: 12, color: 'gray' },
     fbLoginBtn: { width: 150, backgroundColor: '#1877F2', height: 45, padding: 10, borderRadius: 5 },
     ggLoginBtn: { width: 150, backgroundColor: '#EA4335', height: 45, padding: 10, borderRadius: 5 },
-    avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 100 / 2,
-        overflow: "hidden",
-        borderWidth: 0,
-    },
+    avatar: { width: 100, height: 100, borderRadius: 100 / 2, overflow: "hidden", borderWidth: 0 },
     addBtn: {
         width: formWidth * 0.9, alignItems: "center", backgroundColor: config.secondaryColor,
         borderRadius: 5, height: 40, marginBottom: 10, paddingTop: 5
