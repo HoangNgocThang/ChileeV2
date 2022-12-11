@@ -140,9 +140,12 @@ class ProductItemChildren extends PureComponent<Props, State> {
                     <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
                         <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(item.price)}</Text>
                     </Text>
-                    {quantity > 1 ? <Text style={{ fontSize: 12, marginTop: 4 }}>Tổng tiền:
-                        <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(item.price * quantity)}</Text>
+                    {item.quantity > 0 && item.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
+                        <Text style={[styles.textPrice1, { color: 'grey' }]} > {`${item?.quantity}`}</Text>
                     </Text> : <></>}
+                    {/* {quantity > 1 ? <Text style={{ fontSize: 12, marginTop: 4 }}>Tổng tiền:
+                        <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(item.price * quantity)}</Text>
+                    </Text> : <></>} */}
                     {item.quantity > 0 && item.saleable ?
                         <View style={{ marginTop: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                             <View style={styles.buttonWrapper}>
@@ -169,7 +172,7 @@ class ProductItemChildren extends PureComponent<Props, State> {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                            <Text>{`Max: ${item?.quantity}`}</Text>
+                            {/* <Text>{`Tồn: ${item?.quantity}`}</Text> */}
                             <TouchableOpacity onPress={this.addToCart}>
                                 <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
                             </TouchableOpacity>

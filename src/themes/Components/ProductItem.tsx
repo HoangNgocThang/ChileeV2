@@ -234,7 +234,7 @@ export default class ProductItem extends Component<Props, State>{
                         </View>
                     </TouchableOpacity>
                 </View>
-                <Text>{`Max: ${ProductItem?.quantity}`}</Text>
+                {/* <Text>{`Tồn: ${ProductItem?.quantity}`}</Text> */}
                 <TouchableOpacity onPress={this.addToCart}>
                     <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
                 </TouchableOpacity>
@@ -245,6 +245,7 @@ export default class ProductItem extends Component<Props, State>{
     render() {
         let { ProductItem } = this.props;
         const { quantity } = this.state
+        console.log('1111', ProductItem)
         return (
             <View style={[styles.item, { flexDirection: 'column' }]}>
                 <View style={styles.item}>
@@ -259,16 +260,21 @@ export default class ProductItem extends Component<Props, State>{
                         <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
                             <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price)}</Text>
                         </Text>
-                        {quantity > 1 ? <Text style={{ fontSize: 12, marginTop: 4 }}>Tổng tiền:
+                        {
+                            ProductItem?.quantity > 0 && ProductItem?.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
+                                <Text style={[styles.textPrice1, { color: 'grey' }]} > {`${ProductItem?.quantity}`}</Text>
+                            </Text> : <></>
+                        }
+                        {/* {quantity > 1 ? <Text style={{ fontSize: 12, marginTop: 4 }}>Tổng tiền:
                             <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price * quantity)}</Text>
-                        </Text> : <></>}
+                        </Text> : <></>} */}
                         {ProductItem?.quantity > 0 && ProductItem?.saleable ?
                             this.renderQuantity()
                             : <></>
                         }
                         {
                             // ProductItem?.quantity > 0 &&
-                             ProductItem?.saleable && ProductItem?.children?.length > 0 &&
+                            ProductItem?.saleable && ProductItem?.children?.length > 0 &&
                             <TouchableOpacity
                                 onPress={() => {
                                     this.setState({
