@@ -204,7 +204,7 @@ export default class ProfileScreen extends Component<any, State>{
                         </View>
                     </View>
                 </View> */}
-                <View style={styles.myOrders}>
+                {/* <View style={styles.myOrders}>
                     <View style={{flexDirection: 'row', height:40}}>
                         <View style={{flex:1}}>
                             <Text style={{ fontSize:22}}>Đơn hàng của tôi</Text>
@@ -266,7 +266,7 @@ export default class ProfileScreen extends Component<any, State>{
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>
+                </View> */}
 
                 <View style={[styles.profileMenu, {height: 50*this.state.menuItems.length}]}>
                     {this.state.menuItems.map((item,index) => {
