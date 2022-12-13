@@ -16,6 +16,7 @@ import CartStore from "../../store/CartStore";
 import ListProps from './ListProps';
 import ProductRequest from '../../api/requests/ProductRequest';
 import ListChildren from './ListChildren';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const defaultWidth = platform.deviceWidth;
 const ic_up = require('../../assets/ic_up.png')
@@ -48,15 +49,13 @@ export default class ProductItem extends Component<Props, State>{
         const defaultPack = (props.ProductItem.packs && props.ProductItem.packs[0]) || { id: 0, price: 0 };
         this.activePrice = props.ProductItem.price;
         this.state = {
-            quantity: 1,
+            quantity: 0,
             activePack: defaultPack,
             listDataPack: [],
             showChildren: false
         }
     }
 
-    componentDidMount() {
-    }
 
     // onSelectPack = (item: any, index: number) => {
     //     const newArr = this.state.listDataPack.map((e) => {
@@ -235,9 +234,11 @@ export default class ProductItem extends Component<Props, State>{
                     </TouchableOpacity>
                 </View>
                 {/* <Text>{`Tồn: ${ProductItem?.quantity}`}</Text> */}
-                <TouchableOpacity onPress={this.addToCart}>
-                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
-                </TouchableOpacity>
+                {
+                    this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart}>
+                        <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
+                    </TouchableOpacity> : <></>
+                }
             </View>
         )
     }

@@ -25,7 +25,6 @@ export  default class CartBadge extends Component<Prop, State>{
             if (this._isMounted) {
                 this.setState({count: CartStore.count()})
             }
-
         })
     }
 

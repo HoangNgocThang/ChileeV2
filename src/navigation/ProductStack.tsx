@@ -20,7 +20,8 @@ export default function ProductStack() {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                options={StackOption('Danh mục', false)}
+                // options={StackOption('Danh mục', false)}
+                options={{ headerShown: false }}
                 name="ProductsScreen" component={ProductsScreen} />
             <Stack.Screen
                 options={StackOption('Chi tiết', false)}

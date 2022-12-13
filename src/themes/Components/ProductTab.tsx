@@ -6,9 +6,11 @@ import platform from "../../themes/Variables/platform";
 import Spinner from '../../ui/Spinner';
 import CategoryRequest from "../../api/requests/CategoryRequest";
 import ProductTabItem from "./ProductTabItem";
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface Props {
     navigation: any
+    needReset: boolean
 }
 
 interface State {
@@ -29,7 +31,6 @@ export default class ProductTab extends Component<Props, State>{
     }
 
     asyncInit = async () => {
-
         const res = await CategoryRequest.getParentCategories();
         if (res) {
             let routes = res.categories.map((value, index, res) => {
@@ -50,6 +51,20 @@ export default class ProductTab extends Component<Props, State>{
 
     componentDidMount(): void {
         this.asyncInit();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        // if(this.props.need)
+        // console.log('aa11', prevProps)
+        if (prevProps.needReset != this.props.needReset) {
+            this.setState({
+                index: 0,
+                isLoading: true,
+                routes: []
+            }, () => {
+                this.asyncInit();
+            })
+        }
     }
 
     onChange = (index: any) => {
@@ -124,7 +139,6 @@ export default class ProductTab extends Component<Props, State>{
     }
 
     render() {
-
         return (
             <View style={styles.container}>
                 {this.renderContent()}

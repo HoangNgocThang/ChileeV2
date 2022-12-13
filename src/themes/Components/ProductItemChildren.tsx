@@ -15,6 +15,7 @@ import { CartItem, Pack } from "../../api/interfaces";
 import CartStore from "../../store/CartStore";
 import ListProps from './ListProps';
 import ProductRequest from '../../api/requests/ProductRequest';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const prodef = require('../../../src/assets/prodef.jpeg')
 const defaultWidth = platform.deviceWidth;
@@ -38,14 +39,14 @@ class ProductItemChildren extends PureComponent<Props, State> {
         super(props);
         this.activePrice = props.item?.price;
         this.state = {
-            quantity: 1,
+            quantity: 0,
             valid: true,
         }
     }
 
     add = (value: number) => {
         const newQuantity = this.state.quantity + value;
-        if (newQuantity <= 0) {
+        if (newQuantity < 0) {
             return;
         }
         this.setState({ quantity: newQuantity });
@@ -173,9 +174,11 @@ class ProductItemChildren extends PureComponent<Props, State> {
                                 </TouchableOpacity>
                             </View>
                             {/* <Text>{`Tồn: ${item?.quantity}`}</Text> */}
-                            <TouchableOpacity onPress={this.addToCart}>
-                                <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
-                            </TouchableOpacity>
+                            {
+                                this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart}>
+                                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
+                                </TouchableOpacity> : <></>
+                            }
                         </View>
                         : <></>
                     }
