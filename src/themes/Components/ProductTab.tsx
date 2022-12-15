@@ -54,8 +54,6 @@ export default class ProductTab extends Component<Props, State>{
     }
 
     componentDidUpdate(prevProps, prevState) {
-        // if(this.props.need)
-        // console.log('aa11', prevProps)
         if (prevProps.needReset != this.props.needReset) {
             this.setState({
                 index: 0,

@@ -20,7 +20,6 @@ const NotiDetailScreen = (props: Props) => {
             console.log('11id', id)
             const res: any = await NotificationRequest.show(id);
             if (res) {
-                console.log('ress1111', res)
                 setDataDetail(res)
             }
 

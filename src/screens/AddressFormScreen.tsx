@@ -101,7 +101,6 @@ export default class AddressFormScreen extends Component<Props, State>{
             return;
         }
         const { address } = this.state;
-        console.log('1111', this.state.provinceName, this.state.districtName);
 
         if (isStrEmptyOrSpaces(address.name)) {
             $alert(messages.receiverNameError);

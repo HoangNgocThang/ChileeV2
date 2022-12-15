@@ -26,7 +26,7 @@ const BOOK_TIME_ANY = 2;
 const BOOK_TIME_ANY_DATE = 3;
 
 interface Props {
-    navigation:any
+    navigation: any
 }
 
 export default class CheckoutScreen extends Component<Props, any>{
@@ -102,7 +102,7 @@ export default class CheckoutScreen extends Component<Props, any>{
         this.fastShipFee = feeData.fastShipFee;
         this.fastShippingNote = feeData.fastShippingNote;
 
-        console.log("AAA",res, 'tt',amount + feeData.shipFee, 'ori' ,amountOrigin + feeData.shipFee)
+        console.log("AAA", res, 'tt', amount + feeData.shipFee, 'ori', amountOrigin + feeData.shipFee)
         this.setState({
             allowFastShipping: feeData.allowFastShipping,
             isLoading: false,
@@ -198,7 +198,7 @@ export default class CheckoutScreen extends Component<Props, any>{
         }
         this.setState({ isLoading: true });
 
-        const res:any = await OrderRequest.createV4(this.getOrderParams());
+        const res: any = await OrderRequest.createV4(this.getOrderParams());
         console.log('ress OrderRequest', res)
         setTimeout(() => {
             this.setState({ isLoading: false });
@@ -320,10 +320,16 @@ export default class CheckoutScreen extends Component<Props, any>{
                     <View style={styles.secondCard}>
                         <InputText
                             placeholder={"Ghi chú cho người bán"}
-
+                            multiline={true}
                             onChangeText={(text) => { this.note = text; }}
                             placeholdercolor={"#a0a0a0"}
-                            style={{ fontSize: 16, paddingVertical: 0, width: platform.deviceWidth - 30, color: "#000000" }}
+                            style={{
+                                fontSize: 16,
+                                paddingVertical: 0,
+                                width: platform.deviceWidth - 30,
+                                color: "#000000",
+                                height: 80
+                            }}
                             showplaceholder={true}
                         />
                         <View style={{ width: "100%", height: 1, backgroundColor: "#a0a0a0" }} />
@@ -373,14 +379,14 @@ export default class CheckoutScreen extends Component<Props, any>{
                             <Text style={styles.cardText}>{this.state.shipmentNote}</Text>
                         </View>
                     </View>}
-                    <View style={styles.thirdCard}>
+                    <View style={[styles.thirdCard, ]}>
                         <View style={[styles.cardLeft, { paddingVertical: 10 }]}>
                             <View style={styles.cardIcon}>
                                 <MaterialCommunityIcons name="package-variant-closed" color={"#000000"} size={24} />
                             </View>
                             <Text style={styles.cardTitle}>Danh sách sản phẩm</Text>
                         </View>
-                        {this.state.items.map(item => {
+                        {this.state.items.map((item: any) => {
                             return (
                                 <OrderItem
                                     // key={item.product.id.toString() + "/" + item.pack.id.toString()}

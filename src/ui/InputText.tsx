@@ -50,7 +50,7 @@ export default class InputText extends Component<any, State>{
                 secureTextEntry={!!this.props.secureTextEntry}
                 style={this.props.style ? this.props.style : style.textInput}
                 onChangeText={text => this.onChangeText(text)}
-
+                multiline={this.props.multiline || false}
                 value={this.state.value}
             />
             {this.state.err.length>0 && <Text style={{color:'red', fontSize:12}}>{this.state.err}</Text>}

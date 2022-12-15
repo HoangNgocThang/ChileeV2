@@ -28,7 +28,8 @@ interface Props {
 
 interface State {
     quantity: number,
-    valid: boolean
+    valid: boolean,
+    cartQuantity: number
 }
 
 class ProductItemChildren extends PureComponent<Props, State> {
@@ -41,7 +42,21 @@ class ProductItemChildren extends PureComponent<Props, State> {
         this.state = {
             quantity: 0,
             valid: true,
+            cartQuantity: 0
         }
+    }
+
+    inintData = () => {
+        // Lấy số lượng đã chọn trong giỏ hàng 
+        if (this.props.item) {
+            this.setState({
+                cartQuantity: this.props.item?.cart_quantity
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.inintData()
     }
 
     add = (value: number) => {
@@ -97,6 +112,13 @@ class ProductItemChildren extends PureComponent<Props, State> {
         setTimeout(() => {
             $alert(res.message);
         }, 200)
+        // Lấy số lượng đã chọn trong giỏ hàng 
+        if (res && res?.items?.length > 0) {
+            const itemFind = res?.items?.find((e: any) => e?.product?.id == item?.product?.id);
+            console.log(itemFind)
+            const cartQuantity = itemFind?.quantity;
+            this.setState({ cartQuantity: cartQuantity });
+        }
     }
 
     addToCart = async () => {
@@ -138,12 +160,15 @@ class ProductItemChildren extends PureComponent<Props, State> {
                     <TouchableOpacity onPress={this.onNavigate}>
                         <Text style={styles.textName}>{item.name}</Text>
                     </TouchableOpacity>
-                    <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
-                        <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(item.price)}</Text>
-                    </Text>
-                    {item.quantity > 0 && item.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
-                        <Text style={[styles.textPrice1, { color: 'grey' }]} > {`${item?.quantity}`}</Text>
-                    </Text> : <></>}
+                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                        <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
+                            <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(item.price)}</Text>
+                        </Text>
+                        {item.quantity > 0 && item.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
+                            <Text style={[styles.textPrice1, { color: 'grey' }]} > {`${item?.quantity}`}</Text>
+                        </Text> : <></>}
+                    </View>
+
                     {/* {quantity > 1 ? <Text style={{ fontSize: 12, marginTop: 4 }}>Tổng tiền:
                         <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(item.price * quantity)}</Text>
                     </Text> : <></>} */}
@@ -173,10 +198,13 @@ class ProductItemChildren extends PureComponent<Props, State> {
                                     </View>
                                 </TouchableOpacity>
                             </View>
-                            {/* <Text>{`Tồn: ${item?.quantity}`}</Text> */}
                             {
-                                this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart}>
-                                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
+                               this.state.cartQuantity != 0 &&
+                                <Text style={[styles.textPrice1, { color: 'grey', marginLeft: 4 }]}>{`Đã chọn ${this.state.cartQuantity}`}</Text>
+                            }
+                            {
+                                this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart} style={{ paddingHorizontal: 8, paddingVertical: 4 }}>
+                                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={25} />
                                 </TouchableOpacity> : <></>
                             }
                         </View>

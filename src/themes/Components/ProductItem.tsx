@@ -32,7 +32,8 @@ interface State {
     quantity: number
     activePack: Pack,
     listDataPack: any[],
-    showChildren: boolean
+    showChildren: boolean,
+    cartQuantity: number
 }
 
 export default class ProductItem extends Component<Props, State>{
@@ -52,10 +53,23 @@ export default class ProductItem extends Component<Props, State>{
             quantity: 0,
             activePack: defaultPack,
             listDataPack: [],
-            showChildren: false
+            showChildren: false,
+            cartQuantity: 0
         }
     }
 
+    inintData = () => {
+        // Lấy số lượng đã chọn trong giỏ hàng 
+        if (this.props.ProductItem) {
+            this.setState({
+                cartQuantity: this.props.ProductItem?.cart_quantity
+            })
+        }
+    }
+
+    componentDidMount() {
+        this.inintData()
+    }
 
     // onSelectPack = (item: any, index: number) => {
     //     const newArr = this.state.listDataPack.map((e) => {
@@ -76,6 +90,13 @@ export default class ProductItem extends Component<Props, State>{
         setTimeout(() => {
             $alert(res.message);
         }, 200)
+        // Lấy số lượng đã chọn trong giỏ hàng 
+        if (res && res?.items?.length > 0) {
+            const itemFind = res?.items?.find((e: any) => e?.product?.id == item?.product?.id);
+            console.log(itemFind)
+            const cartQuantity = itemFind?.quantity;
+            this.setState({ cartQuantity: cartQuantity });
+        }
     }
 
     addToCart = async () => {
@@ -157,7 +178,7 @@ export default class ProductItem extends Component<Props, State>{
 
     add = (value: number) => {
         const newQuantity = this.state.quantity + value;
-        if (newQuantity <= 0) {
+        if (newQuantity < 0) {
             return;
         }
         this.setState({ quantity: newQuantity });
@@ -186,7 +207,11 @@ export default class ProductItem extends Component<Props, State>{
 
     renderPopup = () => {
         const { ProductItem } = this.props;
-        if (ProductItem.quantity < 1) {
+        if (
+            ProductItem.quantity < 1 &&
+            // Trong tất cả thằng con số lượng đã hết
+            ProductItem.child_product_has_quantity == false 
+        ) {
             return (
                 <View style={styles.outStock}>
                     <Text style={styles.textOutStock}>Hết hàng</Text>
@@ -233,10 +258,13 @@ export default class ProductItem extends Component<Props, State>{
                         </View>
                     </TouchableOpacity>
                 </View>
-                {/* <Text>{`Tồn: ${ProductItem?.quantity}`}</Text> */}
                 {
-                    this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart}>
-                        <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
+                    this.state.cartQuantity != 0 &&
+                    <Text style={[styles.textPrice1, { color: 'grey', marginLeft: 4 }]}>{`Đã chọn ${this.state.cartQuantity}`}</Text>
+                }
+                {
+                    this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart} style={{ paddingHorizontal: 8, paddingVertical: 4 }}>
+                        <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={25} />
                     </TouchableOpacity> : <></>
                 }
             </View>
@@ -245,8 +273,7 @@ export default class ProductItem extends Component<Props, State>{
 
     render() {
         let { ProductItem } = this.props;
-        const { quantity } = this.state
-        console.log('1111', ProductItem)
+        // console.log('ProductItem', ProductItem)
         return (
             <View style={[styles.item, { flexDirection: 'column' }]}>
                 <View style={styles.item}>
@@ -254,18 +281,20 @@ export default class ProductItem extends Component<Props, State>{
                         <Image source={ProductItem.thumb} style={styles.image} />
                         {this.renderPopup()}
                     </TouchableOpacity>
-                    <View style={[styles.content, {}]}>
+                    <View style={styles.content}>
                         <TouchableOpacity onPress={this.onNavigate}>
                             <Text style={styles.textName}>{ProductItem.name}</Text>
                         </TouchableOpacity>
-                        <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
-                            <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price)}</Text>
-                        </Text>
-                        {
-                            ProductItem?.quantity > 0 && ProductItem?.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
-                                <Text style={[styles.textPrice1, { color: 'grey' }]} > {`${ProductItem?.quantity}`}</Text>
-                            </Text> : <></>
-                        }
+                        <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
+                            <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
+                                <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price)}</Text>
+                            </Text>
+                            {
+                                ProductItem?.quantity > 0 && ProductItem?.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
+                                    <Text style={[styles.textPrice1, { color: 'grey' }]} > {`${ProductItem?.quantity}`}</Text>
+                                </Text> : <></>
+                            }
+                        </View>
                         {/* {quantity > 1 ? <Text style={{ fontSize: 12, marginTop: 4 }}>Tổng tiền:
                             <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price * quantity)}</Text>
                         </Text> : <></>} */}
@@ -282,8 +311,8 @@ export default class ProductItem extends Component<Props, State>{
                                         showChildren: !this.state.showChildren
                                     })
                                 }}
-                                style={{ position: 'absolute', bottom: 0, right: 0 }}>
-                                <Image source={this.state.showChildren ? ic_down : ic_up} style={{ width: 20, height: 20 }} resizeMode='cover' />
+                                style={{ position: 'absolute', bottom: 0, right: 0, paddingHorizontal: 8, paddingVertical: 4 }}>
+                                <Image source={this.state.showChildren ? ic_down : ic_up} style={{ width: 20, height: 20 }} resizeMode='cover' tintColor={config.secondaryColor} />
                             </TouchableOpacity>
                         }
 

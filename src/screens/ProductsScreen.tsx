@@ -43,8 +43,6 @@ export default class ProductsScreen extends Component<Props, State>{
     // }
 
     onFocus = async () => {
-        // console.log('abc1111')
-        // await AsyncStorage.setItem('needReset', 'false');
         this.setState({ needReset: false })
     }
 
