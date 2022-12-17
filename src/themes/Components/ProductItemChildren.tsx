@@ -109,13 +109,13 @@ class ProductItemChildren extends PureComponent<Props, State> {
     addCartBuyThangHN = async (item: any) => {
         console.log('addCartBuyThangHN', item)
         const res = await CartStore.add(item);
-        setTimeout(() => {
-            $alert(res.message);
-        }, 200)
+        // setTimeout(() => {
+        //     $alert(res.message);
+        // }, 200)
+        await this.setState({ quantity: 0 });
         // Lấy số lượng đã chọn trong giỏ hàng 
         if (res && res?.items?.length > 0) {
             const itemFind = res?.items?.find((e: any) => e?.product?.id == item?.product?.id);
-            console.log(itemFind)
             const cartQuantity = itemFind?.quantity;
             this.setState({ cartQuantity: cartQuantity });
         }
@@ -151,7 +151,7 @@ class ProductItemChildren extends PureComponent<Props, State> {
         const { item } = this.props
         const { quantity, valid } = this.state;
         return (
-            <View style={[styles.item, { marginLeft: 12, width: defaultWidth - 115 - 12 }]}>
+            <View style={[styles.item, { padding: 0, marginLeft: 12, width: defaultWidth - 115 - 12 }]}>
                 <TouchableOpacity style={styles.imageWrapper} onPress={this.onNavigate}>
                     <Image source={valid ? item.thumb : prodef} style={styles.image} onError={() => { this.setState({ valid: false }) }} />
                     {this.renderPopup()}
@@ -160,8 +160,8 @@ class ProductItemChildren extends PureComponent<Props, State> {
                     <TouchableOpacity onPress={this.onNavigate}>
                         <Text style={styles.textName}>{item.name}</Text>
                     </TouchableOpacity>
-                    <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                        <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
+                    <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center' }}>
+                        <Text style={{ fontSize: 12, marginTop: 4, marginRight: 12 }}>Đơn giá:
                             <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(item.price)}</Text>
                         </Text>
                         {item.quantity > 0 && item.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
@@ -175,7 +175,13 @@ class ProductItemChildren extends PureComponent<Props, State> {
                     {item.quantity > 0 && item.saleable ?
                         <View style={{ marginTop: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                             <View style={styles.buttonWrapper}>
-                                <TouchableOpacity style={{ borderRadius: 15 }} onPress={(() => this.add(-1))}>
+                                <TouchableOpacity
+                                    onPress={(() => this.add(-1))}
+                                    style={{
+                                        borderRadius: 1000,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
                                     <View style={styles.button}>
                                         <View style={styles.buttonBackground} />
                                         <View style={{ zIndex: 1 }}><MaterialCommunityIcons name="minus" color={"#fff"} size={15} /></View>
@@ -192,20 +198,27 @@ class ProductItemChildren extends PureComponent<Props, State> {
                                 />
                                 <TouchableOpacity
                                     onPress={(() => this.add(1))}
-                                    style={{ backgroundColor: config.secondaryColor, borderRadius: 15 }}>
+                                    style={{
+                                        backgroundColor: config.secondaryColor,
+                                        borderRadius: 1000,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
                                     <View style={styles.button}>
                                         <MaterialCommunityIcons name="plus" color={"#fff"} size={15} />
                                     </View>
                                 </TouchableOpacity>
                             </View>
                             {
-                               this.state.cartQuantity != 0 &&
-                                <Text style={[styles.textPrice1, { color: 'grey', marginLeft: 4 }]}>{`Đã chọn ${this.state.cartQuantity}`}</Text>
+                                this.state.cartQuantity != 0 &&
+                                <Text style={[styles.textPrice1, { color: 'grey', marginLeft: 12 }]}>{`Đã chọn: ${this.state.cartQuantity}`}</Text>
                             }
                             {
-                                this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart} style={{ paddingHorizontal: 8, paddingVertical: 4 }}>
-                                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={25} />
-                                </TouchableOpacity> : <></>
+                                this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart} style={{ padding: 4 }}>
+                                    <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
+                                </TouchableOpacity> : <View style={{ padding: 4 }}>
+                                    <View style={{ width: 20, height: 20 }} />
+                                </View>
                             }
                         </View>
                         : <></>
@@ -244,13 +257,18 @@ const styles = StyleSheet.create({
     },
     textPrice1: { fontSize: 12, color: config.secondaryColor, flex: 1 },
     buttonWrapper: { flexDirection: "row", alignItems: "center" },
-    button: { alignItems: "center", width: 20, height: 20, justifyContent: "center", padding: 1 },
+    button: {
+        alignItems: "center",
+        width: 15, height: 15,
+        justifyContent: "center",
+        // padding: 1,
+    },
     buttonBackground: {
         position: "absolute", backgroundColor: config.secondaryColor,
         top: 0, bottom: 0, left: 0, right: 0, opacity: 0.3, borderRadius: 15
     },
     textQuantity: {
-        fontSize: 14, color: config.secondaryColor, marginHorizontal: 5,
+        fontSize: 12, color: config.secondaryColor, marginHorizontal: 5,
         minWidth: 20,
         paddingVertical: 0, textAlign: "center"
     },

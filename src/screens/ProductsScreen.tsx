@@ -78,10 +78,9 @@ export default class ProductsScreen extends Component<Props, State>{
                         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Danh mục</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             style={{ marginRight: 15 }}
                             onPress={() => {
-
                                 Alert.alert(
                                     "Thông báo",
                                     "Thao tác này sẽ thêm tất cả các sản phẩm đã chọn vào giỏ hàng",
@@ -98,7 +97,6 @@ export default class ProductsScreen extends Component<Props, State>{
                                         },
                                         {
                                             text: "Huỷ", onPress: () => {
-
                                             }
                                         }
                                     ]
@@ -106,8 +104,8 @@ export default class ProductsScreen extends Component<Props, State>{
                             }}
                         >
                             <CartBadge name={'topright'} count={0} />
-                            <MaterialCommunityIcons name="cart-outline" color={config.textColor} size={24} />
-                        </TouchableOpacity>
+                            <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={25} />
+                        </TouchableOpacity> */}
                     </View>
                 </View>
                 <ProductTab navigation={this.props.navigation} needReset={this.state.needReset} />

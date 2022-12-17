@@ -27,7 +27,7 @@ const Stack = createStackNavigator();
 export default function ProfileStack() {
     return (
             <Stack.Navigator>
-                <Stack.Screen options={StackOption('Cá nhân', false)} name="ProfileScreen" component={ProfileScreen} />
+                <Stack.Screen options={StackOption('Cá nhân', false, false)} name="ProfileScreen" component={ProfileScreen} />
                 <Stack.Screen options={StackOption('Đăng nhập', false)} name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen options={StackOption('Đăng ký', false)} name="RegisterScreen" component={RegisterScreen} />
                 <Stack.Screen options={StackOption('Quên mật khẩu', false)} name="PassForgotScreen" component={PassForgotScreen} />

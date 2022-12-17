@@ -158,10 +158,13 @@ export default class CartItem extends Component<Props, State>{
             </View>
 
             <View style={[styles.contentFooter]}>
-              <Text style={styles.textInfo}>Đơn giá:</Text>
-              <Text style={styles.textAmount} numberOfLines={1} ellipsizeMode="tail">
-                {numberFormat(this.state.price)}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.textInfo}>Đơn giá:</Text>
+                <Text style={[styles.textAmount, { flex: 0 }]} numberOfLines={1}>
+                  {numberFormat(this.state.price)}
+                </Text>
+                <Text style={{ marginLeft: 12, fontSize: 12, color: 'grey', }}>Tồn: {product.quantity}</Text>
+              </View>
               {this.state.priceOrigin > this.state.price &&
                 <Text style={styles.textAmountOrigin} numberOfLines={1} ellipsizeMode="tail">
                   {numberFormat(this.state.priceOrigin)}
@@ -178,7 +181,7 @@ export default class CartItem extends Component<Props, State>{
                 </Text>}
             </View>
 
-            <View style={[styles.contentFooter, { marginTop: 5 }]}>
+            {/* <View style={[styles.contentFooter, { marginTop: 5 }]}>
               <View style={styles.buttonWrapper}>
                 <TouchableOpacity style={{ borderRadius: 15 }} onPress={(() => this.add(-1))}>
                   <View style={styles.button}>
@@ -204,7 +207,47 @@ export default class CartItem extends Component<Props, State>{
                 </TouchableOpacity>
               </View>
               <Text style={styles.textInfo}>Tồn: {product.quantity}</Text>
+            </View> */}
+
+            <View style={{ marginTop: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+              <View style={styles.buttonWrapper}>
+                <TouchableOpacity
+                  onPress={(() => this.add(-1))}
+                  style={{
+                    borderRadius: 1000,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <View style={styles.button}>
+                    <View style={styles.buttonBackground} />
+                    <View style={styles.button}>
+                      <MaterialCommunityIcons name="minus" color={"#fff"} size={15} /></View>
+                  </View>
+                </TouchableOpacity>
+                <TextInput
+                  value={this.state.quantity.toString()}
+                  onChangeText={this.onChangeText}
+                  onEndEditing={this.onEndEditing}
+                  keyboardType={"number-pad"}
+                  enablesReturnKeyAutomatically={true}
+                  returnKeyType={"done"}
+                  style={styles.textQuantity}
+                />
+                <TouchableOpacity
+                  onPress={(() => this.add(1))}
+                  style={{
+                    backgroundColor: config.secondaryColor,
+                    borderRadius: 1000,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}>
+                  <View style={styles.button}>
+                    <MaterialCommunityIcons name="plus" color={"#fff"} size={15} />
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
+
           </View>
         </View>
       </View>
@@ -229,28 +272,43 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     flex: 1,
-    color: config.secondaryColor
+    color: config.textColor
   },
   contentFooter: { flexDirection: "row", alignItems: "center" },
-  textAmount: { fontSize: 12, color: config.secondaryColor, flex: 1, fontWeight: "bold" },
+  textAmount: { fontSize: 12, color: config.secondaryColor, flex: 1 },
   textAmountOrigin: { fontSize: 12, color: 'gray', textDecorationLine: "line-through", marginRight: 3 },
-  buttonWrapper: { flexDirection: "row", alignItems: "center", paddingRight: 10 },
-  button: { alignItems: "center", width: 25, height: 25, justifyContent: "center", padding: 1 },
+  // buttonWrapper: { flexDirection: "row", alignItems: "center", paddingRight: 10 },
+  // button: { alignItems: "center", width: 25, height: 25, justifyContent: "center", padding: 1 },
+  // buttonBackground: {
+  //   position: "absolute", backgroundColor: config.secondaryColor,
+  //   top: 0, bottom: 0, left: 0, right: 0, opacity: 0.3, borderRadius: 15
+  // },
+  buttonWrapper: { flexDirection: "row", alignItems: "center" },
+  button: {
+    alignItems: "center",
+    width: 15, height: 15,
+    justifyContent: "center",
+    // padding: 1,
+  },
   buttonBackground: {
     position: "absolute", backgroundColor: config.secondaryColor,
     top: 0, bottom: 0, left: 0, right: 0, opacity: 0.3, borderRadius: 15
   },
-  //textQuantity: {fontSize: 14, paddingHorizontal: 5, color: config.secondaryColor, fontWeight: "bold"},
-  textInfo: { fontSize: 12, paddingTop: 2, color: config.textColor, marginRight: 5 },
+  textQuantity: {
+    fontSize: 12, color: config.secondaryColor, marginHorizontal: 5,
+    minWidth: 30,
+    paddingVertical: 0, textAlign: "center"
+  },
+  textInfo: { fontSize: 12,  color: config.textColor, marginRight: 5 },
   shopInfo: {
     paddingTop: 2, color: config.textColor, alignSelf: 'flex-start',
     marginTop: 5, borderRadius: 5,
     padding: 5, borderWidth: 1, borderColor: config.secondaryColor
   },
   shopInfoText: { fontSize: 14, paddingTop: 2, color: config.secondaryColor, borderColor: config.secondaryColor },
-  textQuantity: {
-    fontSize: 18, color: config.secondaryColor, marginHorizontal: 5,
-    minWidth: 60,
-    paddingVertical: 0, textAlign: "center"
-  },
+  // textQuantity: {
+  //   fontSize: 18, color: config.secondaryColor, marginHorizontal: 5,
+  //   minWidth: 60,
+  //   paddingVertical: 0, textAlign: "center"
+  // },
 })

@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     textName: {
         fontSize: 14,
         fontWeight: "bold",
-        color: config.secondaryColor
+        // color: config.secondaryColor
     },
     quantityWrapper: { flexDirection: "row", alignItems: "center", paddingTop: 2 },
     priceWrapper: { alignItems: "flex-end" },

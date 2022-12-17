@@ -87,13 +87,13 @@ export default class ProductItem extends Component<Props, State>{
     addCartBuyThangHN = async (item: any) => {
         console.log('addCartBuyThangHN', item)
         const res = await CartStore.add(item);
-        setTimeout(() => {
-            $alert(res.message);
-        }, 200)
+        // setTimeout(() => {
+        //     $alert(res.message);
+        // }, 200)
+        await this.setState({ quantity: 0 });
         // Lấy số lượng đã chọn trong giỏ hàng 
         if (res && res?.items?.length > 0) {
             const itemFind = res?.items?.find((e: any) => e?.product?.id == item?.product?.id);
-            console.log(itemFind)
             const cartQuantity = itemFind?.quantity;
             this.setState({ cartQuantity: cartQuantity });
         }
@@ -210,7 +210,7 @@ export default class ProductItem extends Component<Props, State>{
         if (
             ProductItem.quantity < 1 &&
             // Trong tất cả thằng con số lượng đã hết
-            ProductItem.child_product_has_quantity == false 
+            ProductItem.child_product_has_quantity == false
         ) {
             return (
                 <View style={styles.outStock}>
@@ -235,7 +235,13 @@ export default class ProductItem extends Component<Props, State>{
         return (
             <View style={{ marginTop: 4, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                 <View style={styles.buttonWrapper}>
-                    <TouchableOpacity style={{ borderRadius: 15 }} onPress={(() => this.add(-1))}>
+                    <TouchableOpacity
+                        onPress={(() => this.add(-1))}
+                        style={{
+                            borderRadius: 1000,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
                         <View style={styles.button}>
                             <View style={styles.buttonBackground} />
                             <View style={{ zIndex: 1 }}><MaterialCommunityIcons name="minus" color={"#fff"} size={15} /></View>
@@ -252,7 +258,12 @@ export default class ProductItem extends Component<Props, State>{
                     />
                     <TouchableOpacity
                         onPress={(() => this.add(1))}
-                        style={{ backgroundColor: config.secondaryColor, borderRadius: 15 }}>
+                        style={{
+                            backgroundColor: config.secondaryColor,
+                            borderRadius: 1000,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
                         <View style={styles.button}>
                             <MaterialCommunityIcons name="plus" color={"#fff"} size={15} />
                         </View>
@@ -260,12 +271,14 @@ export default class ProductItem extends Component<Props, State>{
                 </View>
                 {
                     this.state.cartQuantity != 0 &&
-                    <Text style={[styles.textPrice1, { color: 'grey', marginLeft: 4 }]}>{`Đã chọn ${this.state.cartQuantity}`}</Text>
+                    <Text style={[styles.textPrice1, { color: 'grey', marginLeft: 12 }]}>{`Đã chọn: ${this.state.cartQuantity}`}</Text>
                 }
                 {
-                    this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart} style={{ paddingHorizontal: 8, paddingVertical: 4 }}>
-                        <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={25} />
-                    </TouchableOpacity> : <></>
+                    this.state.quantity != 0 ? <TouchableOpacity onPress={this.addToCart} style={{ padding: 4 }}>
+                        <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={20} />
+                    </TouchableOpacity> : <View style={{ padding: 4 }}>
+                        <View style={{ width: 20, height: 20 }} />
+                    </View>
                 }
             </View>
         )
@@ -275,7 +288,7 @@ export default class ProductItem extends Component<Props, State>{
         let { ProductItem } = this.props;
         // console.log('ProductItem', ProductItem)
         return (
-            <View style={[styles.item, { flexDirection: 'column' }]}>
+            <View style={[styles.item, { padding: 0, flexDirection: 'column', }]}>
                 <View style={styles.item}>
                     <TouchableOpacity style={styles.imageWrapper} onPress={this.onNavigate}            >
                         <Image source={ProductItem.thumb} style={styles.image} />
@@ -285,12 +298,12 @@ export default class ProductItem extends Component<Props, State>{
                         <TouchableOpacity onPress={this.onNavigate}>
                             <Text style={styles.textName}>{ProductItem.name}</Text>
                         </TouchableOpacity>
-                        <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-between' }}>
-                            <Text style={{ fontSize: 12, marginTop: 4 }}>Đơn giá:
+                        <View style={{ flexDirection: 'row', width: '100%', alignItems: 'center' }}>
+                            <Text style={{ fontSize: 12, marginTop: 4, marginRight: 12 }}>Đơn giá:
                                 <Text style={styles.textPrice1} numberOfLines={1} ellipsizeMode="tail"> {numberFormat(ProductItem.price)}</Text>
                             </Text>
                             {
-                                ProductItem?.quantity > 0 && ProductItem?.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey' }}>Tồn:
+                                ProductItem?.quantity > 0 && ProductItem?.saleable ? <Text style={{ fontSize: 12, marginTop: 4, color: 'grey', }}>Tồn:
                                     <Text style={[styles.textPrice1, { color: 'grey' }]} > {`${ProductItem?.quantity}`}</Text>
                                 </Text> : <></>
                             }
@@ -312,7 +325,7 @@ export default class ProductItem extends Component<Props, State>{
                                     })
                                 }}
                                 style={{ position: 'absolute', bottom: 0, right: 0, paddingHorizontal: 8, paddingVertical: 4 }}>
-                                <Image source={this.state.showChildren ? ic_down : ic_up} style={{ width: 20, height: 20 }} resizeMode='cover' tintColor={config.secondaryColor} />
+                                <Image source={this.state.showChildren ? ic_up : ic_down} style={{ width: 20, height: 20 }} resizeMode='cover' tintColor={config.secondaryColor} />
                             </TouchableOpacity>
                         }
 
@@ -359,13 +372,18 @@ const styles = StyleSheet.create({
     },
     textPrice1: { fontSize: 12, color: config.secondaryColor, flex: 1 },
     buttonWrapper: { flexDirection: "row", alignItems: "center" },
-    button: { alignItems: "center", width: 20, height: 20, justifyContent: "center", padding: 1 },
+    button: {
+        alignItems: "center",
+        width: 15, height: 15,
+        justifyContent: "center",
+        // padding: 1,
+    },
     buttonBackground: {
         position: "absolute", backgroundColor: config.secondaryColor,
         top: 0, bottom: 0, left: 0, right: 0, opacity: 0.3, borderRadius: 15
     },
     textQuantity: {
-        fontSize: 14, color: config.secondaryColor, marginHorizontal: 5,
+        fontSize: 12, color: config.secondaryColor, marginHorizontal: 5,
         minWidth: 20,
         paddingVertical: 0, textAlign: "center"
     },
