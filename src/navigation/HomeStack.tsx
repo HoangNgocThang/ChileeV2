@@ -37,9 +37,10 @@ export default function HomeStack() {
                 name="Home" component={HomeScreen}/>
 
             <Stack.Screen
-                options={({route}) => {
-                    return StackOption('Chi tiết', false, true)
-                }}
+                // options={({route}) => {
+                //     return StackOption('Chi tiết', false, true)
+                // }}
+                options={{ headerShown: false }}
                 name="DetailProduct" component={ProductDetailScreen}/>
             <Stack.Screen
                 options={({route}) => {

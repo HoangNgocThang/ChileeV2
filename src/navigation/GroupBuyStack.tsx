@@ -32,9 +32,10 @@ export default function GroupBuyStack() {
             }} name="GroupBuyScreen" component={GroupBuyScreen} />
             <Stack.Screen name="ProductDetailScreen"
                           component={ProductDetailScreen}
-                          options={({route}) => {
-                              return StackOption( route.params.title || messages.title, false)
-                          }}
+                        //   options={({route}) => {
+                        //       return StackOption( route.params.title || messages.title, false)
+                        //   }}
+                        options={{ headerShown: false }}
             />
             <Stack.Screen options={{
                 title: "Danh sách nhóm",

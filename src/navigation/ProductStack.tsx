@@ -24,7 +24,8 @@ export default function ProductStack() {
                 options={{ headerShown: false }}
                 name="ProductsScreen" component={ProductsScreen} />
             <Stack.Screen
-                options={StackOption('Chi tiết', false)}
+                // options={StackOption('Chi tiết', false)}
+                options={{ headerShown: false }}
                 name="ProductDetailScreen" component={ProductDetailScreen} />
             <Stack.Screen
                 options={({ route }) => {
@@ -83,9 +84,10 @@ export default function ProductStack() {
                 return StackOption(route.params.title || 'Chi tiết', false)
             }} name="ProductShopDetail" component={ProductShopDetail} />
             <Stack.Screen
-                options={({ route }) => {
-                    return StackOption('Chi tiết', false, true)
-                }}
+                // options={({ route }) => {
+                //     return StackOption('Chi tiết', false, true)
+                // }}
+                options={{ headerShown: false }}
                 name="DetailProduct" component={ProductDetailScreen} />
         </Stack.Navigator>
     );
