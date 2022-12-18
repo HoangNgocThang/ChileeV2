@@ -69,7 +69,7 @@ class ProductItemChildren extends PureComponent<Props, State> {
 
     onChangeText = (text: string) => {
         let quantity = intVal(text);
-        if (quantity <= 0) {
+        if (quantity < 0) {
             return;
         }
         this.setState({ quantity });

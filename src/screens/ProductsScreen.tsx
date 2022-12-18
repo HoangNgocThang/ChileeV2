@@ -63,7 +63,7 @@ export default class ProductsScreen extends Component<Props, State>{
             />
         )
     }
-
+    
     render() {
         // if (this.state.isLoading) {
         //     return <Spinner/>

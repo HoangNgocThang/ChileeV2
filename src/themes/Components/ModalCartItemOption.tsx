@@ -1,24 +1,25 @@
-import React, {Component} from 'react';
-import {FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React, { Component } from 'react';
+import { FlatList, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Modal from "react-native-modal";
 import platform from "../Variables/platform";
-import {cloneObject, debounce, numberFormat, intVal, validQuantity} from "../../utils";
+import { cloneObject, debounce, numberFormat, intVal, validQuantity } from "../../utils";
 import config from "../../config";
-import {Pack, Product} from '../../api/interfaces';
-import CartStore, {CartItem} from "../../store/CartStore";
-import {$alert} from "../../ui/Alert";
+import { Pack, Product } from '../../api/interfaces';
+import CartStore, { CartItem } from "../../store/CartStore";
+import { $alert } from "../../ui/Alert";
 import messages from "../../locale/messages";
 import storage from "../../utils/storage";
-import {navigate} from "../../navigation/RootNavigation";
+import { navigate } from "../../navigation/RootNavigation";
 // @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import ProductRequest from "../../api/requests/ProductRequest";
 import Prompt from "../../ui/Prompt";
 
 
-
 export interface Props {
     item: Product
+    quantity: number
+    onUpdateQuantity: (quantity: number)=> void
 }
 
 export interface State {
@@ -45,15 +46,15 @@ export default class ModalCartItemOption extends Component<Props, State> {
             item.checked = (index === 0)
         });
 
-        const defaultPack =  (props.item.packs && props.item.packs[0]) || {id: 0, price: 0};
+        const defaultPack = (props.item.packs && props.item.packs[0]) || { id: 0, price: 0 };
         this.activePrice = props.item.price;
         this.state = {
             isVisible: false,
             price: 0,
-            quantity: 1,
-            item:  props.item || {thumb: {}},
-            amount:  0,
-            amountOrigin:  0,
+            quantity: this.props.quantity || 1,
+            item: props.item || { thumb: {} },
+            amount: 0,
+            amountOrigin: 0,
             activePack: defaultPack,
             showPrompt: false
         };
@@ -63,7 +64,14 @@ export default class ModalCartItemOption extends Component<Props, State> {
         this.onOpen = this.onOpen.bind(this);
     }
 
-
+    componentDidUpdate(prevProps: any, prevState: any, snapshot?: any): void {
+        console.log(prevProps,prevState);
+         if(prevProps.quantity != this.state.quantity) {
+             this.setState({
+                 quantity: prevProps.quantity 
+             })
+         }
+     }
 
     static getDerivedStateFromProps(nextProps: any, prevState: any) {
         // do things with nextProps.someProp and prevState.cachedSomeProp
@@ -115,16 +123,16 @@ export default class ModalCartItemOption extends Component<Props, State> {
             item.checked = (pack === item)
         });
         //this.activePrice = pack.price;
-       // const newPrice = this.activePrice * this.state.quantity;
-        this.setState({item: this.state.item, activePack: pack})
+        // const newPrice = this.activePrice * this.state.quantity;
+        this.setState({ item: this.state.item, activePack: pack })
     };
 
     add = async (value: number) => {
 
         const newValue = validQuantity(this.state.quantity + value);
-
+        this.props.onUpdateQuantity(newValue)
         this.isLoading = true;
-        this.setState({quantity: newValue}, () => {
+        this.setState({ quantity: newValue }, () => {
             this.asyncInit();
         });
     };
@@ -134,11 +142,11 @@ export default class ModalCartItemOption extends Component<Props, State> {
             $alert('Vui lòng đợi giây lát')
             return;
         }
-        
+
         const auth = await storage.getAuth();
         if (!auth) {
             $alert(messages.pleaseLogin, () => {
-                this.setState({isVisible: false});
+                this.setState({ isVisible: false });
                 // navigate('ProfileScreen');
             });
             return;
@@ -167,14 +175,14 @@ export default class ModalCartItemOption extends Component<Props, State> {
             $alert(res.message);
         } else {
             $alert(res.message, () => {
-                this.setState({isVisible: false});
+                this.setState({ isVisible: false });
             });
         }
     };
 
 
     showQuantity = (index: number) => {
-        const {priceByQuantities} = this.props.item;
+        const { priceByQuantities } = this.props.item;
         if (index == 0) {
             return "≥" + priceByQuantities[index].quantity
         } else {
@@ -186,22 +194,22 @@ export default class ModalCartItemOption extends Component<Props, State> {
     }
 
     renderPriceByQuantity = () => {
-        let {item} = this.props;
+        let { item } = this.props;
         if (item.priceByQuantities && item.priceByQuantities.length > 0) {
             return (
                 <View>
-                    <View style={styles.underLine}/>
+                    <View style={styles.underLine} />
                     <View style={styles.priceByUnit}>
                         <FlatList
                             numColumns={3}
                             keyExtractor={(item, index) => item.id.toString()}
-                            style={{marginTop: 15, marginBottom: 10}}
+                            style={{ marginTop: 15, marginBottom: 10 }}
                             showsVerticalScrollIndicator={false}
                             data={item.priceByQuantities}
-                            renderItem={({item}) => {
+                            renderItem={({ item }) => {
                                 return <View style={styles.priceUnitItem} key={item.id}>
                                     <Text style={styles.textItemPrice}>{numberFormat(item.price)}</Text>
-                                    <View style={[styles.priceItemRow, {marginTop: 3}]}>
+                                    <View style={[styles.priceItemRow, { marginTop: 3 }]}>
                                         <Text style={styles.textItemQuantity}>{item.explain}</Text>
                                     </View>
 
@@ -219,12 +227,12 @@ export default class ModalCartItemOption extends Component<Props, State> {
         const hasDiscount = this.state.amountOrigin > this.state.amount;
         return (
             <View>
-                <View style={styles.underLine}/>
+                <View style={styles.underLine} />
                 <View style={styles.amountWrapper}>
                     <Text style={styles.amountTitle}>Tổng tiền</Text>
                     <Text>
                         {hasDiscount &&
-                        <Text style={styles.textPriceOrigin}>{numberFormat(this.state.amountOrigin)+ ' '}</Text>}
+                            <Text style={styles.textPriceOrigin}>{numberFormat(this.state.amountOrigin) + ' '}</Text>}
                         <Text style={styles.textPrice}>{numberFormat(this.state.amount)}</Text>
                     </Text>
                 </View>
@@ -232,11 +240,11 @@ export default class ModalCartItemOption extends Component<Props, State> {
         )
     }
 
-    renderItem = ({item}) => {
+    renderItem = ({ item }) => {
         return (
             <TouchableOpacity
                 style={[styles.pack, item.checked ? styles.packActive : undefined]}
-                onPress={() => {this.selectPack(item)}}
+                onPress={() => { this.selectPack(item) }}
             >
                 <Text style={[styles.packName, item.checked ? styles.packNameActie : undefined]}>{item.name}</Text>
             </TouchableOpacity>
@@ -244,7 +252,7 @@ export default class ModalCartItemOption extends Component<Props, State> {
     }
 
     renderPack = () => {
-        let {item} = this.props;
+        let { item } = this.props;
         let hasChecked = false;
         item.packs.forEach((item: Pack, index: number) => {
             if (item.checked) {
@@ -257,13 +265,13 @@ export default class ModalCartItemOption extends Component<Props, State> {
 
         return (
             <View>
-                <View style={styles.underLine}/>
-                <Text style={{fontSize: 16, fontWeight: "bold", marginTop: 10, color: config.secondaryColor}}>
+                <View style={styles.underLine} />
+                <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 10, color: config.secondaryColor }}>
                     Thuộc tính
                 </Text>
                 <View style={styles.packContainer}>
                     <FlatList
-                        style={{maxHeight: platform.deviceHeight * 0.3}}
+                        style={{ maxHeight: platform.deviceHeight * 0.3 }}
                         showsVerticalScrollIndicator={false}
                         data={item.packs}
                         renderItem={this.renderItem}
@@ -296,8 +304,8 @@ export default class ModalCartItemOption extends Component<Props, State> {
 
     render() {
 
-        let {item} = this.props;
-        const {activePack} = this.state;
+        let { item } = this.props;
+        const { activePack } = this.state;
         let thumbUrl = activePack.image;
         if (!thumbUrl) {
             if (item.thumb && item.thumb.uri) {
@@ -312,7 +320,7 @@ export default class ModalCartItemOption extends Component<Props, State> {
                     animationIn={'fadeIn'}
                     animationOut={'fadeOut'}
                     isVisible={this.state.isVisible}
-                    style={{margin: 0, justifyContent: "flex-end" }}
+                    style={{ margin: 0, justifyContent: "flex-end" }}
                     onBackButtonPress={() => {
                         this.onClose();
                     }}
@@ -320,32 +328,32 @@ export default class ModalCartItemOption extends Component<Props, State> {
                         this.onClose();
                     }}>
                     <Prompt label={'Nhập số lượng'}
-                            ref={(ref: any) => {
-                                this.promptRef = ref;
-                            }}
-                            maxLength={6}
-                            placeholder={'Vui lòng nhập số lượng'}
-                            keyboardType={'number-pad'}
-                            visible={this.state.showPrompt}
-                            onDone={this.onQuantityTextChange}
-                            onCancel={() => {
-                                this.setState({
-                                    showPrompt:false,
-                                });
-                            }}
-                            content={this.state.quantity}/>
+                        ref={(ref: any) => {
+                            this.promptRef = ref;
+                        }}
+                        maxLength={6}
+                        placeholder={'Vui lòng nhập số lượng'}
+                        keyboardType={'number-pad'}
+                        visible={this.state.showPrompt}
+                        onDone={this.onQuantityTextChange}
+                        onCancel={() => {
+                            this.setState({
+                                showPrompt: false,
+                            });
+                        }}
+                        content={this.state.quantity} />
                     <View style={styles.container}>
-                        <View style={{width: platform.deviceWidth}}>
+                        <View style={{ width: platform.deviceWidth }}>
                             <View style={styles.wrapper}>
                                 <View style={styles.header}>
-                                    <Image source={{uri: thumbUrl}} style={styles.headerImage}/>
+                                    <Image source={{ uri: thumbUrl }} style={styles.headerImage} />
                                     <View style={styles.headerBody}>
                                         <Text style={styles.textName}>{item.name}</Text>
                                         <Text style={styles.textPrice}>{numberFormat(this.state.price)}
-                                            <Text style={{fontSize: 14, color: "#a0a0a0"}}>/{item.unit}</Text>
+                                            <Text style={{ fontSize: 14, color: "#a0a0a0" }}>/{item.unit}</Text>
                                         </Text>
-                                        <Text style={{fontSize: 14, color: "#a0a0a0"}}>Số lượng còn lại: {item.quantity}</Text>
-                                        <Text style={{fontSize: 14, paddingTop: 2, color: "#a0a0a0"}}>{this.state.activePack.name}</Text>
+                                        <Text style={{ fontSize: 14, color: "#a0a0a0" }}>Số lượng còn lại: {item.quantity}</Text>
+                                        <Text style={{ fontSize: 14, paddingTop: 2, color: "#a0a0a0" }}>{this.state.activePack.name}</Text>
                                     </View>
                                     <View>
                                         <TouchableOpacity onPress={this.onClose}>
@@ -355,25 +363,25 @@ export default class ModalCartItemOption extends Component<Props, State> {
                                 </View>
                                 {this.renderPriceByQuantity()}
                                 {/* {this.renderPack()} */}
-                                <View style={styles.underLine}/>
+                                <View style={styles.underLine} />
                                 <View style={styles.amountWrapper}>
                                     <Text style={styles.amountTitle}>Số lượng</Text>
                                     <View style={styles.buttonWrapper}>
-                                        <TouchableOpacity style={styles.plusBtn} onPress={() => {this.add(-1)}}>
+                                        <TouchableOpacity style={styles.plusBtn} onPress={() => { this.add(-1) }}>
                                             <MaterialCommunityIcons name="minus" color={"#a0a0a0"} size={22} />
                                         </TouchableOpacity>
                                         <TouchableOpacity
                                             onPress={this.openPrompt}
-                                            style={{minWidth:70, justifyContent:'center'}}>
-                                            <Text style={{textAlign:'center',width:'100%'}}>{this.state.quantity}</Text>
+                                            style={{ minWidth: 70, justifyContent: 'center' }}>
+                                            <Text style={{ textAlign: 'center', width: '100%' }}>{this.state.quantity}</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={styles.plusBtn} onPress={() => {this.add(1)}}>
+                                        <TouchableOpacity style={styles.plusBtn} onPress={() => { this.add(1) }}>
                                             <MaterialCommunityIcons name="plus" color={"#a0a0a0"} size={22} />
                                         </TouchableOpacity>
                                     </View>
                                 </View>
                                 {this.renderPrice()}
-                                <View style={styles.underLine}/>
+                                <View style={styles.underLine} />
                                 {/* thanghn todo */}
                                 <TouchableOpacity style={styles.addBtn} onPress={this.addToCart}>
                                     <Text style={styles.textAdd}>Thêm vào giỏ hàng</Text>
@@ -388,40 +396,40 @@ export default class ModalCartItemOption extends Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    container: {alignItems: 'center'},
+    container: { alignItems: 'center' },
     wrapper: {
         borderTopLeftRadius: 15, backgroundColor: '#FFFFFF', paddingHorizontal: 15, paddingVertical: 15,
         borderTopRightRadius: 15
     },
-    header: {flexDirection: "row", paddingBottom: 15},
-    headerImage: {width: defaultWidth / 4, height: defaultWidth/4},
-    headerBody: {flex: 1, paddingLeft: 15, justifyContent: "space-between"},
-    underLine: {height: 1, backgroundColor: "#a0a0a0", width: "100%"},
-    amountWrapper: {flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 12.5},
-    amountTitle: {fontSize: 16, fontWeight: "bold", color: config.secondaryColor},
+    header: { flexDirection: "row", paddingBottom: 15 },
+    headerImage: { width: defaultWidth / 4, height: defaultWidth / 4 },
+    headerBody: { flex: 1, paddingLeft: 15, justifyContent: "space-between" },
+    underLine: { height: 1, backgroundColor: "#a0a0a0", width: "100%" },
+    amountWrapper: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 12.5 },
+    amountTitle: { fontSize: 16, fontWeight: "bold", color: config.secondaryColor },
     buttonWrapper: {
         flexDirection: "row", alignItems: "center", borderRadius: 5,
         borderWidth: 1, borderColor: "#a0a0a0", paddingVertical: 3.5
     },
-    plusBtn: {alignItems: "center", justifyContent: "center", paddingHorizontal: 5},
-    packContainer: {marginTop: 10, paddingBottom: 15},
-    packActive: {backgroundColor: config.secondaryColor},
-    packNameActie: {color: '#fff'},
-    pack: {alignSelf: 'flex-start' ,marginTop:5, borderRadius: 5, backgroundColor: "#E3E3E8", marginEnd: 10},
-    packName: {fontSize: 14, paddingHorizontal: 5, paddingVertical: 5, color: "#000"},
+    plusBtn: { alignItems: "center", justifyContent: "center", paddingHorizontal: 5 },
+    packContainer: { marginTop: 10, paddingBottom: 15 },
+    packActive: { backgroundColor: config.secondaryColor },
+    packNameActie: { color: '#fff' },
+    pack: { alignSelf: 'flex-start', marginTop: 5, borderRadius: 5, backgroundColor: "#E3E3E8", marginEnd: 10 },
+    packName: { fontSize: 14, paddingHorizontal: 5, paddingVertical: 5, color: "#000" },
     addBtn: {
         width: "100%", alignItems: "center", backgroundColor: config.secondaryColor,
         borderRadius: 10, height: 40, marginTop: 5, justifyContent: "center"
     },
-    textAdd: {fontSize: 16, paddingVertical: 5, color: "#fff"},
-    textName: {fontSize: 18, fontWeight: "bold", color: config.secondaryColor},
-    textPrice: {fontSize: 18, color: config.secondaryColor, paddingTop: 2},
-    textPriceOrigin: {fontSize: 14, color: '#808082', paddingTop: 2, textDecorationLine: "line-through"},
-    textQuantity: {fontSize: 18, color: config.secondaryColor, marginHorizontal: 5, paddingVertical: 0, textAlign: "center"},
-    priceByUnit: {flexDirection: "row", alignItems: "center", width: "100%", paddingVertical: 10},
-    priceUnitItem: {flex: 1, paddingRight: 10, alignItems: "center"},
-    priceItemRow: {alignItems: "center", flexDirection: "row", justifyContent: "center"},
-    textItemPrice: {fontSize: 18, color: config.secondaryColor, fontWeight: "bold"},
-    textItemQuantity: {fontSize: 14.5, color: "#000", marginRight: 5},
-    textDefaultQuantity: {fontSize: 14.5, color: "#000"},
+    textAdd: { fontSize: 16, paddingVertical: 5, color: "#fff" },
+    textName: { fontSize: 18, fontWeight: "bold", color: config.secondaryColor },
+    textPrice: { fontSize: 18, color: config.secondaryColor, paddingTop: 2 },
+    textPriceOrigin: { fontSize: 14, color: '#808082', paddingTop: 2, textDecorationLine: "line-through" },
+    textQuantity: { fontSize: 18, color: config.secondaryColor, marginHorizontal: 5, paddingVertical: 0, textAlign: "center" },
+    priceByUnit: { flexDirection: "row", alignItems: "center", width: "100%", paddingVertical: 10 },
+    priceUnitItem: { flex: 1, paddingRight: 10, alignItems: "center" },
+    priceItemRow: { alignItems: "center", flexDirection: "row", justifyContent: "center" },
+    textItemPrice: { fontSize: 18, color: config.secondaryColor, fontWeight: "bold" },
+    textItemQuantity: { fontSize: 14.5, color: "#000", marginRight: 5 },
+    textDefaultQuantity: { fontSize: 14.5, color: "#000" },
 })

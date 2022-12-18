@@ -186,7 +186,7 @@ export default class ProductItem extends Component<Props, State>{
 
     onChangeText = (text: string) => {
         let quantity = intVal(text);
-        if (quantity <= 0) {
+        if (quantity < 0) {
             return;
         }
         this.setState({ quantity });
@@ -202,7 +202,9 @@ export default class ProductItem extends Component<Props, State>{
 
     onNavigate = () => {
         const { ProductItem, navigation } = this.props;
-        navigation.navigate("DetailProduct", { Item: ProductItem })
+        if (ProductItem?.children?.length == 0) {
+            navigation.navigate("DetailProduct", { Item: ProductItem })
+        }
     }
 
     renderPopup = () => {
@@ -286,11 +288,14 @@ export default class ProductItem extends Component<Props, State>{
 
     render() {
         let { ProductItem } = this.props;
-        // console.log('ProductItem', ProductItem)
+        console.log('ProductItem', ProductItem)
         return (
             <View style={[styles.item, { padding: 0, flexDirection: 'column', }]}>
                 <View style={styles.item}>
-                    <TouchableOpacity style={styles.imageWrapper} onPress={this.onNavigate}            >
+                    <TouchableOpacity
+                        // activeOpacity={ProductItem?.quantity > 0 && ProductItem?.saleable ? 0.7:1}
+                        style={styles.imageWrapper}
+                        onPress={this.onNavigate}            >
                         <Image source={ProductItem.thumb} style={styles.image} />
                         {this.renderPopup()}
                     </TouchableOpacity>
