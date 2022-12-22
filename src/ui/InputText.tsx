@@ -43,7 +43,7 @@ export default class InputText extends Component<any, State>{
         return <View>
             {this.state.value && this.props.showplaceholder ? <Text style={style.placehoder}>Ghi chú cho người bán</Text> : null}
             <TextInput
-                returnKeyType='done'
+                // returnKeyType='done'
                 maxLength={this.props.maxLength||200}
                 placeholder={this.props.placeholder ? this.props.placeholder : ""}
                 placeholderTextColor={this.props.placeholdercolor ? this.props.placeholdercolor : "#bababa"}

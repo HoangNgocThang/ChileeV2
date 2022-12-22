@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TextInput as Input, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, Keyboard } from "react-native";
 import config from "../config";
 import OrderItem from "../themes/Components/OrderItem"
 import platform from "../themes/Variables/platform";
@@ -20,6 +20,7 @@ import { RadioButton } from "../ui/RadioButton";
 import { CheckBox } from "../ui/CheckBox";
 import TimePickerCheckout from "../ui/TimePickerCheckout";
 import storage from "../utils/storage";
+import { TextInput } from 'react-native-gesture-handler';
 const BOOK_TIME_NONE = 0;
 const BOOK_TIME_OPTION = 1;
 const BOOK_TIME_ANY = 2;
@@ -77,7 +78,8 @@ export default class CheckoutScreen extends Component<Props, any>{
             fastShipping: false,
             discounted: 0,
             shipmentNote: '',
-            currentCredit: 0
+            currentCredit: 0,
+            saleId: '',
         }
     }
 
@@ -161,7 +163,8 @@ export default class CheckoutScreen extends Component<Props, any>{
             buyer_phone: this.address.buyer_phone,
             buyer_phone2: this.address.buyer_phone2,
             shipment_note: this.state.shipmentNote,
-            payment_method: this.paymentMethod
+            payment_method: this.paymentMethod,
+            sale_id: this.state.saleId
         };
 
         if (this.date.length > 4) {
@@ -318,20 +321,31 @@ export default class CheckoutScreen extends Component<Props, any>{
                         </View>
                     </View>
                     <View style={styles.secondCard}>
-                        <InputText
+                        <Input
                             placeholder={"Ghi chú cho người bán"}
-                            multiline={true}
+                            // keyboardType="default"
+                            // onBlur={() => {
+                            //     Keyboard.dismiss();
+                            // }}
+                            // numberOfLines={4}
+                            // blurOnSubmit={false}
+                            multiline
                             onChangeText={(text) => { this.note = text; }}
-                            placeholdercolor={"#a0a0a0"}
+                            placeholderTextColor={'#a0a0a0'}
                             style={{
                                 fontSize: 16,
                                 paddingVertical: 0,
                                 width: platform.deviceWidth - 30,
                                 color: "#000000",
-                                height: 80
+                                height: 80,
+                                // alignSelf: 'flex-start',
+                                // backgroundColor:'red',
+                                textAlignVertical: 'top'
                             }}
-                            showplaceholder={true}
+
+                        // blurOnSubmit={false} 
                         />
+
                         <View style={{ width: "100%", height: 1, backgroundColor: "#a0a0a0" }} />
                     </View>
 
@@ -379,7 +393,7 @@ export default class CheckoutScreen extends Component<Props, any>{
                             <Text style={styles.cardText}>{this.state.shipmentNote}</Text>
                         </View>
                     </View>}
-                    <View style={[styles.thirdCard, ]}>
+                    <View style={[styles.thirdCard,]}>
                         <View style={[styles.cardLeft, { paddingVertical: 10 }]}>
                             <View style={styles.cardIcon}>
                                 <MaterialCommunityIcons name="package-variant-closed" color={"#000000"} size={24} />
@@ -482,6 +496,25 @@ export default class CheckoutScreen extends Component<Props, any>{
                                     <Text style={styles.titleInfo2}>Tổng tiền</Text>
                                     <Text style={styles.textInfo2}>{numberFormat(this.state.amountTotal)}</Text>
                                 </View>
+                            </View>
+                        </View>
+                    </View>
+
+                    <View style={{ marginTop: 20, marginBottom: 20 }}>
+                        <View style={styles.secondCard}>
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                // justifyContent:'space-between'
+                            }}>
+                                <Text>Tư vấn viên</Text>
+                                <TextInput
+                                    value={this.state.sale_id}
+                                    onChangeText={(text) => { this.setState({text:text}) }}
+                                    placeholder='Vui lòng nhập mã'
+                                    style={{ marginHorizontal: 10, width: '100%', height: 30 }}
+                                />
                             </View>
                         </View>
                     </View>
