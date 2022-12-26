@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { TextInput as Input, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, Keyboard } from "react-native";
+import {
+    KeyboardAvoidingView,
+    Platform, TextInput as Input, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View, Keyboard
+} from "react-native";
 import config from "../config";
 import OrderItem from "../themes/Components/OrderItem"
 import platform from "../themes/Variables/platform";
@@ -25,6 +28,8 @@ const BOOK_TIME_NONE = 0;
 const BOOK_TIME_OPTION = 1;
 const BOOK_TIME_ANY = 2;
 const BOOK_TIME_ANY_DATE = 3;
+const IS_IOS = (Platform.OS === "ios");
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 interface Props {
     navigation: any
@@ -298,7 +303,14 @@ export default class CheckoutScreen extends Component<Props, any>{
         return (
             <View style={styles.container}>
                 {this.state.isLoading && <Spinner />}
-                <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+                {/* <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}> */}
+                {/* <KeyboardAvoidingView
+                    style={styles.scroll}
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                // keyboardVerticalOffset={IS_IOS ? 100 : 0}
+                > */}
+                <KeyboardAwareScrollView style={styles.scroll}>
+
 
                     <View style={styles.firstCard}>
                         <View style={styles.cardLeft}>
@@ -499,7 +511,7 @@ export default class CheckoutScreen extends Component<Props, any>{
                             </View>
                         </View>
                     </View>
-                    <View style={{ marginBottom: 20 }}>
+                    <View style={{ marginTop: 5, }}>
                         <View style={[styles.secondCard, {}]}>
                             <View style={{
                                 flex: 1,
@@ -517,9 +529,9 @@ export default class CheckoutScreen extends Component<Props, any>{
                             </View>
                         </View>
                     </View>
-                    <View style={{ width: '100%', height: 300 }}>
-                    </View>
-                </ScrollView>
+                    {/* <View style={{ width: '100%', height: 300 }}>
+                    </View> */}
+                </KeyboardAwareScrollView>
 
                 <View style={styles.footer}>
                     <View style={styles.footerLeft}>
