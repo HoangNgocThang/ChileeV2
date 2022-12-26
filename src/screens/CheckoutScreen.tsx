@@ -499,24 +499,25 @@ export default class CheckoutScreen extends Component<Props, any>{
                             </View>
                         </View>
                     </View>
-
-                    <View style={{ marginTop: 20, marginBottom: 20 }}>
-                        <View style={styles.secondCard}>
+                    <View style={{ marginBottom: 20 }}>
+                        <View style={[styles.secondCard, {}]}>
                             <View style={{
                                 flex: 1,
                                 flexDirection: 'row',
                                 alignItems: 'center',
-                                // justifyContent:'space-between'
+                                // justifyContent:'space-between',
                             }}>
-                                <Text>Tư vấn viên</Text>
+                                <Text style={{ color: 'silver' }}>Tư vấn viên</Text>
                                 <TextInput
                                     value={this.state.sale_id}
-                                    onChangeText={(text) => { this.setState({text:text}) }}
-                                    placeholder='Vui lòng nhập mã'
-                                    style={{ marginHorizontal: 10, width: '100%', height: 30 }}
+                                    onChangeText={(text) => { this.setState({ text: text }) }}
+                                    placeholder='Mã NV(khách hàng vui lòng k nhập)'
+                                    style={{ padding: 4, backgroundColor: 'white', marginHorizontal: 10, width: '100%', height: 30 }}
                                 />
                             </View>
                         </View>
+                    </View>
+                    <View style={{ width: '100%', height: 300 }}>
                     </View>
                 </ScrollView>
 
