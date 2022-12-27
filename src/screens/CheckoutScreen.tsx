@@ -522,7 +522,7 @@ export default class CheckoutScreen extends Component<Props, any>{
                                 <Text style={{ color: 'silver' }}>Tư vấn viên</Text>
                                 <TextInput
                                     value={this.state.sale_id}
-                                    onChangeText={(text) => { this.setState({ text: text }) }}
+                                    onChangeText={(text) => { this.setState({ saleId: text }) }}
                                     placeholder='Mã NV(khách hàng vui lòng k nhập)'
                                     style={{ padding: 4, backgroundColor: 'white', marginHorizontal: 10, width: '100%', height: 30 }}
                                 />
