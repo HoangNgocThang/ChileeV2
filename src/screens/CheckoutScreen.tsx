@@ -30,6 +30,7 @@ const BOOK_TIME_ANY = 2;
 const BOOK_TIME_ANY_DATE = 3;
 const IS_IOS = (Platform.OS === "ios");
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface Props {
     navigation: any
@@ -97,14 +98,16 @@ export default class CheckoutScreen extends Component<Props, any>{
     }
 
     asyncInit = debounce(async () => {
-
+        const saleId =  await AsyncStorage.getItem('saleId');
+        console.log('saleId:1',saleId)
+        // await this.setState({saleId: saleId})
         const res = await CartStore.get();
         const amount = res.cart.amount;
         const amountOrigin = res.cart.amount_origin;
         //this.state.items = res.items;
 
         const feeData = res.fee;
-        this.setState({ allowBookingTime: feeData.allowBookingTime });
+        this.setState({  allowBookingTime: feeData.allowBookingTime });
         this.shipFee = feeData.shipFee;
         this.fastShipFee = feeData.fastShipFee;
         this.fastShippingNote = feeData.fastShippingNote;
@@ -120,7 +123,8 @@ export default class CheckoutScreen extends Component<Props, any>{
             amountOrigin: amountOrigin + feeData.shipFee,
             shipmentNote: feeData.shipmentNote,
             currentCredit: 0,
-            shipFee: feeData.shipFee
+            shipFee: feeData.shipFee,
+            saleId: saleId
         });
     })
 
@@ -205,9 +209,11 @@ export default class CheckoutScreen extends Component<Props, any>{
             }
         }
         this.setState({ isLoading: true });
-
+        await AsyncStorage.setItem('saleId', this.state.saleId);
         const res: any = await OrderRequest.createV4(this.getOrderParams());
-        console.log('ress OrderRequest', res)
+        const saleId= await AsyncStorage.getItem('saleId')
+        console.log('ress OrderRequest', res, saleId)
+    
         setTimeout(() => {
             this.setState({ isLoading: false });
             CartStore.clear();
@@ -521,11 +527,11 @@ export default class CheckoutScreen extends Component<Props, any>{
                             }}>
                                 <Text style={{ color: 'silver' }}>Tư vấn viên</Text>
                                 <TextInput
-                                    value={this.state.sale_id}
+                                    // value={this.state.sale_id}
                                     onChangeText={(text) => { this.setState({ saleId: text }) }}
                                     placeholder='Mã NV(khách hàng vui lòng k nhập)'
                                     style={{ padding: 4, backgroundColor: 'white', marginHorizontal: 10, width: '100%', height: 30 }}
-                                />
+                                >{this.state.saleId}</TextInput>
                             </View>
                         </View>
                     </View>

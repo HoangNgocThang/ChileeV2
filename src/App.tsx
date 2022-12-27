@@ -108,7 +108,7 @@ function MyTabs(props: any) {
                     },
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="NotiScreen"
                 component={NotiStack}
                 options={{
@@ -117,7 +117,7 @@ function MyTabs(props: any) {
                         <MaterialCommunityIcons name="bell-outline" color={color} size={size} />
                     ),
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="ProfileScreen"
                 component={ProfileStack}
