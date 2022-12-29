@@ -51,6 +51,9 @@ export default class ProductsScreen extends Component<Props, State>{
         this.listener = this.props.navigation.addListener('focus', this.onFocus)
     }
 
+    componentWillUnmount(): void {
+        this.listener()
+    }
 
     renderItem = ({ item, index }) => {
         return (
@@ -78,34 +81,6 @@ export default class ProductsScreen extends Component<Props, State>{
                         <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Danh mục</Text>
                     </View>
                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end' }}>
-                        {/* <TouchableOpacity
-                            style={{ marginRight: 15 }}
-                            onPress={() => {
-                                Alert.alert(
-                                    "Thông báo",
-                                    "Thao tác này sẽ thêm tất cả các sản phẩm đã chọn vào giỏ hàng",
-                                    [
-                                        {
-                                            text: "OK",
-                                            onPress: async () => {
-                                                await this.setState({ needReset: true })
-                                                // await AsyncStorage.setItem('needReset', 'true');
-                                                setTimeout(() => {
-                                                    this.props.navigation.navigate('CartScreen')
-                                                }, 200)
-                                            }
-                                        },
-                                        {
-                                            text: "Huỷ", onPress: () => {
-                                            }
-                                        }
-                                    ]
-                                );
-                            }}
-                        >
-                            <CartBadge name={'topright'} count={0} />
-                            <MaterialCommunityIcons name="cart-plus" color={config.secondaryColor} size={25} />
-                        </TouchableOpacity> */}
                     </View>
                 </View>
                 <ProductTab navigation={this.props.navigation} needReset={this.state.needReset} />

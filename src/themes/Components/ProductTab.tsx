@@ -49,20 +49,39 @@ export default class ProductTab extends Component<Props, State>{
 
     }
 
-    componentDidMount(): void {
-        this.asyncInit();
+    // componentDidMount(): void {
+    //     this.asyncInit();
+    // }
+
+    // componentDidUpdate(prevProps, prevState) {
+    //     if (prevProps.needReset != this.props.needReset) {
+    //         this.setState({
+    //             index: 0,
+    //             isLoading: true,
+    //             routes: []
+    //         }, () => {
+    //             this.asyncInit();
+    //         })
+    //     }
+    // }
+
+    onFocus = async () => {
+        this.setState({
+            index: 0,
+            isLoading: true,
+            routes: []
+        }, () => {
+            this.asyncInit();
+        })
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.needReset != this.props.needReset) {
-            this.setState({
-                index: 0,
-                isLoading: true,
-                routes: []
-            }, () => {
-                this.asyncInit();
-            })
-        }
+    componentDidMount(): void {
+        // this.asyncInit();
+        this.listener = this.props.navigation.addListener('focus', this.onFocus)
+    }
+
+    componentWillUnmount(): void {
+        this.listener()
     }
 
     onChange = (index: any) => {
