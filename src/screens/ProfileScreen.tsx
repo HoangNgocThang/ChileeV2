@@ -43,7 +43,7 @@ export default class ProfileScreen extends Component<any, State>{
         const isDev = __DEV__;
         let version = config.version;
         if (isDev) {
-            version = version + '.1';
+            version = version;
         }
 
         this.state = {

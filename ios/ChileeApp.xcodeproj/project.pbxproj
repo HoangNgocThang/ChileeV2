@@ -12,6 +12,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		6B755FC5296FB71A00D0CD21 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6B755FC4296FB71A00D0CD21 /* GoogleService-Info.plist */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		CA8B154AE22765151833CA9F /* libPods-ChileeApp-ChileeAppTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB32178936367DB9CDC70F3 /* libPods-ChileeApp-ChileeAppTests.a */; };
 /* End PBXBuildFile section */
@@ -43,6 +44,8 @@
 		471B608E6FFF9DDE746ECF08 /* Pods-ChileeApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChileeApp.debug.xcconfig"; path = "Target Support Files/Pods-ChileeApp/Pods-ChileeApp.debug.xcconfig"; sourceTree = "<group>"; };
 		5C8CD4011CB441F5A5499AF1 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = ../assets/fonts/Ionicons.ttf; sourceTree = "<group>"; };
 		625CA86EC07DE6AD6F859ACB /* Pods-ChileeApp-ChileeAppTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChileeApp-ChileeAppTests.release.xcconfig"; path = "Target Support Files/Pods-ChileeApp-ChileeAppTests/Pods-ChileeApp-ChileeAppTests.release.xcconfig"; sourceTree = "<group>"; };
+		6B755FC3296FB2AD00D0CD21 /* ChileeApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = ChileeApp.entitlements; path = ChileeApp/ChileeApp.entitlements; sourceTree = "<group>"; };
+		6B755FC4296FB71A00D0CD21 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = ChileeApp/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8ACF3905C981FFE53A6406C3 /* Pods-ChileeApp-ChileeAppTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChileeApp-ChileeAppTests.debug.xcconfig"; path = "Target Support Files/Pods-ChileeApp-ChileeAppTests/Pods-ChileeApp-ChileeAppTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9809545A0DC549F389699460 /* FontAwesome5_Brands.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Brands.ttf; path = ../assets/fonts/FontAwesome5_Brands.ttf; sourceTree = "<group>"; };
@@ -102,6 +105,8 @@
 		13B07FAE1A68108700A75B9A /* ChileeApp */ = {
 			isa = PBXGroup;
 			children = (
+				6B755FC3296FB2AD00D0CD21 /* ChileeApp.entitlements */,
+				6B755FC4296FB71A00D0CD21 /* GoogleService-Info.plist */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -284,6 +289,7 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				6B755FC5296FB71A00D0CD21 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -528,9 +534,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ChileeApp/ChileeApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_TEAM = AF65C2TX29;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ChileeApp/Info.plist;
@@ -560,9 +567,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = ChileeApp/ChileeApp.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 43;
+				CURRENT_PROJECT_VERSION = 44;
 				DEVELOPMENT_TEAM = AF65C2TX29;
 				INFOPLIST_FILE = ChileeApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chilee;

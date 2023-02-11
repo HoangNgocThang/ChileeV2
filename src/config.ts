@@ -1,5 +1,5 @@
 export default {
-    version: '2.1',
+    version: '2.2',
     versionCode: 14,
     primaryColor: "#ffffff",
     secondaryColor: "#e02e24",
