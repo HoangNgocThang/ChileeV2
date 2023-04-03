@@ -13,6 +13,7 @@ import AddressScreen from "../screens/AddressScreen";
 import AddressFormScreen from "../screens/AddressFormScreen";
 import ShopDetailScreen from "../screens/ShopDetailScreen";
 import ProductShopDetail from "../screens/ProductShopDetail";
+import ProductSearchScreen from '../screens/ProductSearchScreen';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,9 @@ export default function ProductStack() {
                 // options={StackOption('Danh mục', false)}
                 options={{ headerShown: false }}
                 name="ProductsScreen" component={ProductsScreen} />
+            <Stack.Screen 
+              options={{ headerShown: false }}
+              name="ProductSearchScreen" component={ProductSearchScreen}/>    
             <Stack.Screen
                 // options={StackOption('Chi tiết', false)}
                 options={{ headerShown: false }}

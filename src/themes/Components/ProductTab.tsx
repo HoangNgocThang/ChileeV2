@@ -6,6 +6,7 @@ import platform from "../../themes/Variables/platform";
 import Spinner from '../../ui/Spinner';
 import CategoryRequest from "../../api/requests/CategoryRequest";
 import ProductTabItem from "./ProductTabItem";
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import AsyncStorage from '@react-native-community/async-storage';
 
 interface Props {

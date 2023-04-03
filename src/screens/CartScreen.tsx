@@ -7,7 +7,8 @@ import { $alert, confirm } from "../ui/Alert";
 import messages from "../locale/messages";
 import { numberFormat } from "../utils";
 import Spinner from "../ui/Spinner";
-import AsyncStorage from "@react-native-community/async-storage";
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class CartScreen extends Component<any, any>{
 
