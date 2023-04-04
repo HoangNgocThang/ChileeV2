@@ -143,6 +143,12 @@ class ProductsScreen extends Component<Props, State>{
                         onChangeText={text => {
                             this.setState({
                                 searchText: text
+                            }, () => {
+                                if (text == '') {
+                                    this.setState({
+                                        visible: false
+                                    })
+                                }
                             })
                             // setSearchText(text);
                             // onChangeSearchText(text);
@@ -165,7 +171,6 @@ class ProductsScreen extends Component<Props, State>{
                         </TouchableOpacity> : <></>
                     }
                 </View>
-
                 <TouchableOpacity
                     onPress={() => {
                         this.page = 1;

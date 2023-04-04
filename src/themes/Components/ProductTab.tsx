@@ -57,21 +57,18 @@ export default class ProductTab extends Component<Props, State>{
     // }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log('vao2thang',)
         if (prevProps.needReset != this.props.needReset) {
             this.setState({
                 index: 0,
                 isLoading: true,
                 routes: []
             }, () => {
-                console.log('vao2thang', prevProps, prevState)
                 this.asyncInit();
             })
         }
     }
 
     onFocus = async () => {
-        console.log('vao1thang')
         this.setState({
             index: 0,
             isLoading: true,
