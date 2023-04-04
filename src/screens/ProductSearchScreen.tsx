@@ -161,7 +161,6 @@ const ProductSearchScreen = (props: Props) => {
 
   const renderItem = (ele: any) => {
     const { item, index } = ele;
-    // return <ProductItem2/>
     return <ProductItemChildren maxWidth={true} key={`${item.id}`} item={item} navigation={props.navigation} />
   }
 

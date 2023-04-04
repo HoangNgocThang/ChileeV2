@@ -11,13 +11,15 @@ import AsyncStorage from '@react-native-community/async-storage';
 
 interface Props {
     navigation: any
-    needReset: boolean
+    needReset: boolean,
+    visible: boolean
 }
 
 interface State {
     index: number,
     isLoading: boolean,
-    routes: Array<any>
+    routes: Array<any>,
+
 }
 
 export default class ProductTab extends Component<Props, State>{
@@ -54,19 +56,22 @@ export default class ProductTab extends Component<Props, State>{
     //     this.asyncInit();
     // }
 
-    // componentDidUpdate(prevProps, prevState) {
-    //     if (prevProps.needReset != this.props.needReset) {
-    //         this.setState({
-    //             index: 0,
-    //             isLoading: true,
-    //             routes: []
-    //         }, () => {
-    //             this.asyncInit();
-    //         })
-    //     }
-    // }
+    componentDidUpdate(prevProps, prevState) {
+        console.log('vao2thang',)
+        if (prevProps.needReset != this.props.needReset) {
+            this.setState({
+                index: 0,
+                isLoading: true,
+                routes: []
+            }, () => {
+                console.log('vao2thang', prevProps, prevState)
+                this.asyncInit();
+            })
+        }
+    }
 
     onFocus = async () => {
+        console.log('vao1thang')
         this.setState({
             index: 0,
             isLoading: true,
@@ -124,7 +129,7 @@ export default class ProductTab extends Component<Props, State>{
     renderTabBar = () => {
         const { isLoading, routes } = this.state
         if (isLoading) {
-            return null
+            return <></>
         }
         return (
             <View style={styles.tabBarWrap}>
@@ -157,12 +162,16 @@ export default class ProductTab extends Component<Props, State>{
     }
 
     render() {
-        return (
-            <View style={styles.container}>
-                {this.renderContent()}
-                {this.renderTabBar()}
-            </View>
-        )
+        console.log('isLoading', this.state.isLoading,)
+        if (this.props.visible) {
+            return (
+                <View style={styles.container}>
+                    {this.renderContent()}
+                    {this.renderTabBar()}
+                </View>
+            )
+        }
+        return <></>
     }
 }
 
