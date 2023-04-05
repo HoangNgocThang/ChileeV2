@@ -29,6 +29,7 @@ import { CommonActions } from "@react-navigation/native";
 import NotiScreen from './screens/NotiScreen';
 import NotiStack from './navigation/NotiStack';
 import OrderStack from './navigation/OrderStack';
+import ContactStack from './navigation/ContactStack';
 
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
 declare var global: { HermesInternal: null | {} };
@@ -118,6 +119,16 @@ function MyTabs(props: any) {
                     ),
                 }}
             /> */}
+            <Tab.Screen
+                name="ContactStack"
+                component={ContactStack}
+                options={{
+                    tabBarLabel: 'Liên hệ',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="chat-processing-outline" color={color} size={size} />
+                    ),
+                }}
+            />
             <Tab.Screen
                 name="ProfileScreen"
                 component={ProfileStack}

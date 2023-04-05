@@ -3,7 +3,7 @@ import {
     Image, Text, View, FlatList,
     TouchableOpacity, SafeAreaView,
     StyleSheet, Alert, TextInput,
-    ActivityIndicator, Keyboard
+    ActivityIndicator, Keyboard, Linking
 } from "react-native";
 import HomeRequest from "../api/requests/HomeRequest";
 import Spinner from '../ui/Spinner';
