@@ -153,10 +153,17 @@ class ProductsScreen extends Component<Props, State>{
                             // setSearchText(text);
                             // onChangeSearchText(text);
                         }}
-                    // onSubmitEditing={() => {
-                    //   
-                    //     onChangeSearchText(searchText);
-                    // }}
+                        onSubmitEditing={() => {
+                            this.page = 1;
+                            this.setState({
+                                data: [],
+                                hasNextPage: false,
+                                visible: true
+                            }, () => {
+                                this.onSearch()
+                                Keyboard.dismiss();
+                            })
+                        }}
                     />
                     {
                         this.state.searchText != "" ? <TouchableOpacity style={{ padding: 10 }} onPress={() => {
