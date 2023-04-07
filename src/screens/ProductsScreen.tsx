@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import {
     Image, Text, View, FlatList,
     TouchableOpacity, SafeAreaView,
-    StyleSheet, Alert, TextInput,
-    ActivityIndicator, Keyboard, Linking
+    StyleSheet, Alert, TextInput, PermissionsAndroid,
+    ActivityIndicator, Keyboard, Linking, Platform
 } from "react-native";
 import HomeRequest from "../api/requests/HomeRequest";
 import Spinner from '../ui/Spinner';
@@ -19,7 +19,7 @@ import ProductItemChildren from '../themes/Components/ProductItemChildren';
 import { debounce, isScrollCloseToBottom } from '../utils';
 import ProductRequest from '../api/requests/ProductRequest';
 import { $alert } from '../ui/Alert';
-
+import messaging from '@react-native-firebase/messaging';
 const ic_search = require('../../src/assets/ic_searchpro.png');
 const close = require('../../src/assets/close.png');
 
@@ -42,6 +42,7 @@ interface State {
 class ProductsScreen extends Component<Props, State>{
 
     page = 1;
+    unsubscribe = null;
 
     constructor(props: any) {
         super(props);
@@ -57,6 +58,27 @@ class ProductsScreen extends Component<Props, State>{
             visible: false
         }
     }
+
+    getPer = async () => {
+        if (Platform.OS == 'android') {
+            const res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+            console.log("ress", res)
+        }
+
+        if (Platform.OS == 'ios') {
+            const authStatus = await messaging().requestPermission();
+            const enabled =
+                authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+            if (enabled) {
+                console.log('Authorization status:', authStatus);
+            }
+        }
+
+        return true
+    }
+
 
     // asyncInit = async () => {
     //     const res = await HomeRequest.getCategories();
@@ -103,6 +125,7 @@ class ProductsScreen extends Component<Props, State>{
                 justifyContent: 'space-between',
                 alignContent: 'center',
                 alignItems: 'center',
+                marginTop: Platform.OS == 'android' ? 10 : 0
             }}>
                 <View style={{
                     height: 46,

@@ -30,7 +30,7 @@ import NotiScreen from './screens/NotiScreen';
 import NotiStack from './navigation/NotiStack';
 import OrderStack from './navigation/OrderStack';
 import ContactStack from './navigation/ContactStack';
-
+import messaging from '@react-native-firebase/messaging';
 YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
 declare var global: { HermesInternal: null | {} };
 
@@ -147,6 +147,7 @@ interface State {
 }
 class App extends Component<any, State>{
     private appConfig: any;
+    private unsubscribe: any;
     constructor(props: any) {
         super(props);
         this.state = {
@@ -211,8 +212,21 @@ class App extends Component<any, State>{
         }
     }
 
+
+    listnerNoti = () => {
+        this.unsubscribe = messaging().onMessage(async remoteMessage => {
+            console.warn("message when app opening...", remoteMessage)
+        });
+    }
+
+    getToken = async () => {
+        const token = await messaging().getToken();
+        console.log("token11", token)
+    }
+
     componentDidMount(): void {
         this._init();
+        // this.listnerNoti();
         Linking.addEventListener('url', this.handleDeepLink);
 
         /* fcm.getToken().then((token: string) => {
@@ -227,6 +241,13 @@ class App extends Component<any, State>{
              console.log({initialMessage: data});
          })*/
 
+        this.listnerNoti()
+
+        this.getToken()
+    }
+
+    componentWillUnmount(): void {
+        this.unsubscribe
     }
 
     render() {
