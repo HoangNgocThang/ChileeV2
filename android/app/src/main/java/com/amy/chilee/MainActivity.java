@@ -1,4 +1,4 @@
-package com.chileeapp;
+package com.amy.chilee;
 
 import com.facebook.react.ReactActivity;
 

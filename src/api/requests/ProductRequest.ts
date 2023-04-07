@@ -24,6 +24,10 @@ class ProductRequest extends BaseRequest {
     async getProductPacks(product_id: number): Promise<CalculatePriceResponse> {
         return super.dispatch('getProductPacks', product_id)
     }
+
+    async search(keyword: string, page: number = 1): Promise<any> {
+        return super.dispatch('search', keyword, page)
+    }
 }
 
 export default new ProductRequest()

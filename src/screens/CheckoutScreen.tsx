@@ -30,6 +30,7 @@ const BOOK_TIME_ANY = 2;
 const BOOK_TIME_ANY_DATE = 3;
 const IS_IOS = (Platform.OS === "ios");
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import AsyncStorage from '@react-native-community/async-storage';
 
 interface Props {
@@ -98,8 +99,8 @@ export default class CheckoutScreen extends Component<Props, any>{
     }
 
     asyncInit = debounce(async () => {
-        const saleId =  await AsyncStorage.getItem('saleId');
-        console.log('saleId:1',saleId)
+        const saleId = await AsyncStorage.getItem('saleId');
+        console.log('saleId:1', saleId)
         // await this.setState({saleId: saleId})
         const res = await CartStore.get();
         const amount = res.cart.amount;
@@ -107,7 +108,7 @@ export default class CheckoutScreen extends Component<Props, any>{
         //this.state.items = res.items;
 
         const feeData = res.fee;
-        this.setState({  allowBookingTime: feeData.allowBookingTime });
+        this.setState({ allowBookingTime: feeData.allowBookingTime });
         this.shipFee = feeData.shipFee;
         this.fastShipFee = feeData.fastShipFee;
         this.fastShippingNote = feeData.fastShippingNote;
@@ -187,56 +188,63 @@ export default class CheckoutScreen extends Component<Props, any>{
     }
 
     checkOut = async () => {
+        try {
+            if (this.state.isLoading) {
+                return;
+            }
 
-        if (this.state.isLoading) {
-            return;
-        }
+            if (this.state.orderType) {
+                if (isStrEmptyOrSpaces(this.buyerName)) {
+                    $alert('Vui lòng nhập tên người mua');
+                    return;
+                }
+                if (!isPhoneValid(this.buyerPhone)) {
+                    $alert('Vui lòng nhập SĐT người mua hợp lệ');
+                    return;
+                }
+            }
+            if (this.paymentMethod) {
+                if (this.state.currentCredit < this.state.amountTotal) {
+                    $alert('Số dư không đủ để thanh toán ngay');
+                    return;
+                }
+            }
+            await this.setState({ isLoading: true });
+            console.log('raaaaa',this.state.saleId)
+            await AsyncStorage.setItem('saleId', this.state.saleId ?? "");
 
-        if (this.state.orderType) {
-            if (isStrEmptyOrSpaces(this.buyerName)) {
-                $alert('Vui lòng nhập tên người mua');
-                return;
-            }
-            if (!isPhoneValid(this.buyerPhone)) {
-                $alert('Vui lòng nhập SĐT người mua hợp lệ');
-                return;
-            }
-        }
-        if (this.paymentMethod) {
-            if (this.state.currentCredit < this.state.amountTotal) {
-                $alert('Số dư không đủ để thanh toán ngay');
-                return;
-            }
-        }
-        this.setState({ isLoading: true });
-        await AsyncStorage.setItem('saleId', this.state.saleId);
-        const res: any = await OrderRequest.createV4(this.getOrderParams());
-        const saleId= await AsyncStorage.getItem('saleId')
-        console.log('ress OrderRequest', res, saleId)
-    
-        setTimeout(() => {
-            this.setState({ isLoading: false });
-            CartStore.clear();
-            if (res.err_code === 0) {
-                this.props.navigation.dispatch(
-                    CommonActions.reset({
-                        index: 0,
-                        routes: [
-                            { name: 'CartScreen' },
-                        ],
+            const res: any = await OrderRequest.createV4(this.getOrderParams());
+            const saleId = await AsyncStorage.getItem('saleId')
+            console.log('ress OrderRequest', res, saleId)
+
+            setTimeout(() => {
+                this.setState({ isLoading: false });
+                CartStore.clear();
+                if (res.err_code === 0) {
+                    this.props.navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [
+                                { name: 'CartScreen' },
+                            ],
+                        })
+                    );
+                    // this.props.navigation.navigate('CheckoutSucceedScreen', { orderCode: res.orderCode })
+                    navigate('OrderStack', {
+                        screen: 'CheckoutSucceedScreen',
+                        params: {
+                            orderCode: res.orderCode
+                        },
                     })
-                );
-                // this.props.navigation.navigate('CheckoutSucceedScreen', { orderCode: res.orderCode })
-                navigate('OrderStack', {
-                    screen: 'CheckoutSucceedScreen',
-                    params: {
-                        orderCode: res.orderCode
-                    },
-                })
-            } else {
-                $alert(res.message);
-            }
-        }, 500)
+                } else {
+                    $alert(res.message);
+                }
+            }, 500)
+        } catch (error) {
+            console.log('err', error)
+            $alert(`${error}`);
+        }
+
     };
 
     onChangeReceiptOption = (option: any) => {

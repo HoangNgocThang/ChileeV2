@@ -16,7 +16,9 @@ import CartStore from "../../store/CartStore";
 import ListProps from './ListProps';
 import ProductRequest from '../../api/requests/ProductRequest';
 import ListChildren from './ListChildren';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import AsyncStorage from '@react-native-community/async-storage';
+
 
 const defaultWidth = platform.deviceWidth;
 const ic_up = require('../../assets/ic_up.png')

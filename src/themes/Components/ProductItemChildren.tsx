@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { Text, View, TouchableOpacity, Button, StyleSheet, TextInput, Alert } from "react-native";
+import { Text, View, TouchableOpacity, Button, StyleSheet, TextInput, Alert, } from "react-native";
 import platform from "../Variables/platform";
 import { cloneObject, debounce, intVal, numberFormat } from "../../utils";
 import Image from 'react-native-fast-image'
@@ -15,6 +15,7 @@ import { CartItem, Pack } from "../../api/interfaces";
 import CartStore from "../../store/CartStore";
 import ListProps from './ListProps';
 import ProductRequest from '../../api/requests/ProductRequest';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const prodef = require('../../../src/assets/prodef.jpeg')
@@ -24,12 +25,13 @@ const defaultWidth = platform.deviceWidth;
 interface Props {
     item: any
     navigation: any
+    maxWidth?: boolean
 }
 
 interface State {
     quantity: number,
     valid: boolean,
-    cartQuantity: number
+    cartQuantity: number,
 }
 
 class ProductItemChildren extends PureComponent<Props, State> {
@@ -151,7 +153,7 @@ class ProductItemChildren extends PureComponent<Props, State> {
         const { item } = this.props
         const { quantity, valid } = this.state;
         return (
-            <View style={[styles.item, { padding: 0, marginLeft: 12, width: defaultWidth - 115 - 12 }]}>
+            <View style={[styles.item, { padding: 0, marginLeft: 12, width: this.props?.maxWidth ? defaultWidth * 0.9 : defaultWidth - 115 - 12 }]}>
                 <TouchableOpacity style={styles.imageWrapper} onPress={this.onNavigate}>
                     <Image source={valid ? item.thumb : prodef} style={styles.image} onError={() => { this.setState({ valid: false }) }} />
                     {this.renderPopup()}

@@ -234,3 +234,8 @@ export async function waitForRef(parent: any, key: string) {
     }))
 
 }
+
+
+export function isScrollCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+}

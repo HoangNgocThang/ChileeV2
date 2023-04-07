@@ -12,7 +12,8 @@ import messages from "../../locale/messages";
 import CartRequest from "../../api/requests/CartRequest";
 import { navigate } from "../../navigation/RootNavigation";
 import InputText from "../../ui/InputText";
-import AsyncStorage from "@react-native-community/async-storage";
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const prodef = require('../../../src/assets/prodef.jpeg')
 const defaultWidth = platform.deviceWidth;

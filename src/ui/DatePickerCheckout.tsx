@@ -2,10 +2,10 @@ import {TextInput, View, StyleSheet, Text, TouchableOpacity} from "react-native"
 import React, {Component} from "react";
 import MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
 import DateTimePicker from 'react-native-modal-datetime-picker';
-import { Appearance } from 'react-native-appearance';
+// import { Appearance } from 'react-native-appearance';
 import moment from "moment";
 
-const colorScheme = Appearance.getColorScheme();
+// const colorScheme = Appearance.getColorScheme();
 export default class DatePickerCheckout extends Component<any>{
 
     constructor(props: any) {
