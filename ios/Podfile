@@ -1,6 +1,9 @@
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
-
+pod 'Firebase', :modular_headers => true # add firebase
+pod 'FirebaseCore', :modular_headers => true  # add firebase
+pod 'GoogleUtilities', :modular_headers => true  # add firebase
+$RNFirebaseAsStaticFramework = true  # add firebase
 platform :ios, '11.0'
 
 target 'ChileeApp' do
@@ -11,7 +14,7 @@ target 'ChileeApp' do
     # to enable hermes on iOS, change `false` to `true` and then install pods
     :hermes_enabled => false
   )
-
+#  use_frameworks! :linkage => :static   # add firebase
   target 'ChileeAppTests' do
     inherit! :complete
     # Pods for testing

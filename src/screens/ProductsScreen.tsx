@@ -21,7 +21,7 @@ import { debounce, isScrollCloseToBottom } from '../utils';
 import ProductRequest from '../api/requests/ProductRequest';
 import { $alert } from '../ui/Alert';
 import messaging from '@react-native-firebase/messaging';
-import { request, PERMISSIONS } from 'react-native-permissions';
+// import { request, PERMISSIONS } from 'react-native-permissions';
 const ic_search = require('../../src/assets/ic_searchpro.png');
 const close = require('../../src/assets/close.png');
 

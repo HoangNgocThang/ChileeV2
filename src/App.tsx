@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, YellowBox, Linking, Platform, Dimensions, Image
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useState, useEffect, useRef } from 'react';
 import { Colors, } from 'react-native/Libraries/NewAppScreen';
-import { request, PERMISSIONS } from 'react-native-permissions';
+// import { request, PERMISSIONS } from 'react-native-permissions';
 // @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -184,11 +184,11 @@ const App = () => {
     }
 
     const getPer = async () => {
-        if (Platform.OS == 'android') {
-            // const res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-            const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
-            console.log('aaa, result', result)
-        }
+        // if (Platform.OS == 'android') {
+        //     // const res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        //     const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
+        //     console.log('aaa, result', result)
+        // }
 
         if (Platform.OS == 'ios') {
             const authStatus = await messaging().requestPermission();
