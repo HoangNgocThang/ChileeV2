@@ -242,21 +242,14 @@ class ProductsScreen extends Component<Props, State>{
                 console.log('res999', res)
                 this.setState({ loadingSearch: false })
                 if (res?.err_code == 0) {
-                    if (res?.hasNextPage) {
-                        if (this.page == 1) {
-                            this.setState({
-                                data: res?.products,
-                                hasNextPage: res?.hasNextPage
-                            })
-                        } else {
-                            this.setState({
-                                data: this.state.data.concat(res?.products),
-                                hasNextPage: res?.hasNextPage
-                            })
-                        }
-                    } else {
+                    if (this.page == 1) {
                         this.setState({
                             data: res?.products,
+                            hasNextPage: res?.hasNextPage
+                        })
+                    } else {
+                        this.setState({
+                            data: this.state.data.concat(res?.products),
                             hasNextPage: res?.hasNextPage
                         })
                     }
