@@ -10,6 +10,7 @@ import Spinner from '../ui/Spinner';
 import CategoryItem from "../themes/Components/CategoryItem";
 import platform from "../themes/Variables/platform";
 import ProductTab from "../themes/Components/ProductTab";
+// @ts-ignored
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CartBadge from '../ui/CartBadge';
 import config from "../config";
@@ -20,6 +21,7 @@ import { debounce, isScrollCloseToBottom } from '../utils';
 import ProductRequest from '../api/requests/ProductRequest';
 import { $alert } from '../ui/Alert';
 import messaging from '@react-native-firebase/messaging';
+import { request, PERMISSIONS } from 'react-native-permissions';
 const ic_search = require('../../src/assets/ic_searchpro.png');
 const close = require('../../src/assets/close.png');
 
@@ -58,28 +60,6 @@ class ProductsScreen extends Component<Props, State>{
             visible: false
         }
     }
-
-    getPer = async () => {
-        if (Platform.OS == 'android') {
-            const res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-            console.log("ress", res)
-        }
-
-        if (Platform.OS == 'ios') {
-            const authStatus = await messaging().requestPermission();
-            const enabled =
-                authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-                authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-            if (enabled) {
-                console.log('Authorization status:', authStatus);
-            }
-        }
-
-        return true
-    }
-
-
     // asyncInit = async () => {
     //     const res = await HomeRequest.getCategories();
     //     console.log('ress', res)
@@ -95,10 +75,10 @@ class ProductsScreen extends Component<Props, State>{
     //     this.setState({ needReset: false })
     // }
 
-    // componentDidMount() {
-    //     // this.asyncInit();
-    //     this.listener = this.props.navigation.addListener('focus', this.onFocus)
-    // }
+    componentDidMount() {
+        // this.asyncInit();
+        // this.listener = this.props.navigation.addListener('focus', this.onFocus)
+    }
 
     // componentWillUnmount() {
     //     this.listener()
@@ -157,6 +137,7 @@ class ProductsScreen extends Component<Props, State>{
                         placeholder={'Tìm kiếm tên hoặc mã sản phẩm'}
                         autoCapitalize={'none'}
                         returnKeyType={'search'}
+                        placeholderTextColor={'black'}
                         // clearButtonMode={'while-editing'}
                         enablesReturnKeyAutomatically={true}
                         underlineColorAndroid={'transparent'}
