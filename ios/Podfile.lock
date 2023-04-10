@@ -398,8 +398,8 @@ PODS:
     - React
   - react-native-spinkit (1.4.1):
     - React
-  - react-native-webview (8.2.1):
-    - React
+  - react-native-webview (12.0.2):
+    - React-Core
   - React-perflogger (0.66.5)
   - React-RCTActionSheet (0.66.5):
     - React-Core/RCTActionSheetHeaders (= 0.66.5)
@@ -748,7 +748,7 @@ SPEC CHECKSUMS:
   React-logger: fa4ff1e9c7e115648f7c5dafb7c20822ab4f7a7e
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
-  react-native-webview: 160ac8d6bb974e2933f2de6bb7464a8e934ff31d
+  react-native-webview: 203b6a1c7507737f777c91d7e10c30e7e67c1a17
   React-perflogger: 169fb34f60c5fd793b370002ee9c916eba9bc4ae
   React-RCTActionSheet: 2355539e02ad5cd4b1328682ab046487e1e1e920
   React-RCTAnimation: 150644a38c24d80f1f761859c10c727412303f57
