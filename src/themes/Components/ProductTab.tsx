@@ -23,7 +23,8 @@ interface State {
 }
 
 export default class ProductTab extends Component<Props, State>{
-
+    listener:any
+    
     constructor(props: any) {
         super(props);
         this.state = {
