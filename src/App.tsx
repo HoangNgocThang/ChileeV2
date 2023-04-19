@@ -217,10 +217,12 @@ const App = () => {
         });
 
         const unsubscribe = messaging().onMessage(async remoteMessage => {
-            console.warn("message when app opening...", remoteMessage)
+            console.log("message when app opening...", remoteMessage)
             if (remoteMessage) {
-                setShowNoti(true)
-                setObjectNoti(remoteMessage)
+                setTimeout(() => {
+                    setShowNoti(true)
+                    setObjectNoti(remoteMessage)
+                }, 200)
             }
         });
 
@@ -238,7 +240,7 @@ const App = () => {
             const timer = setTimeout(() => {
                 setShowNoti(false)
                 setObjectNoti(null)
-            }, 5000)
+            }, 8000)
             return () => {
                 clearTimeout(timer)
             }
