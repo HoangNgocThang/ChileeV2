@@ -31,8 +31,8 @@ import NotiStack from './navigation/NotiStack';
 import OrderStack from './navigation/OrderStack';
 import ContactStack from './navigation/ContactStack';
 import messaging from '@react-native-firebase/messaging';
-YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
-declare var global: { HermesInternal: null | {} };
+// YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
+// declare var global: { HermesInternal: null | {} };
 
 const { width, height } = Dimensions.get('window');
 const logo2 = require('../src/assets/logo2.png');
@@ -212,6 +212,10 @@ const App = () => {
 
         getPer()
 
+        messaging().subscribeToTopic('all_user').then(() => {
+            console.log('Subscribed to topic!')
+        });
+
         const unsubscribe = messaging().onMessage(async remoteMessage => {
             console.warn("message when app opening...", remoteMessage)
             if (remoteMessage) {
@@ -219,7 +223,13 @@ const App = () => {
                 setObjectNoti(remoteMessage)
             }
         });
-        return unsubscribe;
+
+        return () => {
+            unsubscribe()
+            messaging().unsubscribeFromTopic('all_user').then(() => {
+                console.log('Unsubscribed fom the topic!')
+            });
+        };
 
     }, [])
 
