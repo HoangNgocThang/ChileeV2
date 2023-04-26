@@ -248,9 +248,9 @@ const App = () => {
     }, [showNoti])
 
     const renderImageNoti = () => {
-        if (objectNoti?.notification?.android?.imageUrl) {
-            return { uri: objectNoti?.notification?.android?.imageUrl }
-        }
+        // if (objectNoti?.notification?.android?.imageUrl) {
+        //     return { uri: objectNoti?.notification?.android?.imageUrl }
+        // }
         return logo2
     }
 
