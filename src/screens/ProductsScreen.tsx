@@ -267,7 +267,7 @@ class ProductsScreen extends Component<Props, State>{
 
         } catch (error) {
             console.log('err 99', error)
-            $alert(`${error}`)
+            // $alert(`${error}`)
         }
     }
 

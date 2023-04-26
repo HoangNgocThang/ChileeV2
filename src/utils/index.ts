@@ -75,13 +75,13 @@ export async function getRemoteConfig(): Promise<RemoteConfig> {
     } catch (err) {
         console.error(err);
         appConfigs = await storage.get('app.configs');
-        if (__DEV__) {
-            $alert(err.message);
-        } else {
-            if (!appConfigs) {
-                $alert('Không thể kết nối đến máy chủ.Mã lỗi 01');
-            }
-        }
+        // if (__DEV__) {
+        //     $alert(err.message);
+        // } else {
+        //     if (!appConfigs) {
+        //         $alert('Không thể kết nối đến máy chủ.Mã lỗi 01');
+        //     }
+        // }
     }
 
     return appConfigs;
