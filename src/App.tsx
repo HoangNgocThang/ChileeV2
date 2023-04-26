@@ -165,9 +165,10 @@ const App = () => {
     const _init = async () => {
         await getRemoteConfig();
         // const res1 = await getDeviceId()
+        const fcmToken = await messaging().getToken();
         const res2 = await getUniqueId()
         console.log("pppp111", res2)
-        const loginRes = await AuthRequest.login(res2);
+        const loginRes = await AuthRequest.login(res2, fcmToken);
         console.log("pppp3333", loginRes)
         if (loginRes.err_code !== 0) {
             $alert(loginRes.message);
@@ -176,11 +177,6 @@ const App = () => {
             onLoginSucceed();
         }
         // this.setState({ isLoading: false })
-    }
-
-    const getToken = async () => {
-        const token = await messaging().getToken();
-        console.log("token11", token)
     }
 
     const getPer = async () => {
@@ -207,8 +203,6 @@ const App = () => {
     useEffect(() => {
 
         _init()
-
-        getToken()
 
         getPer()
 
