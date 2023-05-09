@@ -27,7 +27,7 @@ export class AuthRequest extends BaseRequest {
     //     return super.dispatch('login', email, password)
     // }
 
-    async login(deviceId: string, FcmToken: string): Promise<LoginResponse> {
+    async login(deviceId: string, FcmToken?: string): Promise<LoginResponse> {
         return super.dispatch('login', deviceId, FcmToken)
     }
 

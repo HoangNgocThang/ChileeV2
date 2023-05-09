@@ -163,19 +163,31 @@ const App = () => {
     };
 
     const _init = async () => {
+        console.log('login vao ');
         await getRemoteConfig();
         // const res1 = await getDeviceId()
-        const fcmToken = await messaging().getToken();
+
+
+        console.log("pppp111",)
         const res2 = await getUniqueId()
-        console.log("pppp111", res2)
-        const loginRes = await AuthRequest.login(res2, fcmToken);
+        console.log("pppp111",res2)
+        
+        
+        const loginRes = await AuthRequest.login(res2);
         console.log("pppp3333", loginRes)
         if (loginRes.err_code !== 0) {
             $alert(loginRes.message);
         } else {
             await storage.setAuth(loginRes);
             onLoginSucceed();
+          
+            const fcmToken = await messaging().getToken();
+            console.log("pppp222", fcmToken)
+            if(fcmToken) {
+                await AuthRequest.login(res2, fcmToken);
+            }
         }
+
         // this.setState({ isLoading: false })
     }
 
@@ -195,6 +207,8 @@ const App = () => {
             if (enabled) {
                 console.log('Authorization status:', authStatus);
             }
+
+            
         }
 
         // return true
