@@ -394,6 +394,8 @@ PODS:
   - React-jsinspector (0.66.5)
   - React-logger (0.66.5):
     - glog
+  - react-native-netinfo (5.9.10):
+    - React-Core
   - react-native-safe-area-context (0.7.3):
     - React
   - react-native-spinkit (1.4.1):
@@ -549,6 +551,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-spinkit (from `../node_modules/react-native-spinkit`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -645,6 +648,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-spinkit:
@@ -746,6 +751,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 50a73168582868421112609d2fb155e607e34ec8
   React-jsinspector: 953260b8580780a6e81f2a6d319a8d42fd5028d8
   React-logger: fa4ff1e9c7e115648f7c5dafb7c20822ab4f7a7e
+  react-native-netinfo: 30fb89fa913c342be82a887b56e96be6d71201dd
   react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   react-native-spinkit: da294fd828216ad211fe36a5c14c1e09f09e62db
   react-native-webview: 203b6a1c7507737f777c91d7e10c30e7e67c1a17
