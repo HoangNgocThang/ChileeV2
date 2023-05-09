@@ -59,16 +59,16 @@ export default class BaseRequest {
                         if (data.code === 200) {
                             resolve(data.data)
                         } else {
-                            $alert(data.message);
+                            // $alert(data.message);
                             reject(data.message);
                         }
                     }).catch(err => {
                     reject(err);
-                    if (__DEV__) {
-                        $alert(err.message);
-                    } else {
-                        $alert('Không thể kết nối đến máy chủ');
-                    }
+                    // if (__DEV__) {
+                    //     $alert(err.message);
+                    // } else {
+                    //     $alert('Không thể kết nối đến máy chủ');
+                    // }
                 });
             });
 

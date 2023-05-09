@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, YellowBox, Linking, Platform, Dimensions, Image } from 'react-native';
+import { StyleSheet, Text, View, YellowBox, Linking, Platform, Dimensions, Image ,TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useState, useEffect, useRef } from 'react';
 import { Colors, } from 'react-native/Libraries/NewAppScreen';
@@ -33,7 +33,7 @@ import ContactStack from './navigation/ContactStack';
 import messaging from '@react-native-firebase/messaging';
 // YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
 // declare var global: { HermesInternal: null | {} };
-
+import NetInfo, { useNetInfo } from '@react-native-community/netinfo';
 const { width, height } = Dimensions.get('window');
 const logo2 = require('../src/assets/logo2.png');
 
@@ -149,6 +149,7 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [showNoti, setShowNoti] = useState(false);
     const [objectNoti, setObjectNoti] = useState<any>(null);
+    const [isShowModalInternet, setIsShowModalInternet] = useState(false);
 
     const onLoginSucceed = () => {
         CartStore.clear();
@@ -176,7 +177,7 @@ const App = () => {
         const loginRes = await AuthRequest.login(res2);
         console.log("pppp3333", loginRes)
         if (loginRes.err_code !== 0) {
-            $alert(loginRes.message);
+            // $alert(loginRes.message);
         } else {
             await storage.setAuth(loginRes);
             onLoginSucceed();
@@ -216,6 +217,16 @@ const App = () => {
 
     useEffect(() => {
 
+        const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+            // console.log('Connection type listener', state.type);
+            // console.log('Is connected listener?', state.isConnected);
+            if (state.isConnected) {
+                setIsShowModalInternet(false)
+            } else {
+                setIsShowModalInternet(true)
+            }
+        });
+
         _init()
 
         getPer()
@@ -235,6 +246,7 @@ const App = () => {
         });
 
         return () => {
+            unsubscribeNetInfo()
             unsubscribe()
             messaging().unsubscribeFromTopic('all_user').then(() => {
                 console.log('Unsubscribed fom the topic!')
@@ -262,6 +274,121 @@ const App = () => {
         return logo2
     }
 
+    const renderModalInternet = () => {
+        if (isShowModalInternet) {
+            return (
+                <View style={{
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height,
+                    backgroundColor: '#cccc',
+                    position: 'absolute',
+                    bottom: 0,
+                    paddingTop: 15,
+                    paddingBottom: 35 ,
+                    // + StaticSafeAreaInsets.safeAreaInsetsBottom,
+                    zIndex: 10
+                }}>
+                    <View
+                        style={{
+                            width: Dimensions.get('window').width,
+                            flex: 1,
+                            backgroundColor: 'white',
+                            paddingHorizontal: 0,
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            position: 'absolute',
+                            bottom: 0,
+                            paddingTop: 15,
+                            paddingBottom: 35 ,
+                            // + StaticSafeAreaInsets.safeAreaInsetsBottom,
+                            borderTopLeftRadius: 40,
+                            borderTopRightRadius: 40,
+                        }}>
+                        <View
+                            style={{
+                                width: '100%',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                                paddingHorizontal: 15,
+                                paddingVertical: 15,
+                            }}>
+                            <Text
+                                style={{
+                                    color:'black',
+                                    fontSize: 16,
+                                    lineHeight: 22,
+                                    fontWeight: '600',
+                                    width: '100%',
+                                    textAlign: 'center',
+                                }}>
+                                {'Kết nối không thành công'.toUpperCase()}
+                            </Text>
+                        </View>
+    
+                        <View
+                            style={{
+                                width: '100%',
+                                flex: 1,
+                                paddingHorizontal: 35,
+                            }}>
+                            <Text
+                                style={{
+                                    color:'black',
+                                    fontSize: 14,
+                                    lineHeight: 24,
+                                    fontWeight: '400',
+                                    textAlign: 'center',
+                                }}>
+                                {`Xin vui lòng kiểm tra lại kết nối internet của bạn.`}
+                            </Text>
+    
+                            <Image
+                                source={require('../src/assets/error.png')}
+                                resizeMode="contain"
+                                style={{ width: 280, height: 200, marginTop: 25 }}
+                            />
+    
+                            <View style={{ width: '100%', height: 45, marginTop: 25 }}>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    onPress={() => {
+                                        // dispatch(actions.ptiHideModalNotConnect())
+                                        // props.onCloseModalInternet()
+                                        setIsShowModalInternet(false)
+                                    }}>
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            height: 45,
+                                            borderRadius: 22.5,
+                                            backgroundColor: config.secondaryColor,
+                                            justifyContent: 'center',
+                                            alignContent: 'center',
+                                            alignItems: 'center',
+                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 14,
+                                                lineHeight: 19,
+                                                color: 'white',
+                                                fontWeight: '600',
+                                            }}>
+                                            {'Đóng'}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </View>)
+        } else {
+            return <></>
+        }
+    }
+
     return <>
         <NavigationContainer ref={navigationRef}>
             {/* <MyTabs showBuyShare={this.appConfig.showBuyShare} /> */}
@@ -286,6 +413,7 @@ const App = () => {
                     component={OrderStack} />
             </RootStack.Navigator>
         </NavigationContainer>
+        {renderModalInternet()}
         {
             showNoti ? <View style={{
                 // backgroundColor: 'white',
