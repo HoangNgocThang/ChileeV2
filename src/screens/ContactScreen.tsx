@@ -6,6 +6,7 @@ import {
 import moment from 'moment';
 import NotificationRequest from '../api/requests/NotificationRequest';
 import { navigationRef } from '../navigation/RootNavigation';
+import ConfigRequest from '../api/requests/ConfigRequest';
 const prodef = require('../../src/assets/prodef.jpeg');
 const playstore = require('../../src/assets/playstore.png');
 
@@ -16,26 +17,31 @@ interface Props {
 const ContactScreen = (props: Props) => {
 
     const [data, setData] = React.useState([
-        {
-            id: 1,
-            imageUrl: require('../../src/assets/zalo_icon.png'),
-            title: 'Phụ kiện hoa Chilee',
-            summary: 'Công ty chuyên cung cấp các loại Giấy gói hoa, Lưới, Ruby băng và các phụ kiện khác.'
-        }
+        // {
+        //     id: 1,
+        //     imageUrl: require('../../src/assets/zalo_icon.png'),
+        //     title: 'Phụ kiện hoa Chilee',
+        //     summary: 'Công ty chuyên cung cấp các loại Giấy gói hoa, Lưới, Ruby băng và các phụ kiện khác.'
+        // }
     ]);
     const [page, setPage] = React.useState(1);
     const [totalPage, setTotalPage] = React.useState(0);
 
     const getData = async () => {
-        // try {
-        //     const res: any = await NotificationRequest.get(1);
-        //     console.log('res', res)
-        //     if (res) {
-        //         setData(res)
-        //     }
-        // } catch (error) {
-        //     console.log('error', error)
-        // }
+        try {
+            // const res: any = await NotificationRequest.get(1);
+            // console.log('res', res)
+            // if (res) {
+            //     setData(res)
+            // }
+            const res: any = await ConfigRequest.getListContact();
+            console.log('res', res)
+            if (res) {
+                setData(res?.data)
+            }
+        } catch (error) {
+            console.log('error', error)
+        }
     }
 
     React.useEffect(() => {
@@ -44,14 +50,14 @@ const ContactScreen = (props: Props) => {
 
     const onClickItemNoti = async (item: any, index: number) => {
         // props.navigation.navigate('NotiDetailScreen', { item: item })
-        const supported = await Linking.canOpenURL('https://zalo.me/1636451175413542693');
+        const supported = await Linking.canOpenURL(item?.link);
 
         if (supported) {
             // Opening the link with some app, if the URL scheme is "http" the web link should be opened
             // by some browser in the mobile
-            await Linking.openURL('https://zalo.me/1636451175413542693');
+            await Linking.openURL(item?.link);
         } else {
-            Alert.alert(`Không thể mở: https://zalo.me/1636451175413542693`);
+            Alert.alert(`Không thể mở: ${item?.link}`);
         }
     }
 
@@ -70,10 +76,10 @@ const ContactScreen = (props: Props) => {
                 onPress={() => onClickItemNoti(item, index)}
                 style={{ marginBottom: 10, flexDirection: 'row', backgroundColor: '#F6F6F6', borderRadius: 15, padding: 8 }}>
                 {/* <Image source={renderImage(item?.imageUrl)} style={{ width: 60, height: 60 }} resizeMode="contain" /> */}
-                <Image source={item?.imageUrl} style={{ width: 60, height: 60 }} resizeMode="contain" />
+                <Image source={{uri:item?.icon}} style={{ width: 60, height: 60 }} resizeMode="contain" />
                 <View style={{ flex: 1, marginLeft: 8 }}>
                     <Text numberOfLines={2} style={{ fontSize: 14, color: '#000000', fontWeight: 'bold' }}>{item?.title}</Text>
-                    <Text numberOfLines={3} style={{ fontSize: 12, color: '#000000', marginTop: 5 }}>{item?.summary}</Text>
+                    <Text numberOfLines={3} style={{ fontSize: 12, color: '#000000', marginTop: 5 }}>{item?.description}</Text>
                     {/* <View style={{ marginTop: 4, flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}>
                         <Text style={{ color: '#A1A1A1', fontSize: 10, fontWeight: 'bold' }}>{item?.created_at}</Text>
                     </View> */}

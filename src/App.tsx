@@ -1,9 +1,9 @@
 import 'react-native-gesture-handler';
-import { StyleSheet, Text, View, YellowBox, Linking, Platform } from 'react-native';
+import { StyleSheet, Text, View, YellowBox, Linking, Platform, Dimensions, Image ,TouchableOpacity} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
-import React, { Component } from 'react';
-
+import React, { useState, useEffect, useRef } from 'react';
 import { Colors, } from 'react-native/Libraries/NewAppScreen';
+// import { request, PERMISSIONS } from 'react-native-permissions';
 // @ts-ignored
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -30,9 +30,12 @@ import NotiScreen from './screens/NotiScreen';
 import NotiStack from './navigation/NotiStack';
 import OrderStack from './navigation/OrderStack';
 import ContactStack from './navigation/ContactStack';
-
-YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
-declare var global: { HermesInternal: null | {} };
+import messaging from '@react-native-firebase/messaging';
+// YellowBox.ignoreWarnings(['VirtualizedLists should never be nested inside plain ScrollViews with the same orientation - use another VirtualizedList-backed container instead.']);
+// declare var global: { HermesInternal: null | {} };
+import NetInfo, { useNetInfo } from '@react-native-community/netinfo';
+const { width, height } = Dimensions.get('window');
+const logo2 = require('../src/assets/logo2.png');
 
 if (!config.secondaryColor) {
     config.secondaryColor = '#c0576a';
@@ -52,8 +55,6 @@ function SettingScreen() {
 }
 
 const Tab = createBottomTabNavigator();
-
-
 
 const Stack = createStackNavigator();
 
@@ -142,19 +143,15 @@ function MyTabs(props: any) {
         </Tab.Navigator>
     );
 }
-interface State {
-    isLoading: boolean
-}
-class App extends Component<any, State>{
-    private appConfig: any;
-    constructor(props: any) {
-        super(props);
-        this.state = {
-            isLoading: true
-        }
-    }
 
-    onLoginSucceed = () => {
+
+const App = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [showNoti, setShowNoti] = useState(false);
+    const [objectNoti, setObjectNoti] = useState<any>(null);
+    const [isShowModalInternet, setIsShowModalInternet] = useState(false);
+
+    const onLoginSucceed = () => {
         CartStore.clear();
         // this.props.navigation.dispatch(
         //     CommonActions.reset({
@@ -166,75 +163,236 @@ class App extends Component<any, State>{
         // );
     };
 
-    _init = async () => {
-        this.appConfig = await getRemoteConfig();
+    const _init = async () => {
+        console.log('login vao ');
+        await getRemoteConfig();
         // const res1 = await getDeviceId()
+
+
+        console.log("pppp111",)
         const res2 = await getUniqueId()
-        console.log("pppp111", res2)
+        console.log("pppp111",res2)
+        
+        
         const loginRes = await AuthRequest.login(res2);
         console.log("pppp3333", loginRes)
         if (loginRes.err_code !== 0) {
-            $alert(loginRes.message);
+            // $alert(loginRes.message);
         } else {
             await storage.setAuth(loginRes);
-            this.onLoginSucceed();
+            onLoginSucceed();
+          
+            const fcmToken = await messaging().getToken();
+            console.log("pppp222", fcmToken)
+            if(fcmToken) {
+                await AuthRequest.login(res2, fcmToken);
+            }
         }
-        this.setState({ isLoading: false })
+
+        // this.setState({ isLoading: false })
     }
 
-    handleDeepLink = (link: any) => {
-        if (!link.url) {
-            return;
-        }
-        let scheme = 'cluxapp://';
-        if (!link.url.startsWith(scheme)) {
-            return;
-        }
+    const getPer = async () => {
+        // if (Platform.OS == 'android') {
+        //     // const res = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+        //     const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS)
+        //     console.log('aaa, result', result)
+        // }
 
+        if (Platform.OS == 'ios') {
+            const authStatus = await messaging().requestPermission();
+            const enabled =
+                authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+                authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-        let uri = link.url.substr(scheme.length, link.url.length)
-        let [group, id] = uri.split('/');
-        if (group && id) {
-            group = group.toLowerCase();
-            let routeName: any;
-            if (group === 'product') {
-                routeName = 'DetailProduct';
-            } else if (group === 'group') {
-                routeName = 'DetailGroupScreen';
+            if (enabled) {
+                console.log('Authorization status:', authStatus);
             }
 
-            if (routeName) {
+            
+        }
+
+        // return true
+    }
+
+    useEffect(() => {
+
+        const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+            // console.log('Connection type listener', state.type);
+            // console.log('Is connected listener?', state.isConnected);
+            if (state.isConnected) {
+                setIsShowModalInternet(false)
+            } else {
+                setIsShowModalInternet(true)
+            }
+        });
+
+        _init()
+
+        getPer()
+
+        messaging().subscribeToTopic('all_user').then(() => {
+            console.log('Subscribed to topic!')
+        });
+
+        const unsubscribe = messaging().onMessage(async remoteMessage => {
+            console.log("message when app opening...", remoteMessage)
+            if (remoteMessage) {
                 setTimeout(() => {
-                    navigate(routeName, { id })
-                }, 500)
+                    setShowNoti(true)
+                    setObjectNoti(remoteMessage)
+                }, 200)
+            }
+        });
+
+        return () => {
+            unsubscribeNetInfo()
+            unsubscribe()
+            messaging().unsubscribeFromTopic('all_user').then(() => {
+                console.log('Unsubscribed fom the topic!')
+            });
+        };
+
+    }, [])
+
+    useEffect(() => {
+        if (showNoti) {
+            const timer = setTimeout(() => {
+                setShowNoti(false)
+                setObjectNoti(null)
+            }, 8000)
+            return () => {
+                clearTimeout(timer)
             }
         }
+    }, [showNoti])
+
+    const renderImageNoti = () => {
+        // if (objectNoti?.notification?.android?.imageUrl) {
+        //     return { uri: objectNoti?.notification?.android?.imageUrl }
+        // }
+        return logo2
     }
 
-    componentDidMount(): void {
-        this._init();
-        Linking.addEventListener('url', this.handleDeepLink);
-
-        /* fcm.getToken().then((token: string) => {
-             console.log('FCM_Toen=' + token);
-         });
- 
-         fcm.onMessageReceived((data: any) => {
-             console.log('onMessageReceived', data);
-         });
- 
-         fcm.getInitialMessage().then((data:any) => {
-             console.log({initialMessage: data});
-         })*/
-
-    }
-
-    render() {
-        if (this.state.isLoading) {
-            return <Spinner />
+    const renderModalInternet = () => {
+        if (isShowModalInternet) {
+            return (
+                <View style={{
+                    width: Dimensions.get('window').width,
+                    height: Dimensions.get('window').height,
+                    backgroundColor: '#cccc',
+                    position: 'absolute',
+                    bottom: 0,
+                    paddingTop: 15,
+                    paddingBottom: 35 ,
+                    // + StaticSafeAreaInsets.safeAreaInsetsBottom,
+                    zIndex: 10
+                }}>
+                    <View
+                        style={{
+                            width: Dimensions.get('window').width,
+                            flex: 1,
+                            backgroundColor: 'white',
+                            paddingHorizontal: 0,
+                            justifyContent: 'flex-start',
+                            alignItems: 'center',
+                            alignContent: 'center',
+                            position: 'absolute',
+                            bottom: 0,
+                            paddingTop: 15,
+                            paddingBottom: 35 ,
+                            // + StaticSafeAreaInsets.safeAreaInsetsBottom,
+                            borderTopLeftRadius: 40,
+                            borderTopRightRadius: 40,
+                        }}>
+                        <View
+                            style={{
+                                width: '100%',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                                paddingHorizontal: 15,
+                                paddingVertical: 15,
+                            }}>
+                            <Text
+                                style={{
+                                    color:'black',
+                                    fontSize: 16,
+                                    lineHeight: 22,
+                                    fontWeight: '600',
+                                    width: '100%',
+                                    textAlign: 'center',
+                                }}>
+                                {'Kết nối không thành công'.toUpperCase()}
+                            </Text>
+                        </View>
+    
+                        <View
+                            style={{
+                                width: '100%',
+                                flex: 1,
+                                paddingHorizontal: 35,
+                            }}>
+                            <Text
+                                style={{
+                                    color:'black',
+                                    fontSize: 14,
+                                    lineHeight: 24,
+                                    fontWeight: '400',
+                                    textAlign: 'center',
+                                }}>
+                                {`Xin vui lòng kiểm tra lại kết nối internet của bạn.`}
+                            </Text>
+    
+                            <Image
+                                source={require('../src/assets/error.png')}
+                                resizeMode="contain"
+                                style={{ width: 280, height: 200, marginTop: 25 }}
+                            />
+    
+                            <View style={{ width: '100%', height: 45, marginTop: 25 }}>
+                                <TouchableOpacity
+                                    activeOpacity={0.7}
+                                    onPress={() => {
+                                        // dispatch(actions.ptiHideModalNotConnect())
+                                        // props.onCloseModalInternet()
+                                        setIsShowModalInternet(false)
+                                    }}>
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            height: 45,
+                                            borderRadius: 22.5,
+                                            backgroundColor: config.secondaryColor,
+                                            justifyContent: 'center',
+                                            alignContent: 'center',
+                                            alignItems: 'center',
+                                        }}>
+                                        <Text
+                                            style={{
+                                                fontSize: 14,
+                                                lineHeight: 19,
+                                                color: 'white',
+                                                fontWeight: '600',
+                                            }}>
+                                            {'Đóng'}
+                                        </Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </View>)
+        } else {
+            return <></>
         }
-        return <NavigationContainer ref={navigationRef}>
+    }
+
+    return <>
+        <NavigationContainer ref={navigationRef}>
             {/* <MyTabs showBuyShare={this.appConfig.showBuyShare} /> */}
+
             <RootStack.Navigator
                 screenOptions={{ gestureEnabled: false }}>
                 <RootStack.Screen
@@ -255,7 +413,40 @@ class App extends Component<any, State>{
                     component={OrderStack} />
             </RootStack.Navigator>
         </NavigationContainer>
-    }
+        {renderModalInternet()}
+        {
+            showNoti ? <View style={{
+                // backgroundColor: 'white',
+                position: 'absolute',
+                top: 0, right: 0,
+                width: width,
+            }}>
+                <View style={{
+                    paddingVertical: 4,
+                    paddingHorizontal: 8,
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 2,
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 3.84,
+                    elevation: 5,
+                    margin: 10,
+                    height: 60,
+                    width: width - 20,
+                    backgroundColor: 'white',
+                    flexDirection: 'row'
+                }}>
+                    <View style={{ flex: 1, marginRight: 10 }}>
+                        <Text numberOfLines={1} style={{ fontWeight: 'bold', fontSize: 14 }}>{objectNoti?.notification?.title}</Text>
+                        <Text numberOfLines={2} style={{ fontSize: 12, color: 'grey' }}>{objectNoti?.notification?.body}</Text>
+                    </View>
+                    <Image style={{ width: 42, height: 42 }} source={renderImageNoti()} />
+                </View>
+            </View> : <></>
+        }
+    </>
 }
 
 const styles = StyleSheet.create({

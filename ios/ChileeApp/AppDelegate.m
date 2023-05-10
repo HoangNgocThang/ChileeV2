@@ -1,5 +1,6 @@
 #import "AppDelegate.h"
-
+#import <Firebase.h> // add firebase
+#import "RNFBMessagingModule.h"// add firebase
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -27,14 +28,19 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  [FIRApp configure]; // add firebase
+  
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif
-
+  
+ 
+  NSDictionary *appProperties = [RNFBMessagingModule addCustomPropsToUserProps:nil withLaunchOptions:launchOptions];  // add firebase
+  
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
                                                    moduleName:@"ChileeApp"
-                                            initialProperties:nil];
+                                            initialProperties:appProperties];
 
   if (@available(iOS 13.0, *)) {
       rootView.backgroundColor = [UIColor systemBackgroundColor];

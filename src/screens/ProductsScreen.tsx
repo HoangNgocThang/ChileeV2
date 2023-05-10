@@ -2,14 +2,15 @@ import React, { Component } from 'react';
 import {
     Image, Text, View, FlatList,
     TouchableOpacity, SafeAreaView,
-    StyleSheet, Alert, TextInput,
-    ActivityIndicator, Keyboard, Linking
+    StyleSheet, Alert, TextInput, PermissionsAndroid,
+    ActivityIndicator, Keyboard, Linking, Platform
 } from "react-native";
 import HomeRequest from "../api/requests/HomeRequest";
 import Spinner from '../ui/Spinner';
 import CategoryItem from "../themes/Components/CategoryItem";
 import platform from "../themes/Variables/platform";
 import ProductTab from "../themes/Components/ProductTab";
+// @ts-ignored
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import CartBadge from '../ui/CartBadge';
 import config from "../config";
@@ -19,7 +20,8 @@ import ProductItemChildren from '../themes/Components/ProductItemChildren';
 import { debounce, isScrollCloseToBottom } from '../utils';
 import ProductRequest from '../api/requests/ProductRequest';
 import { $alert } from '../ui/Alert';
-
+import messaging from '@react-native-firebase/messaging';
+// import { request, PERMISSIONS } from 'react-native-permissions';
 const ic_search = require('../../src/assets/ic_searchpro.png');
 const close = require('../../src/assets/close.png');
 
@@ -42,6 +44,7 @@ interface State {
 class ProductsScreen extends Component<Props, State>{
 
     page = 1;
+    unsubscribe = null;
 
     constructor(props: any) {
         super(props);
@@ -57,7 +60,6 @@ class ProductsScreen extends Component<Props, State>{
             visible: false
         }
     }
-
     // asyncInit = async () => {
     //     const res = await HomeRequest.getCategories();
     //     console.log('ress', res)
@@ -73,10 +75,10 @@ class ProductsScreen extends Component<Props, State>{
     //     this.setState({ needReset: false })
     // }
 
-    // componentDidMount() {
-    //     // this.asyncInit();
-    //     this.listener = this.props.navigation.addListener('focus', this.onFocus)
-    // }
+    componentDidMount() {
+        // this.asyncInit();
+        // this.listener = this.props.navigation.addListener('focus', this.onFocus)
+    }
 
     // componentWillUnmount() {
     //     this.listener()
@@ -103,6 +105,7 @@ class ProductsScreen extends Component<Props, State>{
                 justifyContent: 'space-between',
                 alignContent: 'center',
                 alignItems: 'center',
+                marginTop: Platform.OS == 'android' ? 10 : 0
             }}>
                 <View style={{
                     height: 46,
@@ -134,6 +137,7 @@ class ProductsScreen extends Component<Props, State>{
                         placeholder={'Tìm kiếm tên hoặc mã sản phẩm'}
                         autoCapitalize={'none'}
                         returnKeyType={'search'}
+                        placeholderTextColor={'black'}
                         // clearButtonMode={'while-editing'}
                         enablesReturnKeyAutomatically={true}
                         underlineColorAndroid={'transparent'}
@@ -253,12 +257,17 @@ class ProductsScreen extends Component<Props, State>{
                             hasNextPage: res?.hasNextPage
                         })
                     }
+                } else {
+                    this.setState({
+                        data: res?.products,
+                        hasNextPage: res?.hasNextPage
+                    })
                 }
             }, 200)
 
         } catch (error) {
             console.log('err 99', error)
-            $alert(`${error}`)
+            // $alert(`${error}`)
         }
     }
 

@@ -13,6 +13,10 @@ class ConfigRequest extends BaseRequest {
     async getProvinceConfigs(): Promise<any> {
         return super.dispatch('getProvinceConfigs')
     }
+
+    async getListContact(): Promise<any> {
+        return super.dispatch('getListContact')
+    }
 }
 
 export default new ConfigRequest()
