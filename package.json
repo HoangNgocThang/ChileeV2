@@ -23,7 +23,7 @@
     "@types/react-native-snap-carousel": "^3.7.4",
     "moment": "^2.24.0",
     "react": "17.0.2",
-    "react-native": "0.66.5",
+    "react-native": "0.67.5",
     "react-native-device-info": "^5.5.3",
     "react-native-fast-image": "^7.0.2",
     "react-native-gesture-handler": "^1.6.0",
