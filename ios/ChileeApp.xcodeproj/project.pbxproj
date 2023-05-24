@@ -552,7 +552,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 64;
-				DEVELOPMENT_TEAM = AF65C2TX29;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = ChileeApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chilee;
@@ -585,7 +585,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 64;
-				DEVELOPMENT_TEAM = AF65C2TX29;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = ChileeApp/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Chilee;
 				LD_RUNPATH_SEARCH_PATHS = (
