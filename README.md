@@ -18,7 +18,7 @@ Registry: external.system.auto.import.disabled=true
 
 # ver RN 0.67.5
 ruby 3.2.2 | nodeJS 14.21.3 | MacOS 13.2.1 | 
-xcode 14.3
+xcode 14.3 |
 android studio Flamingo | 2022.2.1	3.2-8.0
 
 Note:
